@@ -7,6 +7,9 @@ load_dotenv()
 
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
+# Строка-пример из .env.example («sk-ant-вставь-сюда-свой-ключ») — это не ключ.
+if ANTHROPIC_API_KEY and "вставь" in ANTHROPIC_API_KEY:
+    ANTHROPIC_API_KEY = None
 
 # Самая дешёвая модель Claude. Если качества не хватит — claude-sonnet-5 или claude-opus-5.
 CLAUDE_MODEL = os.getenv("CLAUDE_MODEL", "claude-haiku-4-5")

@@ -300,6 +300,9 @@ def take_ai_quota(context: ContextTypes.DEFAULT_TYPE) -> bool:
 
 async def reply_with_claude(context: ContextTypes.DEFAULT_TYPE, chat_id: int, lang: str,
                             user_text: str, codes: list[str]) -> None:
+    if not config.ANTHROPIC_API_KEY:  # ИИ не подключён — не тратим лимит человека
+        await send_long(context, chat_id, t(lang, "no_ai"), lang)
+        return
     if not take_ai_quota(context):
         stats.log_event(chat_id, "limit")
         await send_long(context, chat_id, t(lang, "limit").format(
