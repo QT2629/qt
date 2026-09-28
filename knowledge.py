@@ -8,25 +8,27 @@ KNOWLEDGE_DIR = Path(__file__).parent / "knowledge"
 
 
 def load_programs() -> list[dict]:
-    path = KNOWLEDGE_DIR / "programs.json"
-    programs = json.loads(path.read_text(encoding="utf-8"))
-    if not isinstance(programs, list):
-        raise ValueError("knowledge/programs.json должен содержать список [ ... ]")
+    """Каждая программа — отдельный JSON-файл в папке knowledge/programs/."""
+    programs = []
+    for path in sorted((KNOWLEDGE_DIR / "programs").glob("*.json")):
+        programs.append(json.loads(path.read_text(encoding="utf-8")))
     return programs
 
 
-def load_admission_info() -> str:
-    text = (KNOWLEDGE_DIR / "admission.md").read_text(encoding="utf-8")
+def load_markdown(name: str) -> str:
+    text = (KNOWLEDGE_DIR / name).read_text(encoding="utf-8")
     # Убираем HTML-комментарии с подсказками для заполнения.
     return re.sub(r"<!--.*?-->", "", text, flags=re.DOTALL).strip()
 
 
 def build_knowledge_text() -> str:
     programs = load_programs()
-    admission = load_admission_info()
+    common = load_markdown("almau_common.md")
+    graduate = load_markdown("graduate_programs.md")
+    admission = load_markdown("admission.md")
 
     programs_text = (
-        json.dumps(programs, ensure_ascii=False, indent=1)
+        json.dumps(programs, ensure_ascii=False, separators=(",", ":"))
         if programs
         else "ДАННЫХ О ПРОГРАММАХ ПОКА НЕТ. На вопросы о конкретных программах, баллах "
         "и стоимости отвечай, что информация уточняется, и направляй в приёмную комиссию."
@@ -36,6 +38,8 @@ def build_knowledge_text() -> str:
         "направляй в приёмную комиссию."
     )
     return (
+        "<almau_common>\n" + common + "\n</almau_common>\n\n"
         "<almau_programs>\n" + programs_text + "\n</almau_programs>\n\n"
+        "<almau_graduate>\n" + graduate + "\n</almau_graduate>\n\n"
         "<almau_admission>\n" + admission_text + "\n</almau_admission>"
     )
