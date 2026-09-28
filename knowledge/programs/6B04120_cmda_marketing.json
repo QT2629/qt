@@ -46,5 +46,11 @@
   ],
   "price_kzt": 3200000,
   "price_note": "Стоимость за 1 год обучения (прайс приёмной комиссии AlmaU, 2026). За весь срок (3 года) — примерно 9 600 000 тенге, если цена не изменится",
-  "ent_note": "В прайсе программа Content, Marketing and Data Analysis указана в трёх группах ЕНТ; вариант Marketing — это группа, указанная в ent_subjects (подтверждено приёмной)"
+  "ent_note": "В прайсе программа Content, Marketing and Data Analysis указана в трёх группах ЕНТ; вариант Marketing — это группа, указанная в ent_subjects (подтверждено приёмной)",
+  "tags": [
+    "business",
+    "creative_media",
+    "data"
+  ],
+  "ent_group": "geo_math"
 }

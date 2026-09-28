@@ -5,23 +5,29 @@
 import asyncio
 import sys
 
+import catalog
 from claude_client import ask_claude
 from knowledge import build_knowledge_text
+from prompts import with_details
 
 
 async def main() -> None:
     lang = sys.argv[1] if len(sys.argv) > 1 else "ru"
     knowledge_text = build_knowledge_text()
     history: list[dict] = []
+    recent: list[str] = []
     print(f"Pro4U, язык: {lang}. Пустая строка — выход.\n")
     while True:
         user_text = input("Вы: ").strip()
         if not user_text:
             break
-        messages = history + [{"role": "user", "content": user_text}]
+        codes = catalog.relevant_programs(user_text, recent)
+        details = catalog.program_details(codes) if codes else None
+        messages = history + [{"role": "user", "content": with_details(user_text, details)}]
         answer = await ask_claude(knowledge_text, lang, messages)
-        print(f"\nPro4U: {answer}\n")
-        history = messages + [{"role": "assistant", "content": answer}]
+        print(f"\n[программы в запросе: {codes}]\nPro4U: {answer}\n")
+        history += [{"role": "user", "content": user_text}, {"role": "assistant", "content": answer}]
+        recent = (catalog.find_programs(answer) or codes[:2])[:4]
 
 
 if __name__ == "__main__":

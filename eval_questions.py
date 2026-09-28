@@ -4,8 +4,10 @@
 # ключевые слова (без учёта регистра). Прочитайте ответы и глазами тоже.
 import asyncio
 
+import catalog
 from claude_client import ask_claude
 from knowledge import build_knowledge_text
+from prompts import with_details
 
 # (язык, вопрос, слова — хотя бы одно из каждой группы должно быть в ответе)
 CASES = [
@@ -45,7 +47,9 @@ async def main() -> None:
     knowledge_text = build_knowledge_text()
     passed = 0
     for i, (lang, question, groups) in enumerate(CASES, 1):
-        answer = await ask_claude(knowledge_text, lang, [{"role": "user", "content": question}])
+        codes = catalog.relevant_programs(question, [])
+        details = catalog.program_details(codes) if codes else None
+        answer = await ask_claude(knowledge_text, lang, [{"role": "user", "content": with_details(question, details)}])
         missing = check(answer, groups)
         status = "OK  " if not missing else "FAIL"
         passed += not missing
