@@ -1,47 +1,29 @@
-# Pro4U — Professional for you
-# Telegram-бот-профориентолог на базе Claude (Anthropic API).
+# Pro4U — ИИ-консультант для абитуриентов AlmaU в Telegram.
 #
 # Как это работает:
-#   пользователь пишет боту -> бот отправляет текст в Claude -> Claude отвечает -> бот пересылает ответ в Telegram.
+#   пользователь пишет боту -> бот добавляет базу знаний AlmaU и историю диалога ->
+#   отправляет в Claude -> пересылает ответ пользователю.
+#
+# Запуск: python bot.py
 
 import logging
-import os
 
 import anthropic
-from dotenv import load_dotenv
-from telegram import Update
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup, Update
 from telegram.constants import ChatAction
 from telegram.ext import (
     Application,
+    CallbackQueryHandler,
     CommandHandler,
     ContextTypes,
     MessageHandler,
     filters,
 )
 
-from prompts import SYSTEM_PROMPT
-
-# ---------------------------------------------------------------------------
-# 1. Настройки: читаем ключи из файла .env (а не пишем их прямо в коде)
-# ---------------------------------------------------------------------------
-load_dotenv()
-
-TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
-ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
-CLAUDE_MODEL = os.getenv("CLAUDE_MODEL", "claude-opus-5")
-
-if not TELEGRAM_BOT_TOKEN or not ANTHROPIC_API_KEY:
-    raise SystemExit(
-        "Не найдены ключи. Создай файл .env (скопируй .env.example) "
-        "и заполни TELEGRAM_BOT_TOKEN и ANTHROPIC_API_KEY."
-    )
-
-# Сколько последних сообщений диалога помнить (чтобы Claude понимал контекст,
-# но запрос не становился бесконечно большим и дорогим).
-MAX_HISTORY_MESSAGES = 20
-
-# Telegram не даёт отправить сообщение длиннее 4096 символов.
-TELEGRAM_MESSAGE_LIMIT = 4096
+import config
+from claude_client import Refused, ask_claude
+from knowledge import build_knowledge_text
+from texts import MENU_PROMPTS, TEXTS, t
 
 logging.basicConfig(
     format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
@@ -52,131 +34,164 @@ logging.getLogger("httpx").setLevel(logging.WARNING)
 logging.getLogger("httpx2").setLevel(logging.WARNING)
 logger = logging.getLogger("pro4u")
 
+# База знаний загружается один раз при запуске.
+KNOWLEDGE_TEXT = build_knowledge_text()
+
+# Telegram не даёт отправить сообщение длиннее 4096 символов.
+TELEGRAM_MESSAGE_LIMIT = 4096
+
+# Для каждого текста кнопки (на обоих языках) запоминаем, что это за кнопка.
+BUTTON_KEYS = {
+    TEXTS[lang][key]: key
+    for lang in TEXTS
+    for key in ("btn_pick", "btn_programs", "btn_ent", "btn_money", "btn_admission", "btn_contacts")
+}
+
+
 # ---------------------------------------------------------------------------
-# 2. Клиент Claude. Async-версия, потому что python-telegram-bot тоже асинхронный.
+# Клавиатуры
 # ---------------------------------------------------------------------------
-claude = anthropic.AsyncAnthropic(api_key=ANTHROPIC_API_KEY, timeout=60.0)
-
-# История переписки: для каждого чата храним список сообщений.
-# Хранится в памяти — после перезапуска бота история обнуляется (для начала это нормально).
-chat_histories: dict[int, list[dict]] = {}
-
-
-async def ask_claude(chat_id: int, user_text: str) -> str:
-    """Отправляет сообщение пользователя в Claude и возвращает текст ответа."""
-    history = chat_histories.setdefault(chat_id, [])
-    messages = history + [{"role": "user", "content": user_text}]
-
-    response = await claude.beta.messages.create(
-        model=CLAUDE_MODEL,
-        max_tokens=2000,
-        system=SYSTEM_PROMPT,
-        messages=messages,
-        # Если Claude Opus 5 откажется отвечать по правилам безопасности,
-        # запрос автоматически повторится на запасной модели.
-        betas=["server-side-fallback-2026-07-01"],
-        fallbacks="default",
+def language_keyboard() -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(
+        [[
+            InlineKeyboardButton("🇷🇺 Русский", callback_data="lang:ru"),
+            InlineKeyboardButton("🇰🇿 Қазақша", callback_data="lang:kz"),
+        ]]
     )
 
-    if response.stop_reason == "refusal":
-        return (
-            "Извини, на такой вопрос я ответить не могу. "
-            "Давай вернёмся к выбору профессии или университета 🙂"
-        )
 
-    # Ответ Claude состоит из "блоков". Нам нужны только текстовые.
-    answer = "".join(block.text for block in response.content if block.type == "text").strip()
-    if not answer:
-        return "Хм, у меня не получилось сформулировать ответ. Попробуй задать вопрос чуть по-другому."
-
-    # Запоминаем вопрос и ответ, чтобы Claude помнил контекст разговора.
-    history.append({"role": "user", "content": user_text})
-    history.append({"role": "assistant", "content": answer})
-    # Храним только последние сообщения. Обрезаем парами, чтобы история
-    # всегда начиналась с сообщения пользователя.
-    while len(history) > MAX_HISTORY_MESSAGES:
-        del history[:2]
-
-    return answer
+def menu_keyboard(lang: str) -> ReplyKeyboardMarkup:
+    return ReplyKeyboardMarkup(
+        [
+            [t(lang, "btn_pick")],
+            [t(lang, "btn_programs"), t(lang, "btn_ent")],
+            [t(lang, "btn_money"), t(lang, "btn_admission")],
+            [t(lang, "btn_contacts")],
+        ],
+        resize_keyboard=True,
+    )
 
 
 # ---------------------------------------------------------------------------
-# 3. Обработчики команд и сообщений Telegram
+# Команды
 # ---------------------------------------------------------------------------
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Команда /start — приветствие."""
-    chat_histories.pop(update.effective_chat.id, None)
-    await update.message.reply_text(
-        "Привет! Я Pro4U — твой помощник в выборе профессии и университета 🎓\n\n"
-        "Расскажи немного о себе: что тебе нравится делать, какие предметы "
-        "в школе даются легче всего? А я помогу подобрать подходящие профессии.\n\n"
-        "Команды:\n"
-        "/start — начать заново\n"
-        "/reset — очистить историю разговора"
-    )
+    """/start — выбор языка и новый разговор."""
+    context.user_data["history"] = []
+    await update.message.reply_text(t("ru", "choose_lang"), reply_markup=language_keyboard())
+
+
+async def choose_language(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Пользователь нажал кнопку с языком."""
+    query = update.callback_query
+    await query.answer()
+    lang = query.data.split(":")[1]
+    context.user_data["lang"] = lang
+    await query.edit_message_text(t(lang, "lang_set"))
+    await query.message.reply_text(t(lang, "welcome"), reply_markup=menu_keyboard(lang))
+
+
+async def change_language(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """/lang — сменить язык."""
+    await update.message.reply_text(t("ru", "choose_lang"), reply_markup=language_keyboard())
 
 
 async def reset(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Команда /reset — забыть историю диалога."""
-    chat_histories.pop(update.effective_chat.id, None)
-    await update.message.reply_text("Готово, начинаем разговор с чистого листа ✨")
+    """/reset — забыть историю диалога."""
+    context.user_data["history"] = []
+    lang = context.user_data.get("lang", "ru")
+    await update.message.reply_text(t(lang, "reset_done"), reply_markup=menu_keyboard(lang))
 
 
+# ---------------------------------------------------------------------------
+# Сообщения
+# ---------------------------------------------------------------------------
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Любое обычное текстовое сообщение -> Claude -> ответ пользователю."""
-    chat_id = update.effective_chat.id
-    user_text = update.message.text
-    logger.info("Сообщение от чата %s: %s", chat_id, user_text[:100])
+    """Обычное сообщение или нажатие кнопки меню."""
+    lang = context.user_data.get("lang", "ru")
+    text = update.message.text
+    button = BUTTON_KEYS.get(text)
 
-    # Показываем "печатает...", пока Claude думает.
+    # Кнопка «Приёмная комиссия» — отвечаем сами, без ИИ.
+    if button == "btn_contacts":
+        await update.message.reply_text(t(lang, "contacts").format(contacts=config.ADMISSIONS_CONTACTS))
+        return
+
+    # Остальные кнопки превращаем в готовый вопрос для ИИ.
+    user_text = t(lang, MENU_PROMPTS[button]) if button else text
+    await reply_with_claude(update, context, lang, user_text)
+
+
+async def reply_with_claude(update: Update, context: ContextTypes.DEFAULT_TYPE, lang: str, user_text: str) -> None:
+    chat_id = update.effective_chat.id
+    history = context.user_data.setdefault("history", [])
+    logger.info("Чат %s [%s]: %s", chat_id, lang, user_text[:100])
+
+    # Показываем «печатает...», пока Claude думает.
     await context.bot.send_chat_action(chat_id=chat_id, action=ChatAction.TYPING)
 
     try:
-        answer = await ask_claude(chat_id, user_text)
-        logger.info("Ответ Claude для чата %s получен (%d символов)", chat_id, len(answer))
+        answer = await ask_claude(KNOWLEDGE_TEXT, lang, history + [{"role": "user", "content": user_text}])
+        if answer:
+            logger.info("Ответ Claude для чата %s получен (%d символов)", chat_id, len(answer))
+            # Запоминаем вопрос и ответ, чтобы Claude помнил контекст.
+            history += [
+                {"role": "user", "content": user_text},
+                {"role": "assistant", "content": answer},
+            ]
+            # Храним только последние сообщения (обрезаем парами).
+            while len(history) > config.MAX_HISTORY_MESSAGES:
+                del history[:2]
+        else:
+            answer = t(lang, "empty")
+    except Refused:
+        answer = t(lang, "refusal")
     except anthropic.AuthenticationError:
         logger.error("Неверный ANTHROPIC_API_KEY — проверь файл .env")
-        answer = "Бот сейчас настраивается и временно не может ответить. Попробуй чуть позже 🙏"
+        answer = t(lang, "err_config")
     except anthropic.PermissionDeniedError as e:
         logger.error("Нет доступа к API (проверь права ключа): %s", e)
-        answer = "Бот временно недоступен. Мы уже разбираемся — попробуй позже 🙏"
+        answer = t(lang, "err_config")
     except anthropic.RateLimitError:
         logger.warning("Слишком много запросов к Claude (rate limit)")
-        answer = "Сейчас ко мне очень много вопросов 😅 Подожди минутку и напиши ещё раз."
+        answer = t(lang, "err_busy")
     except anthropic.APITimeoutError:
         logger.warning("Claude не ответил вовремя (timeout)")
-        answer = "Ответ занял слишком много времени ⏳ Попробуй ещё раз или сократи вопрос."
+        answer = t(lang, "err_timeout")
     except anthropic.APIConnectionError:
         logger.warning("Нет соединения с Claude API")
-        answer = "Не получилось связаться с моим «мозгом» 🧠 Попробуй через пару минут."
+        answer = t(lang, "err_connection")
     except anthropic.APIStatusError as e:
-        # Любая другая ошибка от API (например, 500 или 529 "перегружен").
         if e.status_code == 402:
             logger.error("Закончились деньги на балансе Anthropic API — пополни в консоли")
+            answer = t(lang, "err_config")
         else:
             logger.error("Ошибка Claude API %s: %s", e.status_code, e)
-        answer = "Что-то пошло не так на стороне ИИ. Попробуй ещё раз чуть позже 🙏"
+            answer = t(lang, "err_generic")
     except Exception:
         logger.exception("Неожиданная ошибка")
-        answer = "Упс, произошла ошибка. Попробуй ещё раз или напиши /reset."
+        answer = t(lang, "err_generic")
 
     # Длинный ответ режем на куски, чтобы Telegram его принял.
     for i in range(0, len(answer), TELEGRAM_MESSAGE_LIMIT):
-        await update.message.reply_text(answer[i : i + TELEGRAM_MESSAGE_LIMIT])
+        await update.message.reply_text(
+            answer[i : i + TELEGRAM_MESSAGE_LIMIT], reply_markup=menu_keyboard(lang)
+        )
 
 
 # ---------------------------------------------------------------------------
-# 4. Запуск бота
+# Запуск
 # ---------------------------------------------------------------------------
 def main() -> None:
-    app = Application.builder().token(TELEGRAM_BOT_TOKEN).build()
+    app = Application.builder().token(config.TELEGRAM_BOT_TOKEN).build()
 
     app.add_handler(CommandHandler("start", start))
+    app.add_handler(CommandHandler("lang", change_language))
     app.add_handler(CommandHandler("reset", reset))
-    # Все текстовые сообщения, кроме команд (/что-то), отправляем в Claude.
+    app.add_handler(CallbackQueryHandler(choose_language, pattern=r"^lang:"))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
 
-    logger.info("Pro4U запущен (модель: %s). Остановить: Ctrl+C", CLAUDE_MODEL)
+    logger.info("Pro4U запущен (модель: %s). Остановить: Ctrl+C", config.CLAUDE_MODEL)
     app.run_polling(allowed_updates=Update.ALL_TYPES)
 
 
