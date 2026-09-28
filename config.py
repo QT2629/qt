@@ -18,8 +18,7 @@ ADMISSIONS_CONTACTS = os.getenv(
 # Сколько последних сообщений диалога помнит бот.
 MAX_HISTORY_MESSAGES = 20
 
-if not TELEGRAM_BOT_TOKEN or not ANTHROPIC_API_KEY:
+if not ANTHROPIC_API_KEY:
     raise SystemExit(
-        "Не найдены ключи. Создай файл .env (скопируй .env.example) "
-        "и заполни TELEGRAM_BOT_TOKEN и ANTHROPIC_API_KEY."
+        "Не найден ANTHROPIC_API_KEY. Создай файл .env (скопируй .env.example) и заполни ключи."
     )

@@ -183,6 +183,8 @@ async def reply_with_claude(update: Update, context: ContextTypes.DEFAULT_TYPE, 
 # Запуск
 # ---------------------------------------------------------------------------
 def main() -> None:
+    if not config.TELEGRAM_BOT_TOKEN:
+        raise SystemExit("Не найден TELEGRAM_BOT_TOKEN. Заполни его в файле .env.")
     app = Application.builder().token(config.TELEGRAM_BOT_TOKEN).build()
 
     app.add_handler(CommandHandler("start", start))
