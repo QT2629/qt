@@ -24,7 +24,7 @@ async def main() -> None:
         codes = catalog.relevant_programs(user_text, recent)
         details = catalog.program_details(codes) if codes else None
         messages = history + [{"role": "user", "content": with_details(user_text, details)}]
-        answer = await ask_claude(knowledge_text, lang, messages)
+        answer, _cost = await ask_claude(knowledge_text, lang, messages)
         print(f"\n[программы в запросе: {codes}]\nPro4U: {answer}\n")
         history += [{"role": "user", "content": user_text}, {"role": "assistant", "content": answer}]
         recent = (catalog.find_programs(answer) or codes[:2])[:4]

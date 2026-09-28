@@ -20,6 +20,13 @@ ADMISSIONS_CONTACTS = os.getenv(
 # Сколько вопросов к ИИ один человек может задать за сутки. Кнопки без ИИ не считаются.
 DAILY_AI_LIMIT = int(os.getenv("DAILY_AI_LIMIT", "30"))
 
+# Папка, где бот хранит историю диалогов, лимиты и статистику (переживают перезапуск).
+DATA_DIR = os.getenv("DATA_DIR", "data")
+
+# Telegram ID администраторов через запятую — им доступна команда /stats.
+# Свой ID можно узнать командой /myid в боте.
+ADMIN_IDS = {int(x) for x in os.getenv("ADMIN_IDS", "").replace(" ", "").split(",") if x}
+
 # Сколько последних сообщений диалога помнит бот.
 MAX_HISTORY_MESSAGES = 12
 

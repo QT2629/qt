@@ -49,7 +49,7 @@ async def main() -> None:
     for i, (lang, question, groups) in enumerate(CASES, 1):
         codes = catalog.relevant_programs(question, [])
         details = catalog.program_details(codes) if codes else None
-        answer = await ask_claude(knowledge_text, lang, [{"role": "user", "content": with_details(question, details)}])
+        answer, _cost = await ask_claude(knowledge_text, lang, [{"role": "user", "content": with_details(question, details)}])
         missing = check(answer, groups)
         status = "OK  " if not missing else "FAIL"
         passed += not missing
