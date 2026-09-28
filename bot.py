@@ -29,7 +29,7 @@ from telegram.ext import (
 import catalog
 import config
 import stats
-from claude_client import Refused, ask_claude
+from claude_client import NoApiKey, Refused, ask_claude
 from knowledge import build_knowledge_text
 from prompts import with_details
 from texts import MENU_BUTTONS, TEXTS, t
@@ -334,6 +334,9 @@ async def reply_with_claude(context: ContextTypes.DEFAULT_TYPE, chat_id: int, la
             answer = t(lang, "empty")
     except Refused:
         answer = t(lang, "refusal")
+    except NoApiKey:
+        logger.warning("ANTHROPIC_API_KEY не задан — вопросы к ИИ отключены")
+        answer = t(lang, "no_ai")
     except anthropic.AnthropicError as e:
         stats.log_event(chat_id, "error", type(e).__name__)
         answer = api_error_text(e, lang)
@@ -398,6 +401,8 @@ def main() -> None:
     app.add_handler(CallbackQueryHandler(on_callback))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
 
+    if not config.ANTHROPIC_API_KEY:
+        logger.warning("ANTHROPIC_API_KEY не задан: кнопки работают, вопросы к ИИ отключены")
     logger.info("Pro4U запущен (модель: %s, лимит %s вопросов к ИИ в день). Остановить: Ctrl+C",
                 config.CLAUDE_MODEL, config.DAILY_AI_LIMIT)
     app.run_polling(allowed_updates=Update.ALL_TYPES)

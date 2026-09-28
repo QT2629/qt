@@ -30,7 +30,5 @@ ADMIN_IDS = {int(x) for x in os.getenv("ADMIN_IDS", "").replace(" ", "").split("
 # Сколько последних сообщений диалога помнит бот.
 MAX_HISTORY_MESSAGES = 12
 
-if not ANTHROPIC_API_KEY:
-    raise SystemExit(
-        "Не найден ANTHROPIC_API_KEY. Создай файл .env (скопируй .env.example) и заполни ключи."
-    )
+# Без ANTHROPIC_API_KEY бот тоже запускается: кнопки меню работают, а на вопросы к ИИ
+# он отвечает, что ИИ пока не подключён. Удобно, чтобы проверить бота до оплаты API.

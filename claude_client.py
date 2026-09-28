@@ -9,7 +9,7 @@ from stats import request_cost
 
 logger = logging.getLogger("pro4u")
 
-client = anthropic.AsyncAnthropic(api_key=config.ANTHROPIC_API_KEY, timeout=60.0)
+client = anthropic.AsyncAnthropic(api_key=config.ANTHROPIC_API_KEY, timeout=60.0) if config.ANTHROPIC_API_KEY else None
 
 # Модели, для которых включаем автоматическую запасную модель при отказе
 # по правилам безопасности. Для остальных (например, Haiku) параметр не нужен.
@@ -20,12 +20,18 @@ class Refused(Exception):
     """Claude отказался отвечать на запрос."""
 
 
+class NoApiKey(Exception):
+    """ANTHROPIC_API_KEY не задан — ИИ не подключён."""
+
+
 async def ask_claude(knowledge_text: str, lang: str, messages: list[dict]) -> tuple[str, float]:
     """Отправляет историю диалога в Claude и возвращает (текст ответа, примерная стоимость в $).
 
     Ошибки API (нет связи, неверный ключ и т.д.) не перехватываются здесь —
     их обрабатывает bot.py, чтобы показать пользователю понятное сообщение.
     """
+    if client is None:
+        raise NoApiKey()
     params = dict(
         model=config.CLAUDE_MODEL,
         max_tokens=1500,
