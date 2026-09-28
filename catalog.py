@@ -213,15 +213,64 @@ def programs_for(tags: list[str], group: str | None = None, limit: int = 6) -> l
         [p["code"] for p in candidates][:limit]
 
 
+# Слова, по которым узнаём профильные предметы ЕНТ в вопросе (рус / қаз / англ).
+SUBJECT_WORDS = {
+    "geo": ["географ"],
+    "math": ["математ"],
+    "inf": ["информат"],
+    "bio": ["биолог"],
+    "eng": ["английск", "ағылшын", "иностран", "шет тіл", "english"],
+    "wh": ["всемирн", "дүниежүзі", "world history"],
+    "law": ["основы права", "основ права", "құқық негіз"],
+    "creative": ["творческ", "шығармашылық емтихан"],
+}
+GROUP_SUBJECTS = {
+    "geo_math": {"geo", "math"}, "math_inf": {"math", "inf"}, "geo_bio": {"geo", "bio"},
+    "geo_eng": {"geo", "eng"}, "wh_eng": {"wh", "eng"}, "wh_law": {"wh", "law"}, "creative": {"creative"},
+}
+
+
+def find_groups(text: str) -> list[str]:
+    """Группы ЕНТ, пара предметов которых названа в тексте."""
+    low = text.lower()
+    found = {subj for subj, words in SUBJECT_WORDS.items() if any(w in low for w in words)}
+    return [group for group, subjects in GROUP_SUBJECTS.items() if subjects <= found]
+
+
 def relevant_programs(text: str, recent: list[str], limit: int = 6) -> list[str]:
-    """Какие программы подробно показать ИИ для ответа на этот вопрос."""
+    """Какие программы подробно показать ИИ для ответа на этот вопрос.
+
+    1) программы, прямо названные в вопросе, и недавно обсуждавшиеся;
+    2) если названа пара предметов ЕНТ — программы этой группы (с учётом интересов);
+    3) иначе — программы по интересам из вопроса.
+    Краткий список всех программ ИИ видит всегда, поэтому здесь лучше меньше, чем лишнее.
+    """
+    explicit = find_programs(text)
     result: list[str] = []
-    for code in find_programs(text) + recent:
+    for code in explicit + recent:
         if code not in result:
             result.append(code)
-    tags = find_tags(text)
-    if tags and len(result) < limit:
-        for code in programs_for(tags, limit=limit):
-            if code not in result:
-                result.append(code)
+    if explicit:
+        return result[:limit]
+
+    groups = find_groups(text)
+    tag_text = text.lower()
+    if groups:  # названия предметов ЕНТ — это не интересы («математика» ≠ «люблю цифры»)
+        for words in SUBJECT_WORDS.values():
+            for w in words:
+                tag_text = re.sub(rf"{re.escape(w)}\w*", " ", tag_text)
+    tags = find_tags(tag_text)
+    extra: list[str] = []
+    for group in groups:
+        in_group = [p["code"] for p in programs_in_group(group)]
+        if len(in_group) <= limit:  # маленькая группа — все программы, самые подходящие первыми
+            extra += sorted(in_group, key=lambda c: -len(set(PROGRAMS[c]["tags"]) & set(tags)))
+        elif tags:
+            extra += programs_for(tags, group=group, limit=limit)
+        # большая группа без интересов: хватит краткого списка из system prompt
+    if not groups and tags:
+        extra = programs_for(tags, limit=limit)
+    for code in extra:
+        if code not in result:
+            result.append(code)
     return result[:limit]
