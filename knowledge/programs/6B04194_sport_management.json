@@ -45,5 +45,18 @@
     "business",
     "sport"
   ],
-  "ent_group": "geo_math"
+  "ent_group": "geo_math",
+  "grant_2026": {
+    "gop": "B044 Менеджмент и управление",
+    "almau_general": {
+      "count": 1,
+      "min": 127
+    },
+    "almau_rural": {
+      "count": 1,
+      "min": 118
+    },
+    "kz_general_min": 125,
+    "kz_rural_min": 116
+  }
 }

@@ -54,5 +54,11 @@
   "tags": [
     "finance"
   ],
-  "ent_group": "geo_math"
+  "ent_group": "geo_math",
+  "grant_2026": {
+    "gop": "B046 Финансы, экономика, банковское и страховое дело",
+    "almau_general": null,
+    "almau_rural": null,
+    "kz_general_min": 128
+  }
 }

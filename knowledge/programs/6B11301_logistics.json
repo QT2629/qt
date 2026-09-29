@@ -49,5 +49,18 @@
     "city",
     "business"
   ],
-  "ent_group": "geo_math"
+  "ent_group": "geo_math",
+  "grant_2026": {
+    "gop": "B095 Транспортные услуги",
+    "almau_general": {
+      "count": 7,
+      "min": 119
+    },
+    "almau_rural": {
+      "count": 6,
+      "min": 112
+    },
+    "kz_general_min": 118,
+    "kz_rural_min": 112
+  }
 }

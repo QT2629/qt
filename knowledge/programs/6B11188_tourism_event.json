@@ -51,5 +51,18 @@
   "tags": [
     "tourism"
   ],
-  "ent_group": "geo_eng"
+  "ent_group": "geo_eng",
+  "grant_2026": {
+    "gop": "B091 Туризм",
+    "almau_general": {
+      "count": 2,
+      "min": 131
+    },
+    "almau_rural": {
+      "count": 2,
+      "min": 109
+    },
+    "kz_general_min": 126,
+    "kz_rural_min": 104
+  }
 }

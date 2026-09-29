@@ -49,5 +49,18 @@
   "tags": [
     "tourism"
   ],
-  "ent_group": "geo_eng"
+  "ent_group": "geo_eng",
+  "grant_2026": {
+    "gop": "B093 Ресторанное дело и гостиничный бизнес",
+    "almau_general": {
+      "count": 13,
+      "min": 120
+    },
+    "almau_rural": {
+      "count": 16,
+      "min": 98
+    },
+    "kz_general_min": 119,
+    "kz_rural_min": 98
+  }
 }

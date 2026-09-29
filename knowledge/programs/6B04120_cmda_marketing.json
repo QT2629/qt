@@ -52,5 +52,14 @@
     "creative_media",
     "data"
   ],
-  "ent_group": "geo_math"
+  "ent_group": "geo_math",
+  "grant_2026": {
+    "gop": "B047 Маркетинг и реклама",
+    "almau_general": {
+      "count": 4,
+      "min": 119
+    },
+    "almau_rural": null,
+    "kz_general_min": 118
+  }
 }

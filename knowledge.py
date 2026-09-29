@@ -22,5 +22,6 @@ def build_knowledge_text() -> str:
         "(код | название | название на казахском | срок | предметы ЕНТ и цена в год | траектории):\n"
         + compact_catalog() + "\n</almau_catalog>\n\n"
         "<almau_graduate>\n" + load_markdown("graduate_programs.md") + "\n</almau_graduate>\n\n"
-        "<almau_admission>\n" + load_markdown("admission.md") + "\n</almau_admission>"
+        "<almau_admission>\n" + load_markdown("admission.md") + "\n</almau_admission>\n\n"
+        "<almau_grants>\n" + load_markdown("grants_2026.md") + "\n</almau_grants>"
     )

@@ -52,5 +52,14 @@
   "tags": [
     "people_psych"
   ],
-  "ent_group": "geo_bio"
+  "ent_group": "geo_bio",
+  "grant_2026": {
+    "gop": "B041 Психология",
+    "almau_general": {
+      "count": 1,
+      "min": 118
+    },
+    "almau_rural": null,
+    "kz_general_min": 104
+  }
 }

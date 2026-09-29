@@ -53,5 +53,11 @@
   "tags": [
     "law_politics"
   ],
-  "ent_group": "wh_law"
+  "ent_group": "wh_law",
+  "grant_2026": {
+    "gop": "B049 Право",
+    "almau_general": null,
+    "almau_rural": null,
+    "kz_general_min": 126
+  }
 }

@@ -48,5 +48,18 @@
   "tags": [
     "finance"
   ],
-  "ent_group": "geo_math"
+  "ent_group": "geo_math",
+  "grant_2026": {
+    "gop": "B045 Аудит и налогообложение",
+    "almau_general": {
+      "count": 1,
+      "min": 129
+    },
+    "almau_rural": {
+      "count": 1,
+      "min": 120
+    },
+    "kz_general_min": 126,
+    "kz_rural_min": 118
+  }
 }

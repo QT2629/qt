@@ -56,5 +56,18 @@
     "it",
     "creative_media"
   ],
-  "ent_group": "math_inf"
+  "ent_group": "math_inf",
+  "grant_2026": {
+    "gop": "B057 Информационные технологии",
+    "almau_general": {
+      "count": 13,
+      "min": 100
+    },
+    "almau_rural": {
+      "count": 8,
+      "min": 78
+    },
+    "kz_general_min": 100,
+    "kz_rural_min": 63
+  }
 }

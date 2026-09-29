@@ -120,6 +120,24 @@ def price_list_text(lang: str) -> str:
     return "\n".join(lines)
 
 
+def grant_line(g: dict, lang: str) -> str:
+    """Строка о государственных грантах 2026 года в карточке программы."""
+    kz = lang == "kz"
+    gop = g["gop"].split()[0]
+    head = f"🏆 {'Мемлекеттік грант 2026' if kz else 'Госгрант 2026'} ({'БББ тобы' if kz else 'группа'} {gop}): "
+    parts = []
+    for key, label_ru, label_kz in (("almau_general", "общий конкурс", "жалпы конкурс"),
+                                    ("almau_rural", "сельская квота", "ауыл квотасы")):
+        x = g.get(key)
+        if x:
+            parts.append(f"{label_kz}: {x['count']} грант, ең төменгі балл {x['min']}" if kz
+                         else f"{label_ru}: грантов — {x['count']}, мин. балл {x['min']}")
+    if parts:
+        return head + ("AlmaU-да " if kz else "в AlmaU ") + "; ".join(parts)
+    return head + (f"AlmaU-ға грант берілмеді; ел бойынша ең төменгі балл {g['kz_general_min']}" if kz
+                   else f"в AlmaU грантов не было; по стране мин. балл {g['kz_general_min']}")
+
+
 def program_card(code: str, lang: str) -> str:
     p = PROGRAMS[code]
     kz = lang == "kz"
@@ -130,6 +148,8 @@ def program_card(code: str, lang: str) -> str:
         total = money(p["price_kzt"] * p["duration_years"])
         lines.append(("ҰБТ: " if kz else "ЕНТ: ") + ENT_GROUPS[p["ent_group"]][lang])
         lines.append(f"💰 {money(p['price_kzt'])} {per_year} (" + ("барлығы ~" if kz else "всего ~") + f"{total})")
+        if p.get("grant_2026"):
+            lines.append(grant_line(p["grant_2026"], lang))
     else:
         lines.append("⚠️ 2026 жылы бұл бағдарламаға қабылдау жоқ." if kz
                      else "⚠️ В 2026 году набора на эту программу нет.")
@@ -164,7 +184,7 @@ def program_details(codes: list[str]) -> str:
     """Полные данные выбранных программ — добавляются к вопросу пользователя."""
     fields = ["code", "name_ru", "name_kz", "school", "degree", "duration_years", "tracks", "key_courses",
               "practice", "note", "ent_subjects", "ent_note", "price_kzt", "price_note", "availability_note",
-              "languages"]
+              "languages", "grant_2026"]
     data = [{k: PROGRAMS[c][k] for k in fields if k in PROGRAMS[c]} for c in codes]
     return json.dumps(data, ensure_ascii=False, separators=(",", ":"))
 

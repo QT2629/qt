@@ -48,5 +48,14 @@
   "tags": [
     "creative_media"
   ],
-  "ent_group": "creative"
+  "ent_group": "creative",
+  "grant_2026": {
+    "gop": "B023 Режиссура, арт-менеджмент",
+    "almau_general": {
+      "count": 11,
+      "min": 116
+    },
+    "almau_rural": null,
+    "kz_general_min": 116
+  }
 }

@@ -48,5 +48,18 @@
     "creative_media",
     "it"
   ],
-  "ent_group": "creative"
+  "ent_group": "creative",
+  "grant_2026": {
+    "gop": "B042 Журналистика и репортерское дело",
+    "almau_general": {
+      "count": 1,
+      "min": 130
+    },
+    "almau_rural": {
+      "count": 1,
+      "min": 126
+    },
+    "kz_general_min": 127,
+    "kz_rural_min": 125
+  }
 }

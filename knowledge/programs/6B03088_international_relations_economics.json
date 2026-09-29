@@ -49,5 +49,11 @@
   "tags": [
     "law_politics"
   ],
-  "ent_group": "wh_eng"
+  "ent_group": "wh_eng",
+  "grant_2026": {
+    "gop": "B140 Международные отношения и дипломатия",
+    "almau_general": null,
+    "almau_rural": null,
+    "kz_general_min": 135
+  }
 }
