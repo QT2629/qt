@@ -18,7 +18,7 @@ CLAUDE_MODEL = os.getenv("CLAUDE_MODEL", "claude-haiku-4-5")
 ADMISSIONS_CONTACTS = os.getenv(
     "ADMISSIONS_CONTACTS",
     "admission@almau.edu.kz\nhttps://almau.edu.kz/ru/admission/",
-)
+).replace("\\n", "\n")  # на сервере (Railway) \n приходит как два символа — превращаем в перенос строки
 
 # Сколько вопросов к ИИ один человек может задать за сутки. Кнопки без ИИ не считаются.
 DAILY_AI_LIMIT = int(os.getenv("DAILY_AI_LIMIT", "30"))
