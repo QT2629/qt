@@ -82,8 +82,15 @@ def money(value: int) -> str:
     return f"{value:,}".replace(",", " ") + " ₸"
 
 
+def ent_groups_of(program: dict) -> list[str]:
+    """Все пары ЕНТ, с которыми можно поступить на программу (основная + дополнительные)."""
+    if not is_open(program):
+        return []
+    return [program["ent_group"]] + program.get("extra_ent_groups", [])
+
+
 def programs_in_group(group: str) -> list[dict]:
-    return [p for p in PROGRAMS.values() if p.get("ent_group") == group]
+    return [p for p in PROGRAMS.values() if group in ent_groups_of(p)]
 
 
 # ---------------------------------------------------------------------------
@@ -146,10 +153,12 @@ def program_card(code: str, lang: str) -> str:
     if is_open(p):
         per_year = "жылына" if kz else "в год"
         total = money(p["price_kzt"] * p["duration_years"])
-        lines.append(("ҰБТ: " if kz else "ЕНТ: ") + ENT_GROUPS[p["ent_group"]][lang])
+        lines.append(("ҰБТ: " if kz else "ЕНТ: ") + (" немесе " if kz else " или ").join(
+            ENT_GROUPS[g][lang] for g in ent_groups_of(p)))
         lines.append(f"💰 {money(p['price_kzt'])} {per_year} (" + ("барлығы ~" if kz else "всего ~") + f"{total})")
-        if p.get("grant_2026"):
-            lines.append(grant_line(p["grant_2026"], lang))
+        grants = p.get("grant_2026")
+        for g in grants if isinstance(grants, list) else [grants] if grants else []:
+            lines.append(grant_line(g, lang))
     else:
         lines.append("⚠️ 2026 жылы бұл бағдарламаға қабылдау жоқ." if kz
                      else "⚠️ В 2026 году набора на эту программу нет.")
@@ -172,7 +181,8 @@ def compact_catalog() -> str:
     lines = []
     for p in PROGRAMS.values():
         if is_open(p):
-            status = f"ЕНТ: {' + '.join(p['ent_subjects'])}; {p['price_kzt']} тг/год"
+            ent = " или ".join(" + ".join(s) for s in [p["ent_subjects"]] + p.get("extra_ent_subjects", []))
+            status = f"ЕНТ: {ent}; {p['price_kzt']} тг/год"
         else:
             status = "НАБОРА В 2026 НЕТ"
         lines.append(f"{p['code']} | {p['name_ru']} | {p['name_kz']} | {p['duration_years']} г. | {status} | "
@@ -183,7 +193,7 @@ def compact_catalog() -> str:
 def program_details(codes: list[str]) -> str:
     """Полные данные выбранных программ — добавляются к вопросу пользователя."""
     fields = ["code", "name_ru", "name_kz", "school", "degree", "duration_years", "tracks", "key_courses",
-              "practice", "note", "ent_subjects", "ent_note", "price_kzt", "price_note", "availability_note",
+              "practice", "note", "ent_subjects", "extra_ent_subjects", "ent_note", "price_kzt", "price_note", "availability_note",
               "languages", "grant_2026"]
     data = [{k: PROGRAMS[c][k] for k in fields if k in PROGRAMS[c]} for c in codes]
     return json.dumps(data, ensure_ascii=False, separators=(",", ":"))
@@ -201,6 +211,7 @@ def _name_patterns(program: dict) -> list[list[str]]:
         words = [_stem(w) for w in re.findall(r"[\w-]+", base) if len(w) > 2]
         if words:
             patterns.append(words)
+    patterns += [[_stem(alias)] for alias in program.get("aliases", [])]  # «CMDA», «финтех»
     return patterns
 
 
@@ -227,7 +238,7 @@ def find_tags(text: str) -> list[str]:
 
 def programs_for(tags: list[str], group: str | None = None, limit: int = 6) -> list[str]:
     """Программы с набором, подходящие под интересы (и группу ЕНТ, если известна)."""
-    candidates = [p for p in PROGRAMS.values() if is_open(p) and (group is None or p["ent_group"] == group)]
+    candidates = [p for p in PROGRAMS.values() if is_open(p) and (group is None or group in ent_groups_of(p))]
     scored = sorted(candidates, key=lambda p: -len(set(p["tags"]) & set(tags)))
     return [p["code"] for p in scored if set(p["tags"]) & set(tags)][:limit] or \
         [p["code"] for p in candidates][:limit]
@@ -266,20 +277,25 @@ def relevant_programs(text: str, recent: list[str], limit: int = 6) -> list[str]
     Краткий список всех программ ИИ видит всегда, поэтому здесь лучше меньше, чем лишнее.
     """
     explicit = find_programs(text)
+    groups = find_groups(text)
+    # «CMDA, у меня геомат»: сначала вариант программы, подходящий под предметы ЕНТ
+    explicit.sort(key=lambda c: not any(g in ent_groups_of(PROGRAMS[c]) for g in groups))
     result: list[str] = []
     for code in explicit + recent:
         if code not in result:
             result.append(code)
-    if explicit:
-        return result[:limit]
-
-    groups = find_groups(text)
     tag_text = text.lower()
     if groups:  # названия предметов ЕНТ — это не интересы («математика» ≠ «люблю цифры»)
         for words in SUBJECT_WORDS.values():
             for w in words:
                 tag_text = re.sub(rf"{re.escape(w)}\w*", " ", tag_text)
     tags = find_tags(tag_text)
+    if explicit:
+        # «инфомат, хочу финансы»: к названной программе добавляем похожие, доступные с этими предметами
+        for group in groups:
+            if any(group not in ent_groups_of(PROGRAMS[c]) for c in explicit) and tags:
+                result += [c for c in programs_for(tags, group=group, limit=3) if c not in result]
+        return result[:limit]
     extra: list[str] = []
     for group in groups:
         in_group = [p["code"] for p in programs_in_group(group)]
