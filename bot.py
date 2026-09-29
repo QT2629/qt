@@ -4,6 +4,7 @@
 #   • кнопки меню (специальности по ЕНТ, цены, документы, даты, контакты) отвечают сами, без ИИ — бесплатно;
 #   • анкета «Подобрать специальность» собирает ответы кнопками и делает один запрос к ИИ;
 #   • на свободные вопросы отвечает Claude: бот отправляет ему только нужные программы;
+#   • голосовые сообщения распознаются в текст (OpenAI) и дальше идут в Claude как обычный вопрос;
 #   • на каждого человека действует дневной лимит вопросов к ИИ;
 #   • история, лимиты и статистика сохраняются в папке data/ и переживают перезапуск.
 #
@@ -14,6 +15,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import anthropic
+import openai
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup, Update
 from telegram.constants import ChatAction
 from telegram.ext import (
@@ -32,6 +34,7 @@ import stats
 from claude_client import NoApiKey, Refused, ask_claude
 from knowledge import build_knowledge_text
 from prompts import with_details
+from speech import NoSpeechKey, transcribe, voice_cost
 from texts import MENU_BUTTONS, TEXTS, t
 
 logging.basicConfig(
@@ -282,6 +285,44 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         await reply_with_claude(context, chat_id, lang, text, codes)
 
 
+async def handle_voice(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Голосовое сообщение: распознаём в текст и отвечаем как на обычный вопрос."""
+    lang = get_lang(context)
+    chat_id = update.effective_chat.id
+    voice = update.message.voice or update.message.audio
+    if not config.OPENAI_API_KEY:
+        await update.message.reply_text(t(lang, "voice_off"))
+        return
+    if not config.ANTHROPIC_API_KEY:  # распознать можем, но ответить без ИИ — нет
+        await send_long(context, chat_id, t(lang, "no_ai"), lang)
+        return
+    if (voice.duration or 0) > config.MAX_VOICE_SECONDS:
+        await update.message.reply_text(t(lang, "voice_too_long").format(seconds=config.MAX_VOICE_SECONDS))
+        return
+
+    await context.bot.send_chat_action(chat_id=chat_id, action=ChatAction.TYPING)
+    try:
+        file = await voice.get_file()
+        audio = bytes(await file.download_as_bytearray())
+        text = await transcribe(audio, getattr(voice, "file_name", None) or "voice.ogg")
+    except NoSpeechKey:
+        await update.message.reply_text(t(lang, "voice_off"))
+        return
+    except openai.OpenAIError as e:
+        logger.error("Ошибка распознавания голоса (OpenAI): %s", e)
+        stats.log_event(chat_id, "error", "voice:" + type(e).__name__)
+        await update.message.reply_text(t(lang, "voice_error"))
+        return
+    stats.log_event(chat_id, "voice", str(voice.duration or 0), voice_cost(voice.duration or 0))
+    if not text:
+        await update.message.reply_text(t(lang, "voice_empty"))
+        return
+
+    await update.message.reply_text(t(lang, "voice_heard").format(text=text))
+    codes = catalog.relevant_programs(text, context.user_data.get("recent", []))
+    await reply_with_claude(context, chat_id, lang, text, codes)
+
+
 def remember_programs(context: ContextTypes.DEFAULT_TYPE, codes: list[str]) -> None:
     """Запоминаем последние обсуждаемые программы, чтобы понимать «а сколько она стоит?»."""
     recent = context.user_data.get("recent", [])
@@ -407,10 +448,13 @@ def main() -> None:
     app.add_handler(CommandHandler("stats", show_stats))
     app.add_handler(CallbackQueryHandler(on_callback))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
+    app.add_handler(MessageHandler(filters.VOICE | filters.AUDIO, handle_voice))
 
     logger.info("Администраторы (ADMIN_IDS): %s", ", ".join(map(str, config.ADMIN_IDS)) or "не заданы")
     if not config.ANTHROPIC_API_KEY:
         logger.warning("ANTHROPIC_API_KEY не задан: кнопки работают, вопросы к ИИ отключены")
+    if not config.OPENAI_API_KEY:
+        logger.warning("OPENAI_API_KEY не задан: голосовые сообщения не распознаются, бот просит писать текстом")
     logger.info("Pro4U запущен (модель: %s, лимит %s вопросов к ИИ в день). Остановить: Ctrl+C",
                 config.CLAUDE_MODEL, config.DAILY_AI_LIMIT)
     app.run_polling(allowed_updates=Update.ALL_TYPES)
