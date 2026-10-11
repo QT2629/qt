@@ -35,7 +35,7 @@ def _user_hash(user_id: int) -> str:
 
 
 def log_event(user_id: int, kind: str, detail: str = "", cost: float = 0.0) -> None:
-    """kind: button, ai, voice, chance, quiz_done, limit, feedback_up, feedback_down, error."""
+    """kind: button, ai, chance, quiz_done, limit, feedback_up, feedback_down, error."""
     with _connect() as conn:
         conn.execute(
             "INSERT INTO events VALUES (?, ?, ?, ?, ?)",
@@ -63,10 +63,8 @@ def report(days: int) -> str:
         users = one("SELECT COUNT(DISTINCT user) FROM events WHERE ts >= ?")
         ai_users = one("SELECT COUNT(DISTINCT user) FROM events WHERE ts >= ? AND kind = 'ai'")
         ai = one("SELECT COUNT(*) FROM events WHERE ts >= ? AND kind = 'ai'")
-        cost = one("SELECT SUM(cost) FROM events WHERE ts >= ? AND kind != 'voice'")
+        cost = one("SELECT SUM(cost) FROM events WHERE ts >= ?")
         chances = one("SELECT COUNT(*) FROM events WHERE ts >= ? AND kind = 'chance'")
-        voices = one("SELECT COUNT(*) FROM events WHERE ts >= ? AND kind = 'voice'")
-        voice_cost = one("SELECT SUM(cost) FROM events WHERE ts >= ? AND kind = 'voice'")
         quiz = one("SELECT COUNT(*) FROM events WHERE ts >= ? AND kind = 'quiz_done'")
         limit = one("SELECT COUNT(DISTINCT user) FROM events WHERE ts >= ? AND kind = 'limit'")
         up = one("SELECT COUNT(*) FROM events WHERE ts >= ? AND kind = 'feedback_up'")
@@ -85,7 +83,6 @@ def report(days: int) -> str:
         f"Анкет пройдено: {quiz:.0f}",
         f"Расходы на Claude: ~${cost:.2f}" + (f" (~${cost / users:.3f} на человека)" if users else ""),
         f"Расчётов «Шанс на грант»: {chances:.0f}",
-        f"Голосовых: {voices:.0f} (распознавание OpenAI ~${voice_cost:.2f})",
         f"Упёрлись в дневной лимит: {limit:.0f} чел.",
         f"Оценки ответов: 👍 {up:.0f} / 👎 {down:.0f}",
         f"Ошибки: {errors:.0f}",
