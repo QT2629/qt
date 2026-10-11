@@ -1,11 +1,10 @@
-# Собирает постоянную часть базы знаний AlmaU для system prompt.
+# Собирает постоянную часть базы знаний для system prompt: все вузы на равных.
 # Она одинакова для всех пользователей и кэшируется на стороне Anthropic.
-# Подробные данные конкретных программ добавляются к каждому вопросу отдельно (см. catalog.py).
+# Подробные данные конкретных программ добавляются к каждому вопросу отдельно (см. universities.py).
 import re
 from pathlib import Path
 
-from catalog import compact_catalog
-from universities import compact_catalog as other_unis_catalog
+from universities import compact_catalog
 
 KNOWLEDGE_DIR = Path(__file__).parent / "knowledge"
 
@@ -18,13 +17,10 @@ def load_markdown(name: str) -> str:
 
 def build_knowledge_text() -> str:
     return (
-        "<almau_common>\n" + load_markdown("almau_common.md") + "\n</almau_common>\n\n"
-        "<almau_catalog>\nКраткий список всех программ бакалавриата "
-        "(код | название | название на казахском | срок | предметы ЕНТ и цена в год | траектории):\n"
-        + compact_catalog() + "\n</almau_catalog>\n\n"
-        "<almau_graduate>\n" + load_markdown("graduate_programs.md") + "\n</almau_graduate>\n\n"
-        "<almau_admission>\n" + load_markdown("admission.md") + "\n</almau_admission>\n\n"
-        "<almau_grants>\n" + load_markdown("grants_2026.md") + "\n</almau_grants>\n\n"
-        "<other_universities>\nДругие вузы в базе (данные из справок команды Pro4U, октябрь 2026; "
-        "подробности о программе — в <program_details>):\n\n" + other_unis_catalog() + "\n</other_universities>"
+        "<universities>\nВсе вузы и программы бакалавриата в базе (подробности о программе — в <program_details>):\n\n"
+        + compact_catalog() + "\n</universities>\n\n"
+        "<grants_2026>\n" + load_markdown("grants_2026.md") + "\n</grants_2026>\n\n"
+        "<almau_details>\nДополнительные данные по AlmaU (учебные планы, магистратура, документы и даты приёма):\n\n"
+        + load_markdown("almau_common.md") + "\n\n" + load_markdown("graduate_programs.md") + "\n\n"
+        + load_markdown("admission.md") + "\n</almau_details>"
     )

@@ -4,7 +4,6 @@
 # ключевые слова (без учёта регистра). Прочитайте ответы и глазами тоже.
 import asyncio
 
-import catalog
 import universities
 from claude_client import ask_claude
 from knowledge import build_knowledge_text
@@ -14,18 +13,18 @@ from prompts import with_details
 CASES = [
     ("ru", "У меня на ЕНТ математика и информатика. Куда я могу поступить в AlmaU?",
      [["data science"], ["software engineering", "инженерия программного"], ["информационные системы"]]),
-    ("ru", "Сколько стоит учёба на Менеджменте?",
+    ("ru", "Сколько стоит учёба на Менеджменте в AlmaU?",
      [["2 950 000", "2950000"], ["год"]]),
     ("ru", "Хочу поступить на Digital Commerce",
      [["нет набора", "не набира", "набора нет", "не будет набора"]]),
     ("ru", "Какие документы нужны для поступления?",
      [["075"], ["эцп"], ["6 фото", "6 фотограф", "шесть"]]),
-    ("ru", "Какой проходной балл на грант на Финансы?",
+    ("ru", "Какой проходной балл на грант на Финансы в AlmaU?",
      [["128"], ["b046", "групп"]]),
     ("ru", "С каким баллом дали грант на IT в AlmaU?",
      [["100"], ["2026"]]),
     ("ru", "Я люблю снимать видео и монтировать ролики, что мне подойдёт?",
-     [["кинопроизводств", "новые медиа", "new media", "filmmaking"]]),
+     [["кинопроизводств", "новые медиа", "медиаискусств", "журналист", "мультимедиа"]]),
     ("ru", "Когда регистрация на творческий экзамен?",
      [["22 июня"], ["10 августа"]]),
     ("ru", "Сколько стоит магистратура?",
@@ -36,6 +35,10 @@ CASES = [
      [["1 800 000", "1800000"], ["математика"], ["географ"]]),
     ("ru", "Сравни юриспруденцию в AlmaU, ЕНУ и Нархозе по цене",
      [["1 550 000", "1550000"], ["1 602 000", "1602000"], ["almau"]]),
+    ("ru", "Какой минимальный балл на грант на IT в SDU и сколько стоит Программная инженерия?",
+     [["1 860 000", "1860000"], ["120"]]),
+    ("ru", "Хочу на менеджмент, какие вузы есть и сколько стоит?",
+     [["almau"], ["sdu"], ["кбту", "ену", "нархоз"]]),
     ("ru", "Где можно учиться на Data Science в Нархозе?",
      [["статистика и наука о данных", "наука о данных"], ["2 322 000", "2322000"]]),
     ("ru", "Чем отличается Психология от Клинической психологии и можно ли туда поступить?",
@@ -56,8 +59,7 @@ async def main() -> None:
     knowledge_text = build_knowledge_text()
     passed = 0
     for i, (lang, question, groups) in enumerate(CASES, 1):
-        codes, uni_keys = universities.select(question, [], [])
-        details = catalog.program_details(codes, universities.details(uni_keys)) if codes or uni_keys else None
+        details = universities.details(universities.select(question, []))
         answer, _cost = await ask_claude(knowledge_text, lang, [{"role": "user", "content": with_details(question, details)}])
         missing = check(answer, groups)
         status = "OK  " if not missing else "FAIL"
