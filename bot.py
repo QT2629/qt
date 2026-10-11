@@ -31,6 +31,7 @@ from telegram.ext import (
 import catalog
 import config
 import stats
+import universities
 from claude_client import NoApiKey, Refused, ask_claude
 from knowledge import build_knowledge_text
 from prompts import with_details
@@ -85,8 +86,8 @@ def menu_keyboard(lang: str) -> ReplyKeyboardMarkup:
         [
             [t(lang, "btn_pick")],
             [t(lang, "btn_ent"), t(lang, "btn_prices")],
-            [t(lang, "btn_docs"), t(lang, "btn_dates")],
-            [t(lang, "btn_contacts")],
+            [t(lang, "btn_unis"), t(lang, "btn_docs")],
+            [t(lang, "btn_dates"), t(lang, "btn_contacts")],
         ],
         resize_keyboard=True,
     )
@@ -105,6 +106,22 @@ def group_keyboard(group: str, lang: str) -> InlineKeyboardMarkup:
     if len(rows) > 1:
         rows.append([InlineKeyboardButton(t(lang, "btn_help_choose"), callback_data=f"qg:{group}")])
     return InlineKeyboardMarkup(rows)
+
+
+def unis_keyboard(lang: str) -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup([[InlineKeyboardButton(universities.uni_name(slug, lang), callback_data=f"u:{slug}")]
+                                 for slug in universities.UNIS])
+
+
+def uni_groups_keyboard(slug: str, lang: str) -> InlineKeyboardMarkup:
+    labels = universities.ENT_LABELS
+    return InlineKeyboardMarkup([[InlineKeyboardButton(labels[g][lang], callback_data=f"ug:{slug}:{g}")]
+                                 for g in universities.groups_in(slug)])
+
+
+def uni_programs_keyboard(slug: str, group: str) -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup([[InlineKeyboardButton(p["name_ru"][:60], callback_data=f"up:{p['key']}")]
+                                 for p in universities.programs_in(slug, group)])
 
 
 def interests_keyboard(lang: str, selected: list[str]) -> InlineKeyboardMarkup:
@@ -129,6 +146,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """/start — выбор языка и новый разговор."""
     context.user_data["history"] = []
     context.user_data["recent"] = []
+    context.user_data["recent_uni"] = []
     await update.message.reply_text(t("ru", "choose_lang"), reply_markup=language_keyboard())
 
 
@@ -141,6 +159,7 @@ async def reset(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """/reset — забыть историю диалога."""
     context.user_data["history"] = []
     context.user_data["recent"] = []
+    context.user_data["recent_uni"] = []
     lang = get_lang(context)
     await update.message.reply_text(t(lang, "reset_done"), reply_markup=menu_keyboard(lang))
 
@@ -201,6 +220,28 @@ async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
         await context.bot.send_message(
             chat_id, t(lang, "ask_about").format(name=catalog.name(catalog.PROGRAMS[code], lang)))
 
+    elif data.startswith("u:"):  # «Другие вузы» → вуз
+        slug = data.split(":")[1]
+        stats.log_event(user_id, "button", f"вуз {slug}")
+        await query.edit_message_text(universities.uni_text(slug, lang), reply_markup=uni_groups_keyboard(slug, lang))
+
+    elif data.startswith("ug:"):  # вуз + предметы ЕНТ → список программ
+        _, slug, group = data.split(":")
+        await query.edit_message_text(universities.group_text(slug, group, lang),
+                                      reply_markup=uni_programs_keyboard(slug, group))
+
+    elif data.startswith("up:"):  # карточка программы другого вуза
+        key = data[3:]
+        stats.log_event(user_id, "button", f"карточка {key}")
+        keyboard = InlineKeyboardMarkup([[InlineKeyboardButton(t(lang, "btn_ask_ai"), callback_data=f"ua:{key}")]])
+        await context.bot.send_message(chat_id, universities.program_card(key, lang), reply_markup=keyboard)
+
+    elif data.startswith("ua:"):  # следующий вопрос будет про эту программу другого вуза
+        key = data[3:]
+        context.user_data["ask_uni"] = key
+        await context.bot.send_message(
+            chat_id, t(lang, "ask_about").format(name=universities.program(key)["name_ru"]))
+
     elif data.startswith("qg:"):  # анкета, когда группа ЕНТ уже известна
         context.user_data["quiz"] = {"ent": data.split(":")[1], "interests": []}
         await context.bot.send_message(chat_id, t(lang, "q_interests"), reply_markup=interests_keyboard(lang, []))
@@ -251,6 +292,7 @@ async def finish_quiz(context: ContextTypes.DEFAULT_TYPE, chat_id: int, lang: st
 BUTTON_STATS_NAMES = {
     "btn_pick": "Подобрать специальность", "btn_ent": "Мои предметы ЕНТ", "btn_prices": "Специальности и цены",
     "btn_docs": "Документы", "btn_dates": "Важные даты", "btn_contacts": "Приёмная комиссия",
+    "btn_unis": "Другие вузы",
 }
 
 
@@ -273,6 +315,8 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         await update.message.reply_text(t(lang, "choose_ent"), reply_markup=ent_keyboard(lang, "ent:", False))
     elif button == "btn_prices":
         await send_long(context, chat_id, catalog.price_list_text(lang), lang)
+    elif button == "btn_unis":
+        await update.message.reply_text(t(lang, "choose_uni"), reply_markup=unis_keyboard(lang))
     elif button == "btn_docs":
         await update.message.reply_text(static_text("documents", lang))
     elif button == "btn_dates":
@@ -281,8 +325,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         await update.message.reply_text(t(lang, "contacts").format(contacts=config.ADMISSIONS_CONTACTS))
     else:
         # Свободный вопрос → ИИ с программами, о которых идёт речь.
-        codes = catalog.relevant_programs(text, context.user_data.get("recent", []))
-        await reply_with_claude(context, chat_id, lang, text, codes)
+        await answer_question(context, chat_id, lang, text)
 
 
 async def handle_voice(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -319,8 +362,14 @@ async def handle_voice(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
         return
 
     await update.message.reply_text(t(lang, "voice_heard").format(text=text))
-    codes = catalog.relevant_programs(text, context.user_data.get("recent", []))
-    await reply_with_claude(context, chat_id, lang, text, codes)
+    await answer_question(context, chat_id, lang, text)
+
+
+async def answer_question(context: ContextTypes.DEFAULT_TYPE, chat_id: int, lang: str, text: str) -> None:
+    """Свободный вопрос (текстом или голосом) → ИИ с данными нужных программ AlmaU и других вузов."""
+    codes, uni_keys = universities.select(text, context.user_data.get("recent", []),
+                                          context.user_data.get("recent_uni", []), context.user_data.pop("ask_uni", None))
+    await reply_with_claude(context, chat_id, lang, text, codes, uni_keys)
 
 
 def remember_programs(context: ContextTypes.DEFAULT_TYPE, codes: list[str]) -> None:
@@ -344,7 +393,7 @@ def take_ai_quota(context: ContextTypes.DEFAULT_TYPE) -> bool:
 
 
 async def reply_with_claude(context: ContextTypes.DEFAULT_TYPE, chat_id: int, lang: str,
-                            user_text: str, codes: list[str]) -> None:
+                            user_text: str, codes: list[str], uni_keys: list[str] | None = None) -> None:
     if not config.ANTHROPIC_API_KEY:  # ИИ не подключён — не тратим лимит человека
         await send_long(context, chat_id, t(lang, "no_ai"), lang)
         return
@@ -355,18 +404,19 @@ async def reply_with_claude(context: ContextTypes.DEFAULT_TYPE, chat_id: int, la
         return
 
     history = context.user_data.setdefault("history", [])
-    logger.info("Чат %s [%s] программы %s: %s", chat_id, lang, codes, user_text[:100])
+    uni_keys = uni_keys or []
+    logger.info("Чат %s [%s] программы %s %s: %s", chat_id, lang, codes, uni_keys, user_text[:100])
 
     # Показываем «печатает...», пока Claude думает.
     await context.bot.send_chat_action(chat_id=chat_id, action=ChatAction.TYPING)
 
-    details = catalog.program_details(codes) if codes else None
+    details = catalog.program_details(codes, universities.details(uni_keys)) if codes or uni_keys else None
     messages = history + [{"role": "user", "content": with_details(user_text, details)}]
 
     feedback = None
     try:
         answer, cost = await ask_claude(KNOWLEDGE_TEXT, lang, messages)
-        stats.log_event(chat_id, "ai", ",".join(codes), cost)
+        stats.log_event(chat_id, "ai", ",".join(codes + uni_keys), cost)
         if answer:
             feedback = InlineKeyboardMarkup([[InlineKeyboardButton("👍", callback_data="fb:up"),
                                               InlineKeyboardButton("👎", callback_data="fb:down")]])
@@ -378,6 +428,7 @@ async def reply_with_claude(context: ContextTypes.DEFAULT_TYPE, chat_id: int, la
             while len(history) > config.MAX_HISTORY_MESSAGES:
                 del history[:2]
             remember_programs(context, catalog.find_programs(answer) or codes[:2])
+            context.user_data["recent_uni"] = uni_keys[:4]
         else:
             answer = t(lang, "empty")
     except Refused:

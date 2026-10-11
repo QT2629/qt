@@ -5,6 +5,7 @@ import re
 from pathlib import Path
 
 from catalog import compact_catalog
+from universities import compact_catalog as other_unis_catalog
 
 KNOWLEDGE_DIR = Path(__file__).parent / "knowledge"
 
@@ -23,5 +24,7 @@ def build_knowledge_text() -> str:
         + compact_catalog() + "\n</almau_catalog>\n\n"
         "<almau_graduate>\n" + load_markdown("graduate_programs.md") + "\n</almau_graduate>\n\n"
         "<almau_admission>\n" + load_markdown("admission.md") + "\n</almau_admission>\n\n"
-        "<almau_grants>\n" + load_markdown("grants_2026.md") + "\n</almau_grants>"
+        "<almau_grants>\n" + load_markdown("grants_2026.md") + "\n</almau_grants>\n\n"
+        "<other_universities>\nДругие вузы в базе (данные из справок команды Pro4U, октябрь 2026; "
+        "подробности о программе — в <program_details>):\n\n" + other_unis_catalog() + "\n</other_universities>"
     )

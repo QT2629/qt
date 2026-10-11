@@ -5,6 +5,7 @@
 import asyncio
 
 import catalog
+import universities
 from claude_client import ask_claude
 from knowledge import build_knowledge_text
 from prompts import with_details
@@ -30,7 +31,13 @@ CASES = [
     ("ru", "Сколько стоит магистратура?",
      [["2 310 000", "2310000"]]),
     ("ru", "Расскажи, какой проходной балл в КИМЭП",
-     [["almau"]]),
+     [["нет данных", "данных нет", "нет информации", "не знаю", "нет в базе", "пока нет"]]),
+    ("ru", "Сколько стоит Финансы в КБТУ и какие предметы ЕНТ нужны?",
+     [["1 800 000", "1800000"], ["математика"], ["географ"]]),
+    ("ru", "Сравни юриспруденцию в AlmaU, ЕНУ и Нархозе по цене",
+     [["1 550 000", "1550000"], ["1 602 000", "1602000"], ["almau"]]),
+    ("ru", "Где можно учиться на Data Science в Нархозе?",
+     [["статистика и наука о данных", "наука о данных"], ["2 322 000", "2322000"]]),
     ("ru", "Чем отличается Психология от Клинической психологии и можно ли туда поступить?",
      [["клиническ"], ["нет набора", "набора нет", "не набира", "не будет набора", "2026"]]),
     ("kz", "Менің ҰБТ пәндерім география және биология. Қандай мамандыққа түсе аламын?",
@@ -49,8 +56,8 @@ async def main() -> None:
     knowledge_text = build_knowledge_text()
     passed = 0
     for i, (lang, question, groups) in enumerate(CASES, 1):
-        codes = catalog.relevant_programs(question, [])
-        details = catalog.program_details(codes) if codes else None
+        codes, uni_keys = universities.select(question, [], [])
+        details = catalog.program_details(codes, universities.details(uni_keys)) if codes or uni_keys else None
         answer, _cost = await ask_claude(knowledge_text, lang, [{"role": "user", "content": with_details(question, details)}])
         missing = check(answer, groups)
         status = "OK  " if not missing else "FAIL"

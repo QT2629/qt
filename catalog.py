@@ -190,13 +190,14 @@ def compact_catalog() -> str:
     return "\n".join(lines)
 
 
-def program_details(codes: list[str]) -> str:
-    """Полные данные выбранных программ — добавляются к вопросу пользователя."""
+def program_details(codes: list[str], extra: list[dict] | None = None) -> str:
+    """Полные данные выбранных программ — добавляются к вопросу пользователя.
+    extra — программы других вузов (universities.details)."""
     fields = ["code", "name_ru", "name_kz", "school", "degree", "duration_years", "tracks", "key_courses",
               "practice", "note", "ent_subjects", "extra_ent_subjects", "ent_note", "price_kzt", "price_note", "availability_note",
               "languages", "grant_2026"]
-    data = [{k: PROGRAMS[c][k] for k in fields if k in PROGRAMS[c]} for c in codes]
-    return json.dumps(data, ensure_ascii=False, separators=(",", ":"))
+    data = [{"university": "AlmaU", **{k: PROGRAMS[c][k] for k in fields if k in PROGRAMS[c]}} for c in codes]
+    return json.dumps(data + (extra or []), ensure_ascii=False, separators=(",", ":"))
 
 
 def _stem(word: str) -> str:

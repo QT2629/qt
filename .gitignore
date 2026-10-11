@@ -11,6 +11,6 @@ venv/
 data/
 
 # Исходные документы вузов (PDF, картинки) — большие, храним на Google Диске, не в GitHub
-universities/
-nxj/
+/universities/
+/nxj/
 *.pdf
