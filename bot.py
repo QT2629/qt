@@ -190,10 +190,8 @@ async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
     chat_id = update.effective_chat.id
     user_id = update.effective_user.id
 
-    if data in ("fb:up", "fb:down"):  # оценка ответа ИИ
-        stats.log_event(user_id, "feedback_up" if data == "fb:up" else "feedback_down")
+    if data in ("fb:up", "fb:down"):  # 👍/👎 под старыми ответами — оценки больше не собираем
         await query.edit_message_reply_markup(reply_markup=None)
-        await query.answer("Рахмет! 🙏" if lang == "kz" else "Спасибо за оценку! 🙏")
         return
 
     if data.startswith("lang:"):
@@ -387,13 +385,10 @@ async def reply_with_claude(context: ContextTypes.DEFAULT_TYPE, chat_id: int, la
     details = universities.details(keys)
     messages = history + [{"role": "user", "content": with_details(user_text, details)}]
 
-    feedback = None
     try:
         answer, cost = await ask_claude(KNOWLEDGE_TEXT, lang, messages)
         stats.log_event(chat_id, "ai", ",".join(keys), cost)
         if answer:
-            feedback = InlineKeyboardMarkup([[InlineKeyboardButton("👍", callback_data="fb:up"),
-                                              InlineKeyboardButton("👎", callback_data="fb:down")]])
             # В историю кладём вопрос без подробных данных — они добавляются заново к каждому вопросу.
             history += [
                 {"role": "user", "content": user_text},
@@ -417,7 +412,7 @@ async def reply_with_claude(context: ContextTypes.DEFAULT_TYPE, chat_id: int, la
         stats.log_event(chat_id, "error", "unexpected")
         answer = t(lang, "err_generic")
 
-    await send_long(context, chat_id, answer, lang, last_markup=feedback)
+    await send_long(context, chat_id, answer, lang)
 
 
 def api_error_text(err: Exception, lang: str) -> str:
@@ -447,7 +442,7 @@ def api_error_text(err: Exception, lang: str) -> str:
 async def send_long(context: ContextTypes.DEFAULT_TYPE, chat_id: int, text: str, lang: str,
                     last_markup: InlineKeyboardMarkup | None = None) -> None:
     """Длинный текст режем на куски, чтобы Telegram его принял.
-    К последнему куску можно прикрепить кнопки (например, 👍/👎)."""
+    К последнему куску можно прикрепить кнопки (например, «Ещё раз»)."""
     chunks = [text[i: i + TELEGRAM_MESSAGE_LIMIT] for i in range(0, len(text), TELEGRAM_MESSAGE_LIMIT)]
     for n, chunk in enumerate(chunks):
         is_last = n == len(chunks) - 1
