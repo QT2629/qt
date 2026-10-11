@@ -148,11 +148,21 @@ def admissions_line(u: dict) -> str:
     return "; ".join(x for x in parts if x)
 
 
+def links(slug: str, code: str | None = None) -> dict:
+    """Официальные ссылки: сайт вуза, приёмная и страница программы (если её адрес есть в данных)."""
+    u = UNIS[slug]
+    out = {"site": u.get("website", ""), "admission": (u.get("admissions") or {}).get("url", "")}
+    if code and u["programs"].get(code, {}).get("url"):
+        out["program"] = u["programs"][code]["url"]
+    return {k: v for k, v in out.items() if v}
+
+
 def compact_catalog() -> str:
     """Короткий список программ всех вузов — лежит в кэшируемом system prompt."""
     blocks = []
     for u in UNIS.values():
         lines = [f"{u['name_ru']} — {u['city']}, {u['type']}. {u['price_note']} {u['notes']}",
+                 "Официальный сайт: " + u.get("website", ""),
                  "Приёмная комиссия: " + admissions_line(u),
                  "(код | программа | предметы ЕНТ | цена в год | группа ГОП для гранта)"]
         for p in u["programs"].values():
@@ -177,13 +187,14 @@ def details(keys: list[str]) -> str | None:
             fields = ["code", "name_ru", "name_kz", "school", "degree", "duration_years", "tracks", "key_courses",
                       "practice", "note", "ent_subjects", "extra_ent_subjects", "ent_note", "price_kzt", "price_note",
                       "availability_note", "languages", "grant_2026"]
-            out.append({"university": u["name_ru"], **{k: src[k] for k in fields if k in src}})
+            out.append({"university": u["name_ru"], **{k: src[k] for k in fields if k in src},
+                        "links": links(slug, code)})
             continue
         p = u["programs"][code]
         out.append({"university": u["name_ru"], "city": u["city"], "price_note": u["price_note"],
                     **{k: p[k] for k in ("code", "name_ru", "section", "ent_subjects", "ent_note", "price_kzt",
                                          "tracks", "key_courses", "careers", "workplaces", "grant_2026")
-                       if p.get(k) not in (None, "", [])}})
+                       if p.get(k) not in (None, "", [])}, "links": links(slug, code)})
     return json.dumps(out, ensure_ascii=False, separators=(",", ":")) if out else None
 
 
@@ -352,7 +363,7 @@ def program_card(key: str, lang: str) -> str:
         grant = grant_text(program(key), lang)
         if price_at is not None and grant:
             lines.insert(price_at + 1, grant)
-        return "\n".join(lines)
+        return "\n".join(lines) + "\n" + link_line(key, lang)
     p = program(key)
     kz = lang == "kz"
     lines = [f"🎓 {p['name_ru']} ({p['code']})", f"🏛 {uni_name(slug, lang)} · {UNIS[slug]['city']}", p["section"],
@@ -373,7 +384,16 @@ def program_card(key: str, lang: str) -> str:
         lines.append(("Қайда: " if kz else "Где: ") + ", ".join(p["workplaces"]))
     lines.append("\nℹ️ " + ("Деректер бағдар үшін — вуздың қабылдау комиссиясынан нақтылаңыз." if kz
                            else "Данные ориентировочные — уточняй в приёмной комиссии вуза."))
+    lines.append(link_line(key, lang))
     return "\n".join(lines)
+
+
+def link_line(key: str, lang: str) -> str:
+    slug, code = key.split(":")
+    ln = links(slug, code)
+    if ln.get("program"):
+        return ("🔗 Бағдарлама сайтта: " if lang == "kz" else "🔗 Программа на сайте вуза: ") + ln["program"]
+    return ("🌐 ЖОО сайты: " if lang == "kz" else "🌐 Сайт вуза: ") + ln.get("site", "")
 
 
 MAX_ENT_SCORE = 140
