@@ -11,6 +11,7 @@
 # Запуск: python bot.py
 
 import logging
+import re
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -84,7 +85,7 @@ def language_keyboard() -> InlineKeyboardMarkup:
 def menu_keyboard(lang: str) -> ReplyKeyboardMarkup:
     return ReplyKeyboardMarkup(
         [
-            [t(lang, "btn_pick")],
+            [t(lang, "btn_pick"), t(lang, "btn_chance")],
             [t(lang, "btn_ent"), t(lang, "btn_prices")],
             [t(lang, "btn_docs"), t(lang, "btn_dates")],
             [t(lang, "btn_contacts")],
@@ -209,6 +210,12 @@ async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
         stats.log_event(user_id, "button", f"ЕНТ: {group}")
         await query.edit_message_text(universities.ent_text(group, lang), reply_markup=ent_unis_keyboard(group, lang))
 
+    elif data.startswith("gc:"):  # «Шанс на грант» → предметы выбраны, ждём балл
+        group = data.split(":")[1]
+        context.user_data["await_score"] = group
+        stats.log_event(user_id, "button", f"шанс: {group}")
+        await query.edit_message_text(f"📝 {universities.ENT_LABELS[group][lang]}\n\n" + t(lang, "chance_score"))
+
     elif data.startswith("u:"):  # «Вузы и цены» → вуз
         slug = data.split(":")[1]
         stats.log_event(user_id, "button", f"вуз {slug}")
@@ -279,7 +286,7 @@ async def finish_quiz(context: ContextTypes.DEFAULT_TYPE, chat_id: int, lang: st
 
 # Названия кнопок меню для статистики.
 BUTTON_STATS_NAMES = {
-    "btn_pick": "Подобрать специальность", "btn_ent": "Мои предметы ЕНТ", "btn_prices": "Вузы и цены",
+    "btn_pick": "Подобрать специальность", "btn_chance": "Шанс на грант", "btn_ent": "Мои предметы ЕНТ", "btn_prices": "Вузы и цены",
     "btn_docs": "Документы", "btn_dates": "Важные даты", "btn_contacts": "Приёмные комиссии",
 }
 
@@ -296,9 +303,23 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     if button:
         stats.log_event(update.effective_user.id, "button", BUTTON_STATS_NAMES[button])
 
+    # Ждём балл для «Шанс на грант»: число — считаем, нажали кнопку меню — забываем.
+    group = context.user_data.pop("await_score", None)
+    if group and not button:
+        score = re.fullmatch(r"\s*(\d{1,3})\s*(балл\w*)?\s*", text or "")
+        if score and 0 <= int(score.group(1)) <= universities.MAX_ENT_SCORE:
+            await send_chances(context, chat_id, lang, group, int(score.group(1)))
+            return
+        if re.search(r"\d", text or "") and len(text) < 15:
+            context.user_data["await_score"] = group
+            await update.message.reply_text(t(lang, "chance_bad"))
+            return
+
     # Кнопки меню, которые работают без ИИ.
     if button == "btn_pick":
         await update.message.reply_text(t(lang, "q_ent"), reply_markup=ent_keyboard(lang, "q:ent:", True))
+    elif button == "btn_chance":
+        await update.message.reply_text(t(lang, "chance_ent"), reply_markup=ent_keyboard(lang, "gc:", False))
     elif button == "btn_ent":
         await update.message.reply_text(t(lang, "choose_ent"), reply_markup=ent_keyboard(lang, "ent:", False))
     elif button == "btn_prices":
@@ -313,6 +334,15 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     else:
         # Свободный вопрос → ИИ с программами, о которых идёт речь.
         await answer_question(context, chat_id, lang, text)
+
+
+async def send_chances(context: ContextTypes.DEFAULT_TYPE, chat_id: int, lang: str, group: str, score: int) -> None:
+    stats.log_event(chat_id, "chance", f"{group}:{score}")
+    keyboard = InlineKeyboardMarkup([
+        [InlineKeyboardButton(t(lang, "chance_again"), callback_data=f"gc:{group}")],
+        [InlineKeyboardButton(t(lang, "chance_programs"), callback_data=f"ent:{group}")],
+    ])
+    await send_long(context, chat_id, universities.grant_chances(group, score, lang), lang, last_markup=keyboard)
 
 
 async def handle_voice(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
