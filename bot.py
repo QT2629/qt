@@ -308,7 +308,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     elif button == "btn_dates":
         await update.message.reply_text(static_text("dates", lang))
     elif button == "btn_contacts":
-        await update.message.reply_text(universities.contacts_text(lang, config.ADMISSIONS_CONTACTS),
+        await update.message.reply_text(universities.contacts_text(lang),
                                         disable_web_page_preview=True)
     else:
         # Свободный вопрос → ИИ с программами, о которых идёт речь.

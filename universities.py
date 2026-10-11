@@ -58,6 +58,9 @@ def _almau() -> dict:
         "slug": "almau", "short": "AlmaU", "name_ru": "Almaty Management University (AlmaU)",
         "name_kz": "Almaty Management University (AlmaU)", "aliases": ALMAU_WORDS, "city": "Алматы",
         "type": "частный университет", "website": "https://almau.edu.kz", "grant_list_code": "083",
+        "admissions": {"phones": ["+7 (775) 006-16-06"], "email": "admission@almau.edu.kz",
+                       "address": "Алматы, ул. Розыбакиева, 227", "hours": "пн–пт 9:00–18:00",
+                       "url": "https://almau.edu.kz/ru/admission/", "checked_on": "2026-10-11"},
         "price_note": "Цены за 1 год по прайсу приёмной комиссии AlmaU, 2026.",
         "notes": "Программы по учебным планам 2026 года: траектории, практика, Minor. "
                  "По AlmaU в базе есть документы и даты приёма (раздел almau_admission).",
@@ -138,11 +141,19 @@ def grant_text(p: dict, lang: str) -> str:
 # ---------------------------------------------------------------------------
 # Данные для ИИ
 # ---------------------------------------------------------------------------
+def admissions_line(u: dict) -> str:
+    a = u.get("admissions") or {}
+    parts = [", ".join(a.get("phones", [])), a.get("email", ""), a.get("hours", ""), a.get("address", ""),
+             a.get("url") or u.get("website", "")]
+    return "; ".join(x for x in parts if x)
+
+
 def compact_catalog() -> str:
     """Короткий список программ всех вузов — лежит в кэшируемом system prompt."""
     blocks = []
     for u in UNIS.values():
         lines = [f"{u['name_ru']} — {u['city']}, {u['type']}. {u['price_note']} {u['notes']}",
+                 "Приёмная комиссия: " + admissions_line(u),
                  "(код | программа | предметы ЕНТ | цена в год | группа ГОП для гранта)"]
         for p in u["programs"].values():
             if not p["open"]:
@@ -365,12 +376,21 @@ def program_card(key: str, lang: str) -> str:
     return "\n".join(lines)
 
 
-def contacts_text(lang: str, almau_contacts: str) -> str:
+def contacts_text(lang: str) -> str:
     kz = lang == "kz"
     lines = ["☎️ ЖОО қабылдау комиссиялары:" if kz else "☎️ Приёмные комиссии вузов:"]
-    for slug, u in UNIS.items():
-        contact = almau_contacts if slug == "almau" else u.get("website", "")
-        lines.append(f"\n🏛 {u['name_kz' if kz else 'name_ru']}\n{contact}")
-    lines.append("\nМен нақты білмейтінді осы жерден сұраған дұрыс." if kz
-                 else "\nТо, чего я не знаю точно, лучше уточнить там.")
+    for u in UNIS.values():
+        a = u.get("admissions") or {}
+        block = [f"\n🏛 {u['name_kz' if kz else 'name_ru']}"]
+        block += [f"📞 {p}" for p in a.get("phones", [])]
+        if a.get("email"):
+            block.append(f"✉️ {a['email']}")
+        if a.get("hours"):
+            block.append(f"🕘 {a['hours']}")
+        if a.get("address"):
+            block.append(f"📍 {a['address']}")
+        block.append(f"🌐 {a.get('url') or u.get('website', '')}")
+        lines.append("\n".join(block))
+    lines.append("\nКонтактілер ЖОО ресми сайттарынан алынды (қазан 2026) — құжат тапсырар алдында сайттан тексер." if kz
+                 else "\nКонтакты взяты с официальных сайтов вузов (октябрь 2026) — перед подачей документов сверь на сайте.")
     return "\n".join(lines)
