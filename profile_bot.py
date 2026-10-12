@@ -31,6 +31,17 @@ T = {
             "<b>Удалить всё:</b> в любой момент командой /delete_me.\n\n"
             "Если тебе меньше 18 — можно указать только имя без фамилии."
         ),
+        "mocks_intro": (
+            "📈 <b>Статистика пробных тестов</b>\n\n"
+            "Вноси баллы каждого пробника — общий балл или по предметам. Я покажу:\n"
+            "• <b>график роста</b> от первого теста до последнего;\n"
+            "• <b>лучший балл</b> и на сколько вырос результат;\n"
+            "• <b>где больше всего можно добрать</b> — какие предметы проседают;\n"
+            "• <b>сколько не хватает до гранта</b> в выбранный вуз по баллам 2026 года;\n"
+            "• раз в две недели напомню внести новый пробник.\n\n"
+            "Для этого нужна твоя страница: нажми «Начать» — это займёт минуту."
+        ),
+        "mocks_start": "📈 Начать", "mocks_has": "📈 <b>Мои пробники</b>",
         "agree": "✅ Согласен(на), начать", "later": "Не сейчас",
         "later_ok": "Хорошо. Страница будет ждать — кнопка «👤 Мой профиль».",
         "q_name": "Как тебя зовут? Напиши имя (и фамилию, если хочешь).",
@@ -123,6 +134,17 @@ T = {
             "<b>Бәрін өшіру:</b> кез келген уақытта /delete_me командасымен.\n\n"
             "18-ге толмасаң — тек атыңды жазсаң жеткілікті."
         ),
+        "mocks_intro": (
+            "📈 <b>Сынақ тесттерінің статистикасы</b>\n\n"
+            "Әр сынақтың баллын енгіз — жалпы баллды немесе пәндер бойынша. Мен көрсетемін:\n"
+            "• алғашқы тесттен соңғысына дейінгі <b>өсу графигі</b>;\n"
+            "• <b>ең жоғары балл</b> және нәтиже қаншаға өскені;\n"
+            "• <b>қай жерден көбірек балл қосуға болады</b> — қай пәндер төмен;\n"
+            "• таңдаған ЖОО-ңа 2026 жылғы баллдар бойынша <b>грантқа қанша жетпейді</b>;\n"
+            "• екі апта сайын жаңа сынақты енгізуді еске саламын.\n\n"
+            "Ол үшін сенің парақшаң керек: «Бастау» батырмасын бас — бір минут қана."
+        ),
+        "mocks_start": "📈 Бастау", "mocks_has": "📈 <b>Сынақ нәтижелерім</b>",
         "agree": "✅ Келісемін, бастау", "later": "Кейінірек",
         "later_ok": "Жарайды. Парақша сені күтеді — «👤 Менің профилім» батырмасы.",
         "q_name": "Атың кім? Атыңды (қаласаң, тегіңді де) жаз.",
@@ -529,6 +551,10 @@ async def on_callback(update, context: ContextTypes.DEFAULT_TYPE, lang: str, sen
         await query.edit_message_reply_markup(reply_markup=None)
         await ask(context, chat_id, lang, "name")
         return
+    if data == "pf:mocks_start":  # из «Мои пробники» → согласие и анкета
+        await query.edit_message_reply_markup(reply_markup=None)
+        await show_page(context, chat_id, lang)
+        return
     if data == "pf:later":
         await query.edit_message_text(t(lang, "later_ok"))
         return
@@ -607,6 +633,19 @@ async def on_callback(update, context: ContextTypes.DEFAULT_TYPE, lang: str, sen
         await query.edit_message_text(t(lang, "deleted"))
     elif data.startswith("pf:chance:") and p.get("ent_group") in universities.ENT_LABELS:
         await send_chances(context, chat_id, lang, p["ent_group"], int(data.split(":")[2]))
+
+
+async def show_mocks(context: ContextTypes.DEFAULT_TYPE, chat_id: int, lang: str) -> None:
+    """Кнопка «📈 Мои пробники»: нет страницы — объясняем, что умеет статистика; есть — показываем прогресс."""
+    if not profiles.get(chat_id):
+        await context.bot.send_message(chat_id, t(lang, "mocks_intro"),
+                                       reply_markup=Kb([[Btn(t(lang, "mocks_start"), callback_data="pf:mocks_start")]]))
+        return
+    if profiles.scores(chat_id):
+        await send_progress(context, chat_id, lang)
+    await context.bot.send_message(chat_id, t(lang, "mocks_has"), reply_markup=Kb([
+        [Btn(t(lang, "b_mock"), callback_data="pf:addmock"), Btn(t(lang, "b_ent"), callback_data="pf:addent")],
+        [Btn(t(lang, "b_back"), callback_data="pf:show")]]))
 
 
 async def delete_me(context: ContextTypes.DEFAULT_TYPE, chat_id: int, lang: str) -> None:

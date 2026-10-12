@@ -93,9 +93,9 @@ def menu_keyboard(lang: str) -> ReplyKeyboardMarkup:
         [
             [t(lang, "btn_pick"), t(lang, "btn_chance")],
             [t(lang, "btn_ent"), t(lang, "btn_prices")],
-            [t(lang, "btn_profile"), t(lang, "btn_dates")],
-            [t(lang, "btn_docs"), t(lang, "btn_contacts")],
-            [t(lang, "btn_share")],
+            [t(lang, "btn_profile"), t(lang, "btn_mocks")],
+            [t(lang, "btn_docs"), t(lang, "btn_dates")],
+            [t(lang, "btn_contacts"), t(lang, "btn_share")],
         ],
         resize_keyboard=True,
     )
@@ -199,6 +199,24 @@ async def my_id(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 async def profile_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """/profile — личная страница."""
     await profile_bot.show_page(context, update.effective_chat.id, get_lang(context))
+
+
+async def progress_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """/progress — статистика пробных тестов."""
+    await profile_bot.show_mocks(context, update.effective_chat.id, get_lang(context))
+
+
+async def set_commands(app: Application) -> None:
+    """Список команд в меню Telegram (кнопка «/» рядом с полем ввода) — чтобы функции было видно."""
+    from telegram import BotCommand
+    await app.bot.set_my_commands([
+        BotCommand("start", "Начать / выбрать язык"),
+        BotCommand("profile", "Моя страница: цель, сроки ЕНТ, напоминания"),
+        BotCommand("progress", "Мои пробники: баллы и график роста"),
+        BotCommand("lang", "Сменить язык"),
+        BotCommand("reset", "Начать разговор заново"),
+        BotCommand("delete_me", "Удалить мои данные"),
+    ])
 
 
 async def delete_me_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -332,7 +350,7 @@ async def finish_quiz(context: ContextTypes.DEFAULT_TYPE, chat_id: int, lang: st
 BUTTON_STATS_NAMES = {
     "btn_pick": "Подобрать специальность", "btn_chance": "Шанс на грант", "btn_ent": "Мои предметы ЕНТ", "btn_prices": "Вузы и цены",
     "btn_docs": "Документы", "btn_dates": "Важные даты", "btn_contacts": "Приёмные комиссии",
-    "btn_share": "Поделиться ботом", "btn_profile": "Мой профиль",
+    "btn_share": "Поделиться ботом", "btn_profile": "Мой профиль", "btn_mocks": "Мои пробники",
 }
 
 
@@ -380,6 +398,8 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         await update.message.reply_text(static_text("documents", lang))
     elif button == "btn_dates":
         await update.message.reply_text(static_text("dates", lang))
+    elif button == "btn_mocks":
+        await profile_bot.show_mocks(context, chat_id, lang)
     elif button == "btn_profile":
         await profile_bot.show_page(context, chat_id, lang)
     elif button == "btn_share":
@@ -539,7 +559,7 @@ def main() -> None:
     persistence = PicklePersistence(filepath=Path(config.DATA_DIR) / "bot_state.pickle")
     # Все сообщения — в HTML-режиме Telegram: так можно выделять важное жирным (<b>…</b>).
     app = (Application.builder().token(config.TELEGRAM_BOT_TOKEN).persistence(persistence)
-           .defaults(Defaults(parse_mode=ParseMode.HTML)).build())
+           .defaults(Defaults(parse_mode=ParseMode.HTML)).post_init(set_commands).build())
 
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("lang", change_language))
@@ -548,6 +568,7 @@ def main() -> None:
     app.add_handler(CommandHandler("stats", show_stats))
     app.add_handler(CommandHandler("profile", profile_command))
     app.add_handler(CommandHandler("delete_me", delete_me_command))
+    app.add_handler(CommandHandler("progress", progress_command))
     app.add_handler(CallbackQueryHandler(on_callback))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     app.add_handler(MessageHandler(filters.VOICE | filters.AUDIO, handle_voice))
