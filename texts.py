@@ -24,6 +24,7 @@ TEXTS = {
         "btn_dates": "📅 Важные даты",
         "btn_contacts": "☎️ Приёмные комиссии",
         "btn_share": "📤 Поделиться ботом",
+        "btn_profile": "👤 Мой профиль",
         "share_btn": "📤 Отправить другу",
         "share_text": "Бот Pro4U: по баллу ЕНТ показывает, в каких вузах давали грант в 2026, и помогает выбрать специальность. Бесплатно.",
         "share_intro": (
@@ -90,6 +91,7 @@ TEXTS = {
         "btn_dates": "📅 Маңызды күндер",
         "btn_contacts": "☎️ Қабылдау комиссиялары",
         "btn_share": "📤 Ботпен бөлісу",
+        "btn_profile": "👤 Менің профилім",
         "share_btn": "📤 Досыңа жіберу",
         "share_text": "Pro4U боты: ҰБТ баллы бойынша 2026 жылы қай ЖОО-да грант берілгенін көрсетеді және мамандық таңдауға көмектеседі. Тегін.",
         "share_intro": (
@@ -137,7 +139,7 @@ TEXTS = {
     },
 }
 
-MENU_BUTTONS = ("btn_pick", "btn_chance", "btn_ent", "btn_prices", "btn_docs", "btn_dates", "btn_contacts", "btn_share")
+MENU_BUTTONS = ("btn_pick", "btn_chance", "btn_ent", "btn_prices", "btn_docs", "btn_dates", "btn_contacts", "btn_share", "btn_profile")
 
 # Старые названия кнопок — у пользователей может остаться прежняя клавиатура.
 LEGACY_BUTTONS = {

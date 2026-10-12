@@ -11,7 +11,7 @@
 
 import logging
 import re
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, time, timedelta, timezone
 from pathlib import Path
 from urllib.parse import urlencode
 
@@ -34,6 +34,8 @@ import card
 import catalog
 import config
 import formatting
+import profile_bot
+import profiles
 import stats
 import universities
 from claude_client import NoApiKey, Refused, ask_claude
@@ -91,8 +93,9 @@ def menu_keyboard(lang: str) -> ReplyKeyboardMarkup:
         [
             [t(lang, "btn_pick"), t(lang, "btn_chance")],
             [t(lang, "btn_ent"), t(lang, "btn_prices")],
-            [t(lang, "btn_docs"), t(lang, "btn_dates")],
-            [t(lang, "btn_contacts"), t(lang, "btn_share")],
+            [t(lang, "btn_profile"), t(lang, "btn_dates")],
+            [t(lang, "btn_docs"), t(lang, "btn_contacts")],
+            [t(lang, "btn_share")],
         ],
         resize_keyboard=True,
     )
@@ -193,6 +196,16 @@ async def my_id(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await update.message.reply_text(f"Ваш Telegram ID: {update.effective_user.id}")
 
 
+async def profile_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """/profile — личная страница."""
+    await profile_bot.show_page(context, update.effective_chat.id, get_lang(context))
+
+
+async def delete_me_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """/delete_me — удалить профиль и все баллы."""
+    await profile_bot.delete_me(context, update.effective_chat.id, get_lang(context))
+
+
 async def show_stats(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """/stats — пользователи по месяцам и статистика за сутки, 7 и 30 дней (только для администраторов)."""
     if update.effective_user.id not in config.ADMIN_IDS:
@@ -201,7 +214,10 @@ async def show_stats(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None
             "Чтобы стать администратором, впишите его в .env строкой ADMIN_IDS=... и перезапустите бота."
         )
         return
-    await update.message.reply_text(stats.overview())
+    c = profiles.counts()
+    await update.message.reply_text(
+        stats.overview() + f"\n\n👤 Личные страницы: {c['profiles']} (внесли баллы: {c['with_scores']}, "
+        f"всего результатов: {c['scores']}; напоминания включены у {c['reminders']})")
     await update.message.reply_text(stats.report(1) + "\n\n" + stats.report(7))
     await update.message.reply_text(stats.report(30))
 
@@ -221,9 +237,15 @@ async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
         await query.edit_message_reply_markup(reply_markup=None)
         return
 
+    if data.startswith("pf:"):  # личная страница
+        await profile_bot.on_callback(update, context, lang, send_chances)
+        return
+
     if data.startswith("lang:"):
         lang = data.split(":")[1]
         context.user_data["lang"] = lang
+        if profiles.get(chat_id):
+            profiles.update(chat_id, lang=lang)
         await query.edit_message_text(t(lang, "lang_set"))
         await context.bot.send_message(chat_id, t(lang, "welcome"), reply_markup=menu_keyboard(lang))
 
@@ -310,7 +332,7 @@ async def finish_quiz(context: ContextTypes.DEFAULT_TYPE, chat_id: int, lang: st
 BUTTON_STATS_NAMES = {
     "btn_pick": "Подобрать специальность", "btn_chance": "Шанс на грант", "btn_ent": "Мои предметы ЕНТ", "btn_prices": "Вузы и цены",
     "btn_docs": "Документы", "btn_dates": "Важные даты", "btn_contacts": "Приёмные комиссии",
-    "btn_share": "Поделиться ботом",
+    "btn_share": "Поделиться ботом", "btn_profile": "Мой профиль",
 }
 
 
@@ -325,6 +347,13 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     button = BUTTON_KEYS.get(text)
     if button:
         stats.log_event(update.effective_user.id, "button", BUTTON_STATS_NAMES[button])
+
+    # Ждём ответ для личной страницы (имя, город, баллы…). Нажали кнопку меню — забываем вопрос.
+    if button:
+        context.user_data.pop("pf_await", None)
+        context.user_data.pop("pf_wizard", None)
+    elif await profile_bot.on_text(context, chat_id, lang, text):
+        return
 
     # Ждём балл для «Шанс на грант»: число — считаем, нажали кнопку меню — забываем.
     group = context.user_data.pop("await_score", None)
@@ -351,6 +380,8 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         await update.message.reply_text(static_text("documents", lang))
     elif button == "btn_dates":
         await update.message.reply_text(static_text("dates", lang))
+    elif button == "btn_profile":
+        await profile_bot.show_page(context, chat_id, lang)
     elif button == "btn_share":
         await update.message.reply_text(t(lang, "share_intro"),
                                         reply_markup=share_keyboard(context, lang, update.effective_user.id))
@@ -425,7 +456,8 @@ async def reply_with_claude(context: ContextTypes.DEFAULT_TYPE, chat_id: int, la
     await context.bot.send_chat_action(chat_id=chat_id, action=ChatAction.TYPING)
 
     details = universities.details(keys)
-    messages = history + [{"role": "user", "content": with_details(user_text, details)}]
+    profile = profile_bot.ai_context(chat_id)
+    messages = history + [{"role": "user", "content": with_details(user_text, details, profile)}]
 
     try:
         answer, cost = await ask_claude(KNOWLEDGE_TEXT, lang, messages)
@@ -514,6 +546,8 @@ def main() -> None:
     app.add_handler(CommandHandler("reset", reset))
     app.add_handler(CommandHandler("myid", my_id))
     app.add_handler(CommandHandler("stats", show_stats))
+    app.add_handler(CommandHandler("profile", profile_command))
+    app.add_handler(CommandHandler("delete_me", delete_me_command))
     app.add_handler(CallbackQueryHandler(on_callback))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     app.add_handler(MessageHandler(filters.VOICE | filters.AUDIO, handle_voice))
@@ -523,6 +557,8 @@ def main() -> None:
         logger.warning("ANTHROPIC_API_KEY не задан: кнопки работают, вопросы к ИИ отключены")
     logger.info("Pro4U запущен (модель: %s, лимит %s вопросов к ИИ в день). Остановить: Ctrl+C",
                 config.CLAUDE_MODEL, config.DAILY_AI_LIMIT)
+    # Напоминания о сроках ЕНТ и просьбы внести баллы — каждый день в 10:00 по Алматы.
+    app.job_queue.run_daily(profile_bot.daily_reminders, time=time(10, 0, tzinfo=timezone(timedelta(hours=5))))
     app.run_polling(allowed_updates=Update.ALL_TYPES)
 
 

@@ -166,3 +166,84 @@ def chance_card(group: str, score: int, lang: str, bot_username: str) -> bytes |
     buf = io.BytesIO()
     img.save(buf, format="PNG", optimize=True)
     return buf.getvalue()
+
+
+PROGRESS_TEXT = {
+    "ru": {"title": "Мой прогресс", "sub": "баллы пробных тестов и ЕНТ", "mock": "пробный", "ent": "ЕНТ",
+           "target": "грант в {uni} в 2026: от {n}", "best": "лучший", "delta": "с первого теста"},
+    "kz": {"title": "Менің прогресім", "sub": "сынақ тесттері мен ҰБТ баллдары", "mock": "сынақ", "ent": "ҰБТ",
+           "target": "{uni} гранты 2026: {n} бастап", "best": "ең жоғары", "delta": "алғашқы тесттен бері"},
+}
+
+
+def progress_chart(rows: list[dict], lang: str, target: dict | None = None) -> bytes | None:
+    """График роста баллов (PNG). rows — из profiles.scores(); target — {"uni": "SDU", "min": 120}."""
+    if len(rows) < 2:
+        return None
+    tx = PROGRESS_TEXT.get(lang, PROGRESS_TEXT["ru"])
+    img = Image.new("RGB", (W, 1080), BG)
+    d = ImageDraw.Draw(img)
+
+    d.text((PAD, PAD), "Pro4U", font=_font("Bold", 34), fill=INK)
+    d.text((PAD + d.textlength("Pro4U", font=_font("Bold", 34)) + 14, PAD + 3), "· " + tx["title"],
+           font=_font("Regular", 30), fill=MUTED)
+
+    totals = [r["total"] for r in rows]
+    first, last, best = totals[0], totals[-1], max(totals)
+    f_big = _font("Bold", 120)
+    d.text((PAD - 4, PAD + 70), str(last), font=f_big, fill=INK)
+    x = PAD + d.textlength(str(last), font=f_big) + 30
+    delta = last - first
+    sign = "+" if delta > 0 else ""
+    d.text((x, PAD + 96), f"{sign}{delta} {tx['delta']}", font=_font("Medium", 36), fill=GREEN if delta >= 0 else AMBER)
+    d.text((x, PAD + 146), f"{tx['best']}: {best} · {tx['sub']}", font=_font("Regular", 28), fill=MUTED)
+
+    # Область графика
+    left, right, top, bottom = PAD + 60, W - PAD, PAD + 270, 1080 - PAD - 70
+    lo = min(totals + ([target["min"]] if target else [])) - 10
+    hi = max(totals + ([target["min"]] if target else [])) + 10
+    lo, hi = max(0, lo - lo % 10), min(140, hi + (10 - hi % 10) % 10)
+    if hi - lo < 20:
+        hi = min(140, lo + 20)
+
+    def yy(v: float) -> float:
+        return bottom - (v - lo) / (hi - lo) * (bottom - top)
+
+    f_axis = _font("Regular", 24)
+    for v in range(lo, hi + 1, 10 if hi - lo <= 60 else 20):
+        d.line((left, yy(v), right, yy(v)), fill=LINE, width=1)
+        d.text((PAD, yy(v) - 14), str(v), font=f_axis, fill=MUTED)
+
+    if target:
+        ty = yy(target["min"])
+        for sx in range(int(left), int(right), 22):                    # пунктир
+            d.line((sx, ty, min(sx + 12, right), ty), fill=GREEN, width=3)
+
+    n = len(rows)
+    xs = [left + 20 + i * (right - left - 40) / (n - 1) for i in range(n)]
+    pts = [(xs[i], yy(t)) for i, t in enumerate(totals)]
+    d.line(pts, fill=INK, width=5, joint="curve")
+    step = max(1, n // 8)                                              # подписи дат — не теснее 8 штук
+    for i, ((px, py), r) in enumerate(zip(pts, rows)):
+        color = GREEN if r["kind"] == "ent" else INK
+        rad = 11 if r["kind"] == "ent" else 8
+        d.ellipse((px - rad, py - rad, px + rad, py + rad), fill=color, outline=BG, width=3)
+        d.text((px - d.textlength(str(r["total"]), font=f_axis) / 2, py - 44), str(r["total"]), font=f_axis, fill=INK)
+        if i % step == 0 or i == n - 1:
+            dd = r["taken_on"][8:10] + "." + r["taken_on"][5:7]
+            d.text((px - d.textlength(dd, font=f_axis) / 2, bottom + 18), dd, font=f_axis, fill=MUTED)
+
+    lx = PAD
+    for color, label in ((INK, tx["mock"]), (GREEN, tx["ent"])):
+        d.ellipse((lx, 1080 - PAD - 2, lx + 16, 1080 - PAD + 14), fill=color)
+        d.text((lx + 26, 1080 - PAD - 8), label, font=f_axis, fill=MUTED)
+        lx += 26 + d.textlength(label, font=f_axis) + 40
+    if target:
+        ly = 1080 - PAD + 6
+        for sx in range(int(lx), int(lx) + 40, 16):
+            d.line((sx, ly, sx + 9, ly), fill=GREEN, width=3)
+        d.text((lx + 52, 1080 - PAD - 8), tx["target"].format(uni=target["uni"], n=target["min"]), font=f_axis, fill=GREEN)
+
+    buf = io.BytesIO()
+    img.save(buf, format="PNG", optimize=True)
+    return buf.getvalue()
