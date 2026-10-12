@@ -1,4 +1,4 @@
-# Все вузы бота на равных: AlmaU, ЕНУ, КБТУ, Нархоз, SDU (и любые новые из knowledge/universities/).
+# Все вузы бота на равных: AlmaU, ЕНУ, КБТУ, MNU, Нархоз, SDU (и любые новые из knowledge/universities/).
 # Здесь — загрузка данных, краткий каталог для ИИ, подбор программ под вопрос и анкету,
 # тексты для кнопок. Всё работает без ИИ и ничего не стоит.
 #
@@ -33,7 +33,7 @@ ENT_LABELS = {
 }
 _SUBJECTS = {"матем": "math", "информ": "inf", "физик": "phys", "биолог": "bio", "хими": "chem", "геогр": "geo",
              "иностр": "eng", "английск": "eng", "ағылшын": "eng", "шет тіл": "eng", "всемир": "wh",
-             "дүниежүзі": "wh", "прав": "law", "құқық": "law", "казах": "kaz", "қазақ": "kaz", "русск": "rus",
+             "дүниежүзі": "wh", "истори": "wh", "тарих": "wh", "прав": "law", "құқық": "law", "казах": "kaz", "қазақ": "kaz", "русск": "rus",
              "орыс": "rus"}
 _PAIRS = {frozenset(k.split("_")): k for k in ENT_LABELS if "_" in k and k != "lang_lit"}
 _PAIRS.update({frozenset({"kaz"}): "kaz", frozenset({"rus"}): "rus", frozenset({"kaz", "rus"}): "lang_lit"})
@@ -91,7 +91,8 @@ def _load() -> dict[str, dict]:
         info = json.loads(path.read_text(encoding="utf-8"))
         programs = json.loads((path.parent / "programs.json").read_text(encoding="utf-8"))
         for p in programs:
-            p["ent_groups"] = [g for g in [ent_group(p["ent_subjects"])] if g]
+            # ent_groups_override — программа принимает любую пару предметов (например, AI + X в MNU)
+            p["ent_groups"] = p.pop("ent_groups_override", None) or [g for g in [ent_group(p["ent_subjects"])] if g]
             p["open"] = True
         info["programs"] = {p["code"]: p for p in programs}
         unis[info["slug"]] = info
@@ -151,7 +152,8 @@ def admissions_line(u: dict) -> str:
 def links(slug: str, code: str | None = None) -> dict:
     """Официальные ссылки: сайт вуза, приёмная и страница программы (если её адрес есть в данных)."""
     u = UNIS[slug]
-    out = {"site": u.get("website", ""), "admission": (u.get("admissions") or {}).get("url", "")}
+    out = {"site": u.get("website", ""), "admission": (u.get("admissions") or {}).get("url", ""),
+           "bachelor_list": u.get("programs_url", "")}
     if code and u["programs"].get(code, {}).get("url"):
         out["program"] = u["programs"][code]["url"]
     return {k: v for k, v in out.items() if v}
@@ -219,11 +221,14 @@ _SYNONYMS = {"it": ["информ", "программ", "компьютер"], "
 
 
 def _stems(text: str) -> list[str]:
-    """Основы слов вопроса: без служебных слов, названий вузов и предметов ЕНТ."""
+    """Основы слов вопроса: без служебных слов, названий вузов и предметов ЕНТ.
+    Названия предметов отбрасываем, только когда в вопросе есть пара ЕНТ: иначе «право» или «история» —
+    это направление, которое человек ищет."""
     aliases = [a for u in UNIS.values() for a in u["aliases"]]
+    subjects = _SUBJECT_STEMS if _groups(text) else ["ент", "ұбт", "экзамен"]
     out = []
     for w in re.findall(r"[\w-]+", text.lower()):
-        if w in _STOP or any(a in w for a in aliases) or any(w.startswith(s) for s in _SUBJECT_STEMS):
+        if w in _STOP or any(a in w for a in aliases) or any(w.startswith(s) for s in subjects):
             continue
         stem = w[: max(4, len(w) - 2)] if len(w) >= 4 else w if re.fullmatch(r"[a-z]{2,3}|ии", w) else ""
         if stem:  # короткие латинские: it, ai, hr, ux, pr
@@ -393,6 +398,8 @@ def link_line(key: str, lang: str) -> str:
     ln = links(slug, code)
     if ln.get("program"):
         return ("🔗 Бағдарлама сайтта: " if lang == "kz" else "🔗 Программа на сайте вуза: ") + ln["program"]
+    if ln.get("bachelor_list"):
+        return ("🔗 ЖОО сайтындағы бағдарламалар тізімі: " if lang == "kz" else "🔗 Список программ на сайте вуза: ") + ln["bachelor_list"]
     return ("🌐 ЖОО сайты: " if lang == "kz" else "🌐 Сайт вуза: ") + ln.get("site", "")
 
 
