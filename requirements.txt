@@ -1,3 +1,4 @@
 anthropic>=1.8,<2
 python-telegram-bot>=22,<23
 python-dotenv>=1.0
+Pillow>=10,<13

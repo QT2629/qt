@@ -13,6 +13,7 @@ import logging
 import re
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from urllib.parse import urlencode
 
 import anthropic
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup, Update
@@ -27,6 +28,7 @@ from telegram.ext import (
     filters,
 )
 
+import card
 import catalog
 import config
 import stats
@@ -85,7 +87,7 @@ def menu_keyboard(lang: str) -> ReplyKeyboardMarkup:
             [t(lang, "btn_pick"), t(lang, "btn_chance")],
             [t(lang, "btn_ent"), t(lang, "btn_prices")],
             [t(lang, "btn_docs"), t(lang, "btn_dates")],
-            [t(lang, "btn_contacts")],
+            [t(lang, "btn_contacts"), t(lang, "btn_share")],
         ],
         resize_keyboard=True,
     )
@@ -143,8 +145,25 @@ def values_keyboard(lang: str) -> InlineKeyboardMarkup:
 # ---------------------------------------------------------------------------
 # Команды
 # ---------------------------------------------------------------------------
+def invite_link(context: ContextTypes.DEFAULT_TYPE, user_id: int) -> str:
+    """Ссылка на бота с кодом пригласившего — так в /stats видно, сколько людей пришло по приглашениям."""
+    return f"https://t.me/{context.bot.username}?start=ref_{stats.ref_code(user_id)}"
+
+
+def share_keyboard(context: ContextTypes.DEFAULT_TYPE, lang: str, user_id: int, extra=()) -> InlineKeyboardMarkup:
+    url = "https://t.me/share/url?" + urlencode({"url": invite_link(context, user_id), "text": t(lang, "share_text")})
+    return InlineKeyboardMarkup([[InlineKeyboardButton(t(lang, "share_btn"), url=url)], *extra])
+
+
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """/start — выбор языка и новый разговор."""
+    """/start — выбор языка и новый разговор. /start ref_XXXX — пришёл по приглашению."""
+    payload = context.args[0] if context.args else ""
+    is_new = not context.user_data.get("joined") and "lang" not in context.user_data
+    if payload.startswith("ref_") and is_new:
+        ref = payload[4:20]
+        if ref != stats.ref_code(update.effective_user.id):  # сам себя не приглашает
+            stats.log_event(update.effective_user.id, "ref_join", ref)
+    context.user_data["joined"] = True
     context.user_data["history"] = []
     context.user_data["recent"] = []
     await update.message.reply_text(t("ru", "choose_lang"), reply_markup=language_keyboard())
@@ -283,6 +302,7 @@ async def finish_quiz(context: ContextTypes.DEFAULT_TYPE, chat_id: int, lang: st
 BUTTON_STATS_NAMES = {
     "btn_pick": "Подобрать специальность", "btn_chance": "Шанс на грант", "btn_ent": "Мои предметы ЕНТ", "btn_prices": "Вузы и цены",
     "btn_docs": "Документы", "btn_dates": "Важные даты", "btn_contacts": "Приёмные комиссии",
+    "btn_share": "Поделиться ботом",
 }
 
 
@@ -323,6 +343,9 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         await update.message.reply_text(static_text("documents", lang))
     elif button == "btn_dates":
         await update.message.reply_text(static_text("dates", lang))
+    elif button == "btn_share":
+        await update.message.reply_text(t(lang, "share_intro"),
+                                        reply_markup=share_keyboard(context, lang, update.effective_user.id))
     elif button == "btn_contacts":
         await update.message.reply_text(universities.contacts_text(lang),
                                         disable_web_page_preview=True)
@@ -332,12 +355,23 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
 
 
 async def send_chances(context: ContextTypes.DEFAULT_TYPE, chat_id: int, lang: str, group: str, score: int) -> None:
+    """Текст с подробностями, затем картинка с результатом и кнопкой «Отправить другу»."""
     stats.log_event(chat_id, "chance", f"{group}:{score}")
-    keyboard = InlineKeyboardMarkup([
-        [InlineKeyboardButton(t(lang, "chance_again"), callback_data=f"gc:{group}")],
-        [InlineKeyboardButton(t(lang, "chance_programs"), callback_data=f"ent:{group}")],
-    ])
-    await send_long(context, chat_id, universities.grant_chances(group, score, lang), lang, last_markup=keyboard)
+    more = [[InlineKeyboardButton(t(lang, "chance_again"), callback_data=f"gc:{group}")],
+            [InlineKeyboardButton(t(lang, "chance_programs"), callback_data=f"ent:{group}")]]
+    await send_long(context, chat_id, universities.grant_chances(group, score, lang), lang)
+    try:
+        png = card.chance_card(group, score, lang, context.bot.username)
+    except Exception:  # картинка — приятное дополнение; если не вышло, ответ уже отправлен текстом
+        logger.exception("Не получилось нарисовать картинку «Шанс на грант»")
+        png = None
+    if not png:
+        await context.bot.send_message(chat_id, t(lang, "card_more"), reply_markup=InlineKeyboardMarkup(more))
+        return
+    link = invite_link(context, chat_id)
+    await context.bot.send_photo(chat_id, png, caption=t(lang, "card_caption").format(link=link),
+                                 reply_markup=share_keyboard(context, lang, chat_id, more))
+    stats.log_event(chat_id, "card", f"{group}:{score}")
 
 
 async def handle_voice(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:

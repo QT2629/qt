@@ -35,12 +35,17 @@ def _user_hash(user_id: int) -> str:
 
 
 def log_event(user_id: int, kind: str, detail: str = "", cost: float = 0.0) -> None:
-    """kind: button, ai, chance, quiz_done, limit, error."""
+    """kind: button, ai, chance, card, ref_join, quiz_done, limit, error."""
     with _connect() as conn:
         conn.execute(
             "INSERT INTO events VALUES (?, ?, ?, ?, ?)",
             (datetime.now(ALMATY_TZ).isoformat(), _user_hash(user_id), kind, detail, cost),
         )
+
+
+def ref_code(user_id: int) -> str:
+    """Код для пригласительной ссылки: тот же хеш, что в статистике, — Telegram ID наружу не попадает."""
+    return _user_hash(user_id)
 
 
 def request_cost(model: str, usage) -> float:
@@ -65,6 +70,11 @@ def report(days: int) -> str:
         ai = one("SELECT COUNT(*) FROM events WHERE ts >= ? AND kind = 'ai'")
         cost = one("SELECT SUM(cost) FROM events WHERE ts >= ?")
         chances = one("SELECT COUNT(*) FROM events WHERE ts >= ? AND kind = 'chance'")
+        refs = one("SELECT COUNT(*) FROM events WHERE ts >= ? AND kind = 'ref_join'")
+        top_ref = conn.execute(
+            "SELECT detail, COUNT(*) FROM events WHERE ts >= ? AND kind = 'ref_join' "
+            "GROUP BY detail ORDER BY 2 DESC LIMIT 1", (since,)
+        ).fetchone()
         quiz = one("SELECT COUNT(*) FROM events WHERE ts >= ? AND kind = 'quiz_done'")
         limit = one("SELECT COUNT(DISTINCT user) FROM events WHERE ts >= ? AND kind = 'limit'")
         errors = one("SELECT COUNT(*) FROM events WHERE ts >= ? AND kind = 'error'")
@@ -81,6 +91,7 @@ def report(days: int) -> str:
         f"Анкет пройдено: {quiz:.0f}",
         f"Расходы на Claude: ~${cost:.2f}" + (f" (~${cost / users:.3f} на человека)" if users else ""),
         f"Расчётов «Шанс на грант»: {chances:.0f}",
+        f"Пришли по приглашению: {refs:.0f}" + (f" (больше всех привёл один человек: {top_ref[1]})" if top_ref else ""),
         f"Упёрлись в дневной лимит: {limit:.0f} чел.",
         f"Ошибки: {errors:.0f}",
     ]
