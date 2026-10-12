@@ -164,6 +164,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         if ref != stats.ref_code(update.effective_user.id):  # сам себя не приглашает
             stats.log_event(update.effective_user.id, "ref_join", ref)
     context.user_data["joined"] = True
+    stats.log_event(update.effective_user.id, "start", "new" if is_new else "")
     context.user_data["history"] = []
     context.user_data["recent"] = []
     await update.message.reply_text(t("ru", "choose_lang"), reply_markup=language_keyboard())
@@ -188,14 +189,16 @@ async def my_id(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 
 async def show_stats(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """/stats — статистика за сутки и за 7 дней (только для администраторов)."""
+    """/stats — пользователи по месяцам и статистика за сутки, 7 и 30 дней (только для администраторов)."""
     if update.effective_user.id not in config.ADMIN_IDS:
         await update.message.reply_text(
             f"Команда /stats только для администраторов. Ваш ID: {update.effective_user.id}\n"
             "Чтобы стать администратором, впишите его в .env строкой ADMIN_IDS=... и перезапустите бота."
         )
         return
+    await update.message.reply_text(stats.overview())
     await update.message.reply_text(stats.report(1) + "\n\n" + stats.report(7))
+    await update.message.reply_text(stats.report(30))
 
 
 # ---------------------------------------------------------------------------
