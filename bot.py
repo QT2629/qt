@@ -342,7 +342,7 @@ async def finish_quiz(context: ContextTypes.DEFAULT_TYPE, chat_id: int, lang: st
         interests=", ".join(catalog.INTERESTS[tag][lang] for tag in quiz["interests"]),
         value=catalog.VALUES[value][lang],
     )
-    keys = universities.for_quiz(quiz["interests"], group=group)
+    keys = universities.for_quiz(quiz["interests"], group=group, home=home_region(chat_id))
     await reply_with_claude(context, chat_id, lang, user_text, keys)
 
 
@@ -401,7 +401,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     elif button == "btn_mocks":
         await profile_bot.show_mocks(context, chat_id, lang)
     elif button == "btn_profile":
-        await profile_bot.show_page(context, chat_id, lang)
+        await profile_bot.show_page(context, chat_id, lang, with_card=True)
     elif button == "btn_share":
         await update.message.reply_text(t(lang, "share_intro"),
                                         reply_markup=share_keyboard(context, lang, update.effective_user.id))
@@ -438,9 +438,16 @@ async def handle_voice(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     await update.message.reply_text(t(get_lang(context), "voice_off"))
 
 
+def home_region(chat_id: int) -> str | None:
+    """Регион из личной страницы (Алматы / Астана) — его вузы предлагаем первыми."""
+    p = profiles.get(chat_id)
+    return universities.region_of(p.get("city")) if p else None
+
+
 async def answer_question(context: ContextTypes.DEFAULT_TYPE, chat_id: int, lang: str, text: str) -> None:
     """Свободный вопрос → ИИ с данными нужных программ AlmaU и других вузов."""
-    keys = universities.select(text, context.user_data.get("recent", []), context.user_data.pop("ask_uni", None))
+    keys = universities.select(text, context.user_data.get("recent", []), context.user_data.pop("ask_uni", None),
+                               home=home_region(chat_id))
     await reply_with_claude(context, chat_id, lang, text, keys)
 
 

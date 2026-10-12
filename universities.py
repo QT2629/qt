@@ -197,7 +197,7 @@ def details(keys: list[str]) -> str | None:
             fields = ["code", "name_ru", "name_kz", "school", "degree", "duration_years", "tracks", "key_courses",
                       "practice", "note", "ent_subjects", "extra_ent_subjects", "ent_note", "price_kzt", "price_note",
                       "availability_note", "languages", "grant_2026"]
-            out.append({"university": u["name_ru"], **{k: src[k] for k in fields if k in src},
+            out.append({"university": u["name_ru"], "city": u["city"], **{k: src[k] for k in fields if k in src},
                         "links": links(slug, code)})
             continue
         p = u["programs"][code]
@@ -236,9 +236,12 @@ def _stems(text: str) -> list[str]:
     subjects = _SUBJECT_STEMS if _groups(text) else ["ент", "ұбт", "экзамен"]
     out = []
     for w in re.findall(r"[\w-]+", text.lower()):
-        if w in _STOP or any(a in w for a in aliases) or any(w.startswith(s) for s in subjects):
+        if w in _STOP or any(a in w for a in aliases) or any(w.startswith(s) for s in subjects) or region_of(w):
             continue
         stem = w[: max(4, len(w) - 2)] if len(w) >= 4 else w if re.fullmatch(r"[a-z]{2,3}|ии", w) else ""
+        if stem == "прав":  # «право/праву» — не путать с «упРАВление»
+            out += ["право", "юрис", "юрид"]
+            continue
         if stem:  # короткие латинские: it, ai, hr, ux, pr
             out.append(stem)
             out += _SYNONYMS.get(stem, []) + _SYNONYMS.get(w, [])
@@ -274,9 +277,40 @@ def _groups(text: str) -> set[str]:
     return groups | set(find_groups(text))
 
 
-def relevant(text: str, recent: list[str], limit: int = 8) -> list[str]:
-    """Какие программы (ключи «вуз:код») подробно показать ИИ для этого вопроса — из всех вузов поровну."""
+# Города: как их пишут люди → регион. Каскелен (SDU) — пригород Алматы, поэтому считается Алматы.
+REGIONS = {
+    "almaty": ("алмат", "almaty", "алма-ат", "каскелен", "қаскелең", "kaskelen"),
+    "astana": ("астан", "astana", "нур-султан", "нурсултан", "акмол", "ақмол"),
+}
+REGION_NAMES = {"almaty": "Алматы", "astana": "Астана"}
+
+
+def region_of(text: str | None) -> str | None:
+    """Регион по тексту (городу из профиля или вопросу). None — если в базе нет вузов этого города."""
+    low = (text or "").lower()
+    return next((r for r, words in REGIONS.items() if any(w in low for w in words)), None)
+
+
+def uni_region(slug: str) -> str | None:
+    return region_of(UNIS[slug]["city"])
+
+
+def _home_first(keys: list[str], home: str | None) -> list[str]:
+    """Сначала программы вузов в городе человека, потом остальные — порядок внутри групп сохраняем."""
+    if not home:
+        return keys
+    return [k for k in keys if uni_region(k.split(":")[0]) == home] + \
+           [k for k in keys if uni_region(k.split(":")[0]) != home]
+
+
+def relevant(text: str, recent: list[str], limit: int = 8, home: str | None = None) -> list[str]:
+    """Какие программы (ключи «вуз:код») подробно показать ИИ для этого вопроса — из всех вузов поровну.
+    home — регион из профиля: его вузы идут первыми. Если в вопросе назван город — берём только его вузы."""
     slugs = mentioned_unis(text)
+    asked_city = region_of(text)
+    if not slugs and asked_city:  # «покажи вузы Алматы по IT» — только этот город
+        slugs = [s for s in UNIS if uni_region(s) == asked_city]
+        home = None
     pool = [p for s in (slugs or UNIS) for p in UNIS[s]["programs"].values()]
     groups = _groups(text)
     if groups:
@@ -289,10 +323,10 @@ def relevant(text: str, recent: list[str], limit: int = 8) -> list[str]:
         result = [p["key"] for p in pool if p["open"]]
     if not result:  # «а сколько стоит?» — продолжаем про недавние программы
         result = [k for k in recent if not slugs or k.split(":")[0] in slugs]
-    return _balanced(result, limit, per_uni=limit if len(slugs) == 1 else 2)
+    return _balanced(_home_first(result, home), limit, per_uni=limit if len(slugs) == 1 else 2)
 
 
-def select(text: str, recent: list[str], asked: str | None = None) -> list[str]:
+def select(text: str, recent: list[str], asked: str | None = None, home: str | None = None) -> list[str]:
     """Программы для ответа ИИ. asked — программа, под карточкой которой нажали «Задать вопрос ИИ»."""
     # старые записи (до объединения вузов) хранили коды AlmaU без «вуз:» — пропускаем всё неизвестное
     recent = [k for k in recent if ":" in k and k.split(":")[1] in UNIS.get(k.split(":")[0], {}).get("programs", {})]
@@ -300,18 +334,18 @@ def select(text: str, recent: list[str], asked: str | None = None) -> list[str]:
         asked = None
     if asked and not mentioned_unis(text):
         return [asked]
-    keys = relevant(text, recent)
+    keys = relevant(text, recent, home=home)
     return ([asked] + [k for k in keys if k != asked])[:8] if asked else keys
 
 
-def for_quiz(tags: list[str], group: str | None, limit: int = 8) -> list[str]:
+def for_quiz(tags: list[str], group: str | None, limit: int = 8, home: str | None = None) -> list[str]:
     """Программы для анкеты «Подобрать специальность»: по интересам и предметам ЕНТ, из всех вузов поровну."""
     words = [w for t in tags for w in INTERESTS[t]["words"]]
     pool = [p for u in UNIS.values() for p in u["programs"].values()
             if p["open"] and (group is None or group in p["ent_groups"])]
     scored = sorted(((_score(p, words), p["key"]) for p in pool), key=lambda x: -x[0])
     keys = [k for sc, k in scored if sc > 0] or [k for _, k in scored]
-    return _balanced(keys, limit)
+    return _balanced(_home_first(keys, home), limit)
 
 
 # ---------------------------------------------------------------------------

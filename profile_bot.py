@@ -92,6 +92,13 @@ T = {
         "scores": "📈 Пробных тестов: {n}{last}", "scores_last": ", последний — <b>{v}</b>{delta}",
         "scores_ent": "🎓 ЕНТ: <b>{v}</b>", "no_scores": "📈 Баллов пока нет — внеси пробный тест.",
         "remind_on": "🔔 Напоминания включены", "remind_off": "🔕 Напоминания выключены",
+        "b_card": "🪪 Моя карточка",
+        "c_ent": "Предметы ЕНТ", "c_target": "Цель", "c_grant": "Грант 2026 в {uni}", "c_best": "Баллы",
+        "c_next": "Ближайший срок", "c_grant_ok": "от {min} — твоего балла хватает", "c_grant_gap": "от {min} — не хватает {gap}",
+        "c_grant_only": "от {min}", "c_grant_none": "грантов в этот вуз не было", "c_best_v": "лучший {best} · последний {last}",
+        "c_delta": " · {sign}{d} с первого", "c_spark": "Пробные тесты и ЕНТ", "c_footer": "Данные из профиля Pro4U · {date}",
+        "c_reg": "{name}: регистрация {when}", "c_test": "{name}: тестирование {when}", "c_exam": "Моё ЕНТ: {date} ({when})",
+        "c_in": "через {d}", "c_today": "сегодня",
         "b_mock": "➕ Пробный тест", "b_ent": "➕ Результат ЕНТ", "b_progress": "📈 Мой прогресс",
         "b_exam": "🗓 Дата моего ЕНТ", "b_edit": "✏️ Изменить данные", "b_remind_off": "🔕 Выключить напоминания",
         "b_remind_on": "🔔 Включить напоминания", "b_delete": "🗑 Удалить мои данные", "b_back": "↩️ К странице",
@@ -195,6 +202,13 @@ T = {
         "scores": "📈 Сынақ тесттері: {n}{last}", "scores_last": ", соңғысы — <b>{v}</b>{delta}",
         "scores_ent": "🎓 ҰБТ: <b>{v}</b>", "no_scores": "📈 Әзірге балл жоқ — сынақ тестін енгіз.",
         "remind_on": "🔔 Еске салулар қосулы", "remind_off": "🔕 Еске салулар өшірулі",
+        "b_card": "🪪 Менің карточкам",
+        "c_ent": "ҰБТ пәндері", "c_target": "Мақсат", "c_grant": "{uni} гранты 2026", "c_best": "Баллдар",
+        "c_next": "Жақын мерзім", "c_grant_ok": "{min} бастап — балың жетеді", "c_grant_gap": "{min} бастап — {gap} балл жетпейді",
+        "c_grant_only": "{min} бастап", "c_grant_none": "бұл ЖОО-ға грант берілмеді", "c_best_v": "ең жоғары {best} · соңғы {last}",
+        "c_delta": " · алғашқыдан {sign}{d}", "c_spark": "Сынақ тесттері мен ҰБТ", "c_footer": "Pro4U профилінің деректері · {date}",
+        "c_reg": "{name}: тіркелу {when}", "c_test": "{name}: тестілеу {when}", "c_exam": "Менің ҰБТ-м: {date} ({when})",
+        "c_in": "{d} кейін", "c_today": "бүгін",
         "b_mock": "➕ Сынақ тесті", "b_ent": "➕ ҰБТ нәтижесі", "b_progress": "📈 Менің прогресім",
         "b_exam": "🗓 ҰБТ күнім", "b_edit": "✏️ Деректерді өзгерту", "b_remind_off": "🔕 Еске салуды өшіру",
         "b_remind_on": "🔔 Еске салуды қосу", "b_delete": "🗑 Деректерімді өшіру", "b_back": "↩️ Парақшаға",
@@ -258,7 +272,7 @@ def page_keyboard(p: dict, lang: str) -> Kb:
     return Kb([
         [Btn(t(lang, "b_mock"), callback_data="pf:addmock"), Btn(t(lang, "b_ent"), callback_data="pf:addent")],
         [Btn(t(lang, "b_progress"), callback_data="pf:progress"), Btn(t(lang, "b_exam"), callback_data="pf:examdate")],
-        [Btn(t(lang, "b_edit"), callback_data="pf:edit")],
+        [Btn(t(lang, "b_card"), callback_data="pf:card"), Btn(t(lang, "b_edit"), callback_data="pf:edit")],
         [Btn(t(lang, "b_remind_off" if p.get("reminders") else "b_remind_on"), callback_data="pf:remind")],
         [Btn(t(lang, "b_delete"), callback_data="pf:delete")],
     ])
@@ -384,12 +398,81 @@ def page_text(p: dict, lang: str) -> str:
     return "\n".join(lines)
 
 
-async def show_page(context: ContextTypes.DEFAULT_TYPE, chat_id: int, lang: str, query=None) -> None:
+def card_info(p: dict, lang: str) -> dict:
+    """Что показать на карточке пользователя — только главное."""
+    rows_db = profiles.scores(p["user_id"])
+    info = {"name": p.get("name") or t(lang, "no_name").replace("<b>", "").replace("</b>", ""), "rows": [],
+            "totals": [r["total"] for r in rows_db]}
+    sub = [t(lang, "age").format(n=p["age"]) if p.get("age") else "", t(lang, "city").format(c=p["city"]) if p.get("city") else ""]
+    info["sub"] = " · ".join(x for x in sub if x)
+    if p.get("ent_group") in universities.ENT_LABELS:
+        info["rows"].append((t(lang, "c_ent"), universities.ENT_LABELS[p["ent_group"]][lang], None))
+    target = " — ".join(x for x in (uni_label(p), p.get("target_program") or "") if x)
+    slug = p.get("target_uni")
+    if target and slug in universities.UNIS:
+        target += f" ({universities.UNIS[slug]['city'].split(' (')[0]})"
+    if target:
+        info["rows"].append((t(lang, "c_target"), target, None))
+    best = max(info["totals"], default=None)
+    g = target_grant(p)
+    if g:
+        label = t(lang, "c_grant").format(uni=g["uni"])
+        if g["min"] is None:
+            info["rows"].append((label, t(lang, "c_grant_none"), None))
+        elif best is None:
+            info["rows"].append((label, t(lang, "c_grant_only").format(min=g["min"]), None))
+        elif best >= g["min"]:
+            info["rows"].append((label, t(lang, "c_grant_ok").format(min=g["min"]), "green"))
+        else:
+            info["rows"].append((label, t(lang, "c_grant_gap").format(min=g["min"], gap=g["min"] - best), "amber"))
+    if rows_db:
+        first, last = rows_db[0]["total"], rows_db[-1]["total"]
+        v = t(lang, "c_best_v").format(best=best, last=last)
+        if len(rows_db) > 1:
+            v += t(lang, "c_delta").format(sign="+" if last >= first else "", d=last - first)
+        info["rows"].append((t(lang, "c_best"), v, None))
+    # ближайший срок: регистрация, тестирование или своя дата
+    events = []
+    today = profiles.today()
+    for sk in profiles.user_sessions(p):
+        st = profiles.stage(sk)
+        name = st["name_kz" if lang == "kz" else "name_ru"]
+        when = lambda days, dt: (t(lang, "c_today") if days == 0 else t(lang, "c_in").format(d=days_word(days, lang))) + f", {dt:%d.%m}"
+        if st["stage"] == "before_reg":
+            events.append((st["days"], t(lang, "c_reg").format(name=name, when=when(st["days"], st["date"]))))
+        elif st["stage"] in ("before_test", "reg_open"):
+            events.append((st["days"], t(lang, "c_test").format(name=name, when=when(st["days"], st["date"]))))
+        elif st["stage"] == "reg":
+            events.append((st["days"], t(lang, "st_reg").format(d=days_word(st["days"], lang), date=f"{st['date']:%d.%m}") + f" — {name}"))
+    for exam in profiles.exam_dates(p):
+        left = (exam - today).days
+        if left >= 0:
+            events.append((left, t(lang, "c_exam").format(date=f"{exam:%d.%m}",
+                                                           when=t(lang, "c_today") if left == 0 else t(lang, "c_in").format(d=days_word(left, lang)))))
+    if events:
+        info["rows"].append((t(lang, "c_next"), min(events)[1], None))
+    info["spark_label"] = t(lang, "c_spark")
+    info["footer"] = t(lang, "c_footer").format(date=f"{today:%d.%m.%Y}")
+    return info
+
+
+async def send_card(context: ContextTypes.DEFAULT_TYPE, chat_id: int, lang: str) -> None:
+    p = profiles.get(chat_id)
+    if p:
+        await context.bot.send_photo(chat_id, card.profile_card(card_info(p, lang), lang))
+
+
+async def show_page(context: ContextTypes.DEFAULT_TYPE, chat_id: int, lang: str, query=None, with_card: bool = False) -> None:
     p = profiles.get(chat_id)
     if not p:
         kb = Kb([[Btn(t(lang, "agree"), callback_data="pf:consent")], [Btn(t(lang, "later"), callback_data="pf:later")]])
         await context.bot.send_message(chat_id, t(lang, "consent"), reply_markup=kb)
         return
+    if with_card:
+        try:
+            await send_card(context, chat_id, lang)
+        except Exception:  # карточка — дополнение; страница всё равно придёт текстом
+            logger.exception("Не получилось нарисовать карточку пользователя")
     text, kb = page_text(p, lang), page_keyboard(p, lang)
     if query:
         try:
@@ -611,6 +694,8 @@ async def on_callback(update, context: ContextTypes.DEFAULT_TYPE, lang: str, sen
         await query.edit_message_text(t(lang, "dates_cleared"), reply_markup=back_keyboard(lang))
     elif data == "pf:examdate":
         await ask(context, chat_id, lang, "exam_date")
+    elif data == "pf:card":
+        await send_card(context, chat_id, lang)
     elif data == "pf:progress":
         await send_progress(context, chat_id, lang)
     elif data == "pf:edit":
@@ -663,7 +748,10 @@ def ai_context(chat_id: int) -> str | None:
     rows = profiles.scores(chat_id)
     facts = []
     if p.get("city"):
-        facts.append(f"город: {p['city']}")
+        region = universities.region_of(p["city"])
+        near = (f"в базе есть вузы этого города ({universities.REGION_NAMES[region]})" if region
+                else "в его городе вузов из базы нет — учёба будет в другом городе (Алматы или Астана)")
+        facts.append(f"город: {p['city']} ({near})")
     if p.get("ent_group") in universities.ENT_LABELS:
         facts.append(f"профильные предметы ЕНТ: {universities.ENT_LABELS[p['ent_group']]['ru']}")
     if uni_label(p):
