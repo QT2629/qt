@@ -40,8 +40,12 @@ T = {
         "q_target_uni": "В какой вуз хочешь поступить? Если вуза нет в списке — нажми «Другой» и напиши название.",
         "q_target_uni_text": "Напиши название вуза.",
         "q_target_program": "На какую специальность? Напиши название, например: «IT», «Финансы», «Психология».",
-        "q_session": "Какое ЕНТ будешь сдавать?",
-        "q_exam_date": "Напиши дату своего ЕНТ, например: 15.05 (дату и время видно в UTO после регистрации).",
+        "q_session": "Какие ЕНТ будешь сдавать? Можно выбрать несколько — отметь все и нажми «Готово».",
+        "q_ent_which": "Какое это было ЕНТ?", "s_other": "Другое / не помню", "done": "✅ Готово",
+        "s_none": "не выбрано",
+        "q_exam_date": "Напиши дату своего ЕНТ, например: 15.05 (дату и время видно в UTO после регистрации). "
+                       "Если сдаёшь несколько ЕНТ — внеси каждую дату по очереди.",
+        "b_clear_dates": "🗑 Очистить мои даты", "dates_cleared": "Даты ЕНТ удалены.",
         "q_score_mock": (
             "Внеси баллы пробного теста.\n\n"
             "Одним числом — общий балл, например: <b>104</b>\n"
@@ -128,8 +132,12 @@ T = {
         "q_target_uni": "Қай ЖОО-ға түскің келеді? Тізімде жоқ болса — «Басқа ЖОО» батырмасын басып, атауын жаз.",
         "q_target_uni_text": "ЖОО атауын жаз.",
         "q_target_program": "Қай мамандыққа? Атауын жаз, мысалы: «IT», «Қаржы», «Психология».",
-        "q_session": "Қай ҰБТ-ны тапсырасың?",
-        "q_exam_date": "ҰБТ күніңді жаз, мысалы: 15.05 (тіркелгеннен кейін күні мен уақыты UTO-да көрінеді).",
+        "q_session": "Қай ҰБТ-ларды тапсырасың? Бірнешеуін таңдауға болады — барлығын белгілеп, «Дайын» батырмасын бас.",
+        "q_ent_which": "Бұл қай ҰБТ болды?", "s_other": "Басқа / есімде жоқ", "done": "✅ Дайын",
+        "s_none": "таңдалмады",
+        "q_exam_date": "ҰБТ күніңді жаз, мысалы: 15.05 (тіркелгеннен кейін күні мен уақыты UTO-да көрінеді). "
+                       "Бірнеше ҰБТ тапсырсаң — әр күнді кезекпен енгіз.",
+        "b_clear_dates": "🗑 Күндерімді өшіру", "dates_cleared": "ҰБТ күндері өшірілді.",
         "q_score_mock": (
             "Сынақ тестінің баллын енгіз.\n\n"
             "Бір санмен — жалпы балл, мысалы: <b>104</b>\n"
@@ -254,10 +262,16 @@ def unis_keyboard(lang: str) -> Kb:
                        Btn(t(lang, "undecided"), callback_data="pf:u:none")]])
 
 
-def sessions_keyboard(lang: str) -> Kb:
-    return Kb([[Btn(t(lang, "s_main"), callback_data="pf:s:main")],
-               [Btn(t(lang, "s_jan"), callback_data="pf:s:jan"), Btn(t(lang, "s_mar"), callback_data="pf:s:mar")],
-               [Btn(t(lang, "s_unknown"), callback_data="pf:s:unknown")]])
+def sessions_keyboard(lang: str, selected: list[str]) -> Kb:
+    """Можно отметить несколько ЕНТ: январское, мартовское и основное — в любом сочетании."""
+    mark = lambda k: ("✅ " if k in selected else "▫️ ") + t(lang, f"s_{k}")
+    return Kb([[Btn(mark(k), callback_data=f"pf:s:{k}")] for k in profiles.SESSION_ORDER]
+              + [[Btn(t(lang, "s_unknown"), callback_data="pf:s:unknown"), Btn(t(lang, "done"), callback_data="pf:s:done")]])
+
+
+def sessions_label(p: dict, lang: str) -> str:
+    chosen = profiles.user_sessions(p)
+    return ", ".join(t(lang, f"s_{k}") for k in chosen) if chosen else t(lang, "s_none")
 
 
 def edit_keyboard(lang: str) -> Kb:
@@ -322,13 +336,12 @@ def page_text(p: dict, lang: str) -> str:
             gap = g["min"] - best
             lines.append(t(lang, "grant_gap").format(uni=g["uni"], gop=g["gop"], min=g["min"], gap=gap, best=best,
                                                      balls=balls_word(gap)))
-    st = profiles.stage(p.get("session") or "")
-    if st:
+    for sk in profiles.user_sessions(p):
+        st = profiles.stage(sk)
         status = t(lang, f"st_{st['stage']}").format(d=days_word(st["days"], lang), date=st["date"].strftime("%d.%m"))
         approx = t(lang, "approx") if not profiles.schedule().get("confirmed") and st["stage"] != "done" else ""
         lines.append(t(lang, "session_line").format(name=b(st["name_kz" if lang == "kz" else "name_ru"]), status=status) + approx)
-    exam = profiles._d(p.get("exam_date"))
-    if exam:
+    for exam in profiles.exam_dates(p):
         left = (exam - profiles.today()).days
         when = t(lang, "exam_today") if left == 0 else t(lang, "exam_past") if left < 0 else \
             t(lang, "exam_left").format(d=days_word(left, lang))
@@ -376,11 +389,15 @@ async def ask(context: ContextTypes.DEFAULT_TYPE, chat_id: int, lang: str, field
     elif field == "target_uni":
         await context.bot.send_message(chat_id, t(lang, "q_target_uni"), reply_markup=unis_keyboard(lang))
     elif field == "session":
-        await context.bot.send_message(chat_id, t(lang, "q_session"), reply_markup=sessions_keyboard(lang))
+        selected = profiles.user_sessions(profiles.get(chat_id) or {})
+        await context.bot.send_message(chat_id, t(lang, "q_session"), reply_markup=sessions_keyboard(lang, selected))
     elif field in ("mock", "ent"):
         await context.bot.send_message(chat_id, t(lang, f"q_score_{field}"), reply_markup=back_keyboard(lang))
     elif field == "exam_date":
-        await context.bot.send_message(chat_id, t(lang, "q_exam_date"), reply_markup=back_keyboard(lang))
+        kb = [[Btn(t(lang, "b_back"), callback_data="pf:show")]]
+        if profiles.exam_dates(profiles.get(chat_id) or {}):
+            kb.insert(0, [Btn(t(lang, "b_clear_dates"), callback_data="pf:clrdates")])
+        await context.bot.send_message(chat_id, t(lang, "q_exam_date"), reply_markup=Kb(kb))
     elif field == "uni_text":
         await context.bot.send_message(chat_id, t(lang, "q_target_uni_text"))
     else:
@@ -424,14 +441,14 @@ async def on_text(context: ContextTypes.DEFAULT_TYPE, chat_id: int, lang: str, t
         if not d:
             await context.bot.send_message(chat_id, t(lang, "bad_date"), reply_markup=back_keyboard(lang))
             return True
-        profiles.update(chat_id, exam_date=d.isoformat())
+        profiles.add_exam_date(chat_id, d)
     elif field in ("mock", "ent"):
         score = profiles.parse_score(text)
         if not score:
             await context.bot.send_message(chat_id, t(lang, "bad_score"), reply_markup=back_keyboard(lang))
             return True
         prev = profiles.scores(chat_id)
-        profiles.add_score(chat_id, field, score)
+        profiles.add_score(chat_id, field, score, session=context.user_data.pop("pf_session", None) if field == "ent" else None)
         context.user_data.pop("pf_await", None)
         await send_score_saved(context, chat_id, lang, score["total"], prev[-1]["total"] if prev else None)
         return True
@@ -472,6 +489,8 @@ async def send_progress(context, chat_id: int, lang: str) -> None:
         parts = [r[name] for name, _ in profiles.PARTS]
         detail = f" ({'/'.join(str(x) for x in parts)})" if all(x is not None for x in parts) else ""
         kind = t(lang, "k_ent" if r["kind"] == "ent" else "k_mock")
+        if r["kind"] == "ent" and r.get("session") in profiles.SESSION_ORDER:
+            kind += f" ({t(lang, 's_' + r['session']).lower()})"
         lines.append(f"• {r['taken_on'][8:10]}.{r['taken_on'][5:7]} · {kind} · <b>{r['total']}</b>{detail}")
     full = [r for r in rows if all(r[name] is not None for name, _ in profiles.PARTS)]
     if full:
@@ -540,13 +559,30 @@ async def on_callback(update, context: ContextTypes.DEFAULT_TYPE, lang: str, sen
         await next_step(context, chat_id, lang, "target_uni")
     elif data.startswith("pf:s:"):
         choice = data[5:]
-        profiles.update(chat_id, session=None if choice == "unknown" else choice)
-        await query.edit_message_text(f"{t(lang, 'q_session')}\n{b(t(lang, 's_' + choice))}")
+        selected = profiles.user_sessions(p)
+        if choice in profiles.SESSION_ORDER:      # отметить / снять
+            selected = [k for k in selected if k != choice] if choice in selected else selected + [choice]
+            profiles.update(chat_id, session=",".join(selected) or None)
+            await query.edit_message_reply_markup(reply_markup=sessions_keyboard(lang, profiles.user_sessions(profiles.get(chat_id))))
+            return
+        if choice == "unknown":
+            profiles.update(chat_id, session=None)
+        p = profiles.get(chat_id)
+        await query.edit_message_text(f"{t(lang, 'q_session').split('?')[0]}?\n{b(sessions_label(p, lang))}")
         await next_step(context, chat_id, lang, "session")
     elif data == "pf:addmock":
         await ask(context, chat_id, lang, "mock")
     elif data == "pf:addent":
+        options = profiles.user_sessions(p) or list(profiles.SESSION_ORDER)
+        kb = [[Btn(t(lang, f"s_{k}"), callback_data=f"pf:es:{k}")] for k in options]
+        kb.append([Btn(t(lang, "s_other"), callback_data="pf:es:other")])
+        await context.bot.send_message(chat_id, t(lang, "q_ent_which"), reply_markup=Kb(kb))
+    elif data.startswith("pf:es:"):
+        context.user_data["pf_session"] = None if data[6:] == "other" else data[6:]
         await ask(context, chat_id, lang, "ent")
+    elif data == "pf:clrdates":
+        profiles.update(chat_id, exam_date=None)
+        await query.edit_message_text(t(lang, "dates_cleared"), reply_markup=back_keyboard(lang))
     elif data == "pf:examdate":
         await ask(context, chat_id, lang, "exam_date")
     elif data == "pf:progress":
@@ -595,12 +631,12 @@ def ai_context(chat_id: int) -> str | None:
         facts.append(f"хочет поступить в: {uni_label(p)}")
     if p.get("target_program"):
         facts.append(f"специальность: {p['target_program']}")
-    st = profiles.stage(p.get("session") or "")
-    if st:
-        facts.append(f"сдаёт: {st['name_ru']}")
+    chosen = profiles.user_sessions(p)
+    if chosen:
+        facts.append("сдаёт ЕНТ: " + ", ".join(profiles.schedule()["sessions"][k]["name_ru"] for k in chosen))
     if rows:
         facts.append("баллы (дата, вид, общий): " + "; ".join(
-            f"{r['taken_on']} {'ЕНТ' if r['kind'] == 'ent' else 'пробный'} {r['total']}" for r in rows[-6:]))
+            f"{r['taken_on']} {'ЕНТ' if r['kind'] == 'ent' else 'пробный'} {r['total']}" for r in rows[-8:]))
     return "; ".join(facts) or None
 
 
@@ -640,9 +676,10 @@ async def daily_reminders(context: ContextTypes.DEFAULT_TYPE) -> None:
         for key, kind, data in profiles.due_reminders(p):
             if profiles.mark_sent(p["user_id"], key):
                 messages.append(reminder_text(kind, data, lang, confirmed))
-        st = profiles.stage(p.get("session") or "")
+        chosen = profiles.user_sessions(p)
+        all_done = bool(chosen) and all(profiles.stage(k)["stage"] == "done" for k in chosen)
         new = (profiles.today() - profiles._d(p["created_at"][:10])).days < 7
-        if not messages and not new and (not st or st["stage"] != "done") and profiles.mock_nudge_due(p["user_id"]):
+        if not messages and not new and not all_done and profiles.mock_nudge_due(p["user_id"]):
             messages.append((t(lang, "r_mock") + t(lang, "r_off_hint"),
                              Kb([[Btn(t(lang, "b_mock"), callback_data="pf:addmock")]])))
         for text, kb in messages:

@@ -33,7 +33,29 @@ def _connect() -> sqlite3.Connection:
         );
         CREATE TABLE IF NOT EXISTS reminders_sent (user_id INTEGER, key TEXT, sent_at TEXT, PRIMARY KEY (user_id, key));
     """)
+    if "session" not in {r[1] for r in conn.execute("PRAGMA table_info(scores)")}:  # какое это было ЕНТ
+        conn.execute("ALTER TABLE scores ADD COLUMN session TEXT")
     return conn
+
+
+SESSION_ORDER = ("jan", "mar", "main")
+
+
+def user_sessions(p: dict) -> list[str]:
+    """Какие ЕНТ человек сдаёт — можно несколько: январское, мартовское, основное (хранится как «jan,main»)."""
+    chosen = set((p.get("session") or "").split(","))
+    return [k for k in SESSION_ORDER if k in chosen]
+
+
+def exam_dates(p: dict) -> list[date]:
+    """Личные даты тестирования — по одной на каждое ЕНТ (хранятся через запятую)."""
+    return sorted({date.fromisoformat(x) for x in (p.get("exam_date") or "").split(",") if x})
+
+
+def add_exam_date(user_id: int, d: date) -> None:
+    p = get(user_id) or {}
+    dates = sorted({*exam_dates(p), d})
+    update(user_id, exam_date=",".join(x.isoformat() for x in dates))
 
 
 def today() -> date:
@@ -106,14 +128,14 @@ def parse_score(text: str) -> dict | None:
     return None
 
 
-def add_score(user_id: int, kind: str, score: dict, taken_on: date | None = None) -> None:
-    """kind: mock — пробный тест, ent — настоящее ЕНТ."""
+def add_score(user_id: int, kind: str, score: dict, taken_on: date | None = None, session: str | None = None) -> None:
+    """kind: mock — пробный тест, ent — настоящее ЕНТ (session — какое: jan, mar, main)."""
     with _connect() as conn:
         conn.execute(
-            "INSERT INTO scores (user_id, kind, taken_on, total, math_lit, reading, history, prof1, prof2, created_at) "
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "INSERT INTO scores (user_id, kind, taken_on, total, math_lit, reading, history, prof1, prof2, created_at, session) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             (user_id, kind, (taken_on or today()).isoformat(), score["total"],
-             *(score.get(name) for name, _ in PARTS), _now()))
+             *(score.get(name) for name, _ in PARTS), _now(), session))
 
 
 def scores(user_id: int) -> list[dict]:
@@ -183,22 +205,22 @@ def due_reminders(p: dict, on: date | None = None) -> list[tuple[str, str, dict]
     """Какие напоминания пора отправить пользователю сегодня: (ключ для «уже отправлено», вид, данные)."""
     on = on or today()
     out = []
-    s = schedule()["sessions"].get(p.get("session") or "")
-    if s:
+    mine = exam_dates(p)
+    for sk in user_sessions(p):
+        s = schedule()["sessions"][sk]
         rs, re_, ts, te = _d(s["reg_start"]), _d(s["reg_end"]), _d(s["test_start"]), _d(s["test_end"])
-        sk = p["session"]
+        has_date = any(ts <= d <= te for d in mine) if ts and te else False
         for days in (7, 1, 0):
             if rs and (rs - on).days == days:
                 out.append((f"{sk}:reg_start:{rs}:{days}", "reg_start", {"days": days, "date": rs, **s}))
         for days in (3, 1):
             if re_ and (re_ - on).days == days:
                 out.append((f"{sk}:reg_end:{re_}:{days}", "reg_end", {"days": days, "date": re_, **s}))
-        if ts and (ts - on).days == 7 and not p.get("exam_date"):
+        if ts and (ts - on).days == 7 and not has_date:
             out.append((f"{sk}:test_start:{ts}", "test_start", {"days": 7, "date": ts, **s}))
-        if te and (on - te).days == 3:
+        if te and (on - te).days == 3 and not has_date:   # дату не указал — спросим баллы после сессии
             out.append((f"{sk}:ask_result:{te}", "ask_result", s))
-    exam = _d(p.get("exam_date"))
-    if exam:
+    for exam in mine:
         for days in (7, 3, 1):
             if (exam - on).days == days:
                 out.append((f"exam:{exam}:{days}", "exam", {"days": days, "date": exam}))
@@ -215,10 +237,8 @@ def mark_sent(user_id: int, key: str) -> bool:
 
 
 def mock_nudge_due(user_id: int, every_days: int = 14) -> bool:
-    """Раз в две недели спрашиваем про пробные тесты — если человек их вносит или ещё не сдал ЕНТ."""
+    """Раз в две недели спрашиваем про пробные тесты (пока не прошли все выбранные ЕНТ — это проверяет бот)."""
     rows = scores(user_id)
-    if any(r["kind"] == "ent" for r in rows):
-        return False
     last = max([date.fromisoformat(r["taken_on"]) for r in rows if r["kind"] == "mock"], default=None)
     key = f"mock_nudge:{today().isocalendar()[0]}-{today().isocalendar()[1] // 2}"
     if last and (today() - last).days < every_days:
