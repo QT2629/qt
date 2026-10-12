@@ -17,12 +17,14 @@ from urllib.parse import urlencode
 
 import anthropic
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup, Update
-from telegram.constants import ChatAction
+from telegram.constants import ChatAction, ParseMode
+from telegram.error import BadRequest
 from telegram.ext import (
     Application,
     CallbackQueryHandler,
     CommandHandler,
     ContextTypes,
+    Defaults,
     MessageHandler,
     PicklePersistence,
     filters,
@@ -31,6 +33,7 @@ from telegram.ext import (
 import card
 import catalog
 import config
+import formatting
 import stats
 import universities
 from claude_client import NoApiKey, Refused, ask_claude
@@ -62,7 +65,9 @@ BUTTON_KEYS = {TEXTS[lang][key]: key for lang in TEXTS for key in MENU_BUTTONS} 
 
 
 def static_text(name: str, lang: str) -> str:
-    return (STATIC_DIR / f"{name}_{lang}.md").read_text(encoding="utf-8").strip()
+    """Тексты «Документы» и «Даты»: первая строка — заголовок, жирным."""
+    title, _, body = (STATIC_DIR / f"{name}_{lang}.md").read_text(encoding="utf-8").strip().partition("\n")
+    return formatting.b(title) + "\n" + formatting.esc(body)
 
 
 def get_lang(context: ContextTypes.DEFAULT_TYPE) -> str:
@@ -253,7 +258,7 @@ async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
         key = data[3:] if data.startswith("ua:") else "almau:" + data[2:]
         context.user_data["ask_uni"] = key
         await context.bot.send_message(
-            chat_id, t(lang, "ask_about").format(name=universities.prog_name(universities.program(key), lang)))
+            chat_id, t(lang, "ask_about").format(name=formatting.esc(universities.prog_name(universities.program(key), lang))))
 
     elif data.startswith("qg:"):  # анкета, когда группа ЕНТ уже известна
         context.user_data["quiz"] = {"ent": data.split(":")[1], "interests": []}
@@ -410,7 +415,7 @@ async def reply_with_claude(context: ContextTypes.DEFAULT_TYPE, chat_id: int, la
     if not take_ai_quota(context):
         stats.log_event(chat_id, "limit")
         await send_long(context, chat_id, t(lang, "limit").format(
-            limit=config.DAILY_AI_LIMIT, contacts=config.ADMISSIONS_CONTACTS), lang)
+            limit=config.DAILY_AI_LIMIT, contacts=formatting.esc(config.ADMISSIONS_CONTACTS)), lang)
         return
 
     history = context.user_data.setdefault("history", [])
@@ -434,6 +439,7 @@ async def reply_with_claude(context: ContextTypes.DEFAULT_TYPE, chat_id: int, la
             while len(history) > config.MAX_HISTORY_MESSAGES:
                 del history[:2]
             context.user_data["recent"] = keys[:4]  # для уточнений вроде «а сколько она стоит?»
+            answer = formatting.from_ai(answer)  # ИИ выделяет важное <b>…</b>; остальное экранируем
         else:
             answer = t(lang, "empty")
     except Refused:
@@ -480,11 +486,15 @@ async def send_long(context: ContextTypes.DEFAULT_TYPE, chat_id: int, text: str,
                     last_markup: InlineKeyboardMarkup | None = None) -> None:
     """Длинный текст режем на куски, чтобы Telegram его принял.
     К последнему куску можно прикрепить кнопки (например, «Ещё раз»)."""
-    chunks = [text[i: i + TELEGRAM_MESSAGE_LIMIT] for i in range(0, len(text), TELEGRAM_MESSAGE_LIMIT)]
+    chunks = formatting.split(text, TELEGRAM_MESSAGE_LIMIT)
     for n, chunk in enumerate(chunks):
         is_last = n == len(chunks) - 1
         markup = last_markup if (is_last and last_markup) else menu_keyboard(lang)
-        await context.bot.send_message(chat_id, chunk, reply_markup=markup)
+        try:
+            await context.bot.send_message(chat_id, chunk, reply_markup=markup)
+        except BadRequest as e:  # Telegram не принял разметку — отправляем тот же текст без неё
+            logger.warning("Telegram не принял HTML (%s), отправляю без разметки", e)
+            await context.bot.send_message(chat_id, formatting.strip_tags(chunk), reply_markup=markup, parse_mode=None)
 
 
 # ---------------------------------------------------------------------------
@@ -495,7 +505,9 @@ def main() -> None:
         raise SystemExit("Не найден TELEGRAM_BOT_TOKEN. Заполни его в файле .env.")
     Path(config.DATA_DIR).mkdir(parents=True, exist_ok=True)
     persistence = PicklePersistence(filepath=Path(config.DATA_DIR) / "bot_state.pickle")
-    app = Application.builder().token(config.TELEGRAM_BOT_TOKEN).persistence(persistence).build()
+    # Все сообщения — в HTML-режиме Telegram: так можно выделять важное жирным (<b>…</b>).
+    app = (Application.builder().token(config.TELEGRAM_BOT_TOKEN).persistence(persistence)
+           .defaults(Defaults(parse_mode=ParseMode.HTML)).build())
 
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("lang", change_language))
