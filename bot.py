@@ -30,7 +30,6 @@ from telegram.ext import (
     filters,
 )
 
-import card
 import catalog
 import config
 import formatting
@@ -414,23 +413,12 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
 
 
 async def send_chances(context: ContextTypes.DEFAULT_TYPE, chat_id: int, lang: str, group: str, score: int) -> None:
-    """Текст с подробностями, затем картинка с результатом и кнопкой «Отправить другу»."""
+    """Полный список: все группы и все вузы базы. Под ним — «Отправить другу», «Другой балл», «Программы»."""
     stats.log_event(chat_id, "chance", f"{group}:{score}")
     more = [[InlineKeyboardButton(t(lang, "chance_again"), callback_data=f"gc:{group}")],
             [InlineKeyboardButton(t(lang, "chance_programs"), callback_data=f"ent:{group}")]]
-    await send_long(context, chat_id, universities.grant_chances(group, score, lang), lang)
-    try:
-        png = card.chance_card(group, score, lang, context.bot.username)
-    except Exception:  # картинка — приятное дополнение; если не вышло, ответ уже отправлен текстом
-        logger.exception("Не получилось нарисовать картинку «Шанс на грант»")
-        png = None
-    if not png:
-        await context.bot.send_message(chat_id, t(lang, "card_more"), reply_markup=InlineKeyboardMarkup(more))
-        return
-    link = invite_link(context, chat_id)
-    await context.bot.send_photo(chat_id, png, caption=t(lang, "card_caption").format(link=link),
-                                 reply_markup=share_keyboard(context, lang, chat_id, more))
-    stats.log_event(chat_id, "card", f"{group}:{score}")
+    await send_long(context, chat_id, universities.grant_chances(group, score, lang), lang,
+                    last_markup=share_keyboard(context, lang, chat_id, more))
 
 
 async def handle_voice(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:

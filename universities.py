@@ -503,7 +503,7 @@ def grant_chances(group: str, score: int, lang: str) -> str:
                 lines.append("   " + mark)
     if no:
         lines.append("\n❌ " + b("Әзірге жетпейді:" if kz else "Пока не хватает:"))
-        for gop, st in no[:6]:
+        for gop, st in no:
             gap = st["kz_min"] - score
             lines.append(f"• {b(gop)} — " + (f"{st['kz_min']} бастап ({gap} балл жетпейді)" if kz
                                           else f"от {st['kz_min']} (не хватает {gap})"))
@@ -543,22 +543,3 @@ def contacts_text(lang: str) -> str:
                  else "\nКонтакты взяты с официальных сайтов вузов (октябрь 2026) — перед подачей документов сверь на сайте.")
     return "\n".join(lines)
 
-
-def chance_summary(group: str, score: int) -> list[dict]:
-    """Данные для картинки «Шанс на грант»: группы ГОП и вузы, где с этим баллом давали грант
-    (или почти давали). Отсортировано: сначала группы, где проходишь в большее число вузов."""
-    out = []
-    for gop, st in gop_stats(group).items():
-        unis = []
-        for slug in st["programs"]:
-            u = st["unis"].get(slug)
-            if u:
-                unis.append({"short": UNIS[slug]["short"], "min": u["min"], "count": u["count"],
-                             "gap": max(0, u["min"] - score)})
-        if not unis:
-            continue
-        unis.sort(key=lambda x: (x["gap"], x["min"]))
-        out.append({"gop": gop, "kz_min": st["kz_min"], "gap": max(0, st["kz_min"] - score), "unis": unis,
-                    "passed": sum(1 for x in unis if not x["gap"])})
-    out.sort(key=lambda g: (-g["passed"], g["gap"], g["kz_min"]))
-    return out
