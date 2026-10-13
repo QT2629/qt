@@ -9,6 +9,7 @@
 #
 # Запуск: python bot.py
 
+import html
 import logging
 import re
 from datetime import datetime, time, timedelta, timezone
@@ -88,16 +89,77 @@ def language_keyboard() -> InlineKeyboardMarkup:
 
 
 def menu_keyboard(lang: str) -> ReplyKeyboardMarkup:
+    """Постоянное меню — только самое нужное. Остальные кнопки появляются по ходу разговора (под ответами)."""
     return ReplyKeyboardMarkup(
         [
             [t(lang, "btn_pick"), t(lang, "btn_chance")],
-            [t(lang, "btn_ent"), t(lang, "btn_prices")],
-            [t(lang, "btn_profile"), t(lang, "btn_mocks")],
-            [t(lang, "btn_docs"), t(lang, "btn_dates")],
-            [t(lang, "btn_contacts"), t(lang, "btn_share")],
+            [t(lang, "btn_profile")],
         ],
         resize_keyboard=True,
     )
+
+
+def start_keyboard(lang: str) -> InlineKeyboardMarkup:
+    """Первый вопрос после приветствия: что сейчас нужно человеку."""
+    return InlineKeyboardMarkup([[InlineKeyboardButton(t(lang, k), callback_data=f"st:{k[6:]}")]
+                                 for k in ("start_unsure", "start_uni", "start_chance", "start_other")])
+
+
+# Кнопки, которые ИИ может предложить под ответом: метка [[имя]] в тексте → кнопка «act:имя».
+ACTIONS = ("chance", "pick", "ent", "prices", "profile", "mocks", "contacts", "docs", "dates", "share")
+ACTION_TAG = re.compile(r"\[\[\s*(\w+)(?::([^\]]+))?\s*\]\]")
+
+
+def extract_buttons(context: ContextTypes.DEFAULT_TYPE, lang: str, text: str) -> tuple[str, InlineKeyboardMarkup | None]:
+    """Вынимает из ответа ИИ метки кнопок: [[chance]] — действие бота, [[program:вуз:код]] — карточка программы,
+    [[opt:Вариант ответа]] — быстрый ответ на наводящий вопрос. Возвращает текст без меток и клавиатуру."""
+    rows, opts, seen = [], [], set()
+    for m in ACTION_TAG.finditer(text):
+        name, arg = m.group(1).lower(), html.unescape((m.group(2) or "").strip())
+        if name in ACTIONS and name not in seen:
+            seen.add(name)
+            rows.append([InlineKeyboardButton(t(lang, f"act_{name}"), callback_data=f"act:{name}")])
+        elif name == "program" and arg.count(":") == 1 and len([r for r in rows if r[0].callback_data.startswith("up:")]) < 4:
+            try:
+                p = universities.program(arg)
+            except KeyError:
+                continue
+            rows.append([InlineKeyboardButton(("🎓 " + p["name_ru"])[:60] + f" · {universities.UNIS[arg.split(':')[0]]['short']}",
+                                              callback_data=f"up:{arg}")])
+        elif name == "opt" and arg and len(opts) < 4:
+            opts.append(arg[:60])
+    clean = re.sub(r"[ \t]*" + ACTION_TAG.pattern + r"[ \t]*", " ", text)
+    clean = re.sub(r"[ \t]+\n", "\n", clean).strip()
+    if opts:  # быстрые ответы — в начало, по два в ряд
+        context.user_data["opts"] = opts
+        btns = [InlineKeyboardButton(o, callback_data=f"opt:{i}") for i, o in enumerate(opts)]
+        rows = [btns[i:i + 2] for i in range(0, len(btns), 2)] + rows
+    return clean, (InlineKeyboardMarkup(rows) if rows else None)
+
+
+async def run_action(context: ContextTypes.DEFAULT_TYPE, chat_id: int, user_id: int, lang: str, action: str) -> None:
+    """Одно и то же действие — из меню, из стартового вопроса или из кнопки под ответом ИИ."""
+    send = context.bot.send_message
+    if action == "pick":
+        await send(chat_id, t(lang, "q_ent"), reply_markup=ent_keyboard(lang, "q:ent:", True))
+    elif action == "chance":
+        await send(chat_id, t(lang, "chance_ent"), reply_markup=ent_keyboard(lang, "gc:", False))
+    elif action == "ent":
+        await send(chat_id, t(lang, "choose_ent"), reply_markup=ent_keyboard(lang, "ent:", False))
+    elif action == "prices":
+        await send(chat_id, t(lang, "choose_uni"), reply_markup=unis_keyboard(lang))
+    elif action == "docs":
+        await send(chat_id, static_text("documents", lang))
+    elif action == "dates":
+        await send(chat_id, static_text("dates", lang))
+    elif action == "mocks":
+        await profile_bot.show_mocks(context, chat_id, lang)
+    elif action == "profile":
+        await profile_bot.show_page(context, chat_id, lang, with_card=True)
+    elif action == "share":
+        await send(chat_id, t(lang, "share_intro"), reply_markup=share_keyboard(context, lang, user_id))
+    elif action == "contacts":
+        await send(chat_id, universities.contacts_text(lang), disable_web_page_preview=True)
 
 
 def ent_keyboard(lang: str, prefix: str, with_unknown: bool) -> InlineKeyboardMarkup:
@@ -264,7 +326,33 @@ async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
         if profiles.get(chat_id):
             profiles.update(chat_id, lang=lang)
         await query.edit_message_text(t(lang, "lang_set"))
-        await context.bot.send_message(chat_id, t(lang, "welcome"), reply_markup=menu_keyboard(lang))
+        await context.bot.send_message(chat_id, "👋", reply_markup=menu_keyboard(lang))
+        await context.bot.send_message(chat_id, t(lang, "welcome"), reply_markup=start_keyboard(lang))
+
+    elif data.startswith("st:"):  # стартовый вопрос «С чего начнём?»
+        choice = data[3:]
+        stats.log_event(user_id, "button", "Старт: " + choice)
+        await query.edit_message_reply_markup(reply_markup=None)
+        if choice == "unsure":
+            await run_action(context, chat_id, user_id, lang, "pick")
+        elif choice == "chance":
+            await run_action(context, chat_id, user_id, lang, "chance")
+        else:
+            await context.bot.send_message(chat_id, t(lang, "start_uni_q" if choice == "uni" else "start_other_q"))
+
+    elif data.startswith("act:"):  # кнопка, которую предложил ИИ под ответом
+        action = data[4:]
+        if action in ACTIONS:
+            stats.log_event(user_id, "button", "ИИ-кнопка: " + action)
+            await run_action(context, chat_id, user_id, lang, action)
+
+    elif data.startswith("opt:"):  # быстрый ответ на наводящий вопрос ИИ
+        opts = context.user_data.get("opts") or []
+        i = int(data[4:]) if data[4:].isdigit() else -1
+        if 0 <= i < len(opts):
+            await query.edit_message_reply_markup(reply_markup=None)
+            await context.bot.send_message(chat_id, f"✍️ {formatting.esc(opts[i])}")
+            await answer_question(context, chat_id, lang, opts[i])
 
     elif data.startswith("ent:"):  # «Мои предметы ЕНТ» → в каких вузах есть программы
         group = data.split(":")[1]
@@ -384,29 +472,9 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
             await update.message.reply_text(t(lang, "chance_bad"))
             return
 
-    # Кнопки меню, которые работают без ИИ.
-    if button == "btn_pick":
-        await update.message.reply_text(t(lang, "q_ent"), reply_markup=ent_keyboard(lang, "q:ent:", True))
-    elif button == "btn_chance":
-        await update.message.reply_text(t(lang, "chance_ent"), reply_markup=ent_keyboard(lang, "gc:", False))
-    elif button == "btn_ent":
-        await update.message.reply_text(t(lang, "choose_ent"), reply_markup=ent_keyboard(lang, "ent:", False))
-    elif button == "btn_prices":
-        await update.message.reply_text(t(lang, "choose_uni"), reply_markup=unis_keyboard(lang))
-    elif button == "btn_docs":
-        await update.message.reply_text(static_text("documents", lang))
-    elif button == "btn_dates":
-        await update.message.reply_text(static_text("dates", lang))
-    elif button == "btn_mocks":
-        await profile_bot.show_mocks(context, chat_id, lang)
-    elif button == "btn_profile":
-        await profile_bot.show_page(context, chat_id, lang, with_card=True)
-    elif button == "btn_share":
-        await update.message.reply_text(t(lang, "share_intro"),
-                                        reply_markup=share_keyboard(context, lang, update.effective_user.id))
-    elif button == "btn_contacts":
-        await update.message.reply_text(universities.contacts_text(lang),
-                                        disable_web_page_preview=True)
+    # Кнопки меню (в том числе из старых клавиатур, которые остались у пользователей) — без ИИ.
+    if button:
+        await run_action(context, chat_id, update.effective_user.id, lang, button[4:])
     else:
         # Свободный вопрос → ИИ с программами, о которых идёт речь.
         await answer_question(context, chat_id, lang, text)
@@ -416,7 +484,8 @@ async def send_chances(context: ContextTypes.DEFAULT_TYPE, chat_id: int, lang: s
     """Полный список: все группы и все вузы базы. Под ним — «Отправить другу», «Другой балл», «Программы»."""
     stats.log_event(chat_id, "chance", f"{group}:{score}")
     more = [[InlineKeyboardButton(t(lang, "chance_again"), callback_data=f"gc:{group}")],
-            [InlineKeyboardButton(t(lang, "chance_programs"), callback_data=f"ent:{group}")]]
+            [InlineKeyboardButton(t(lang, "chance_programs"), callback_data=f"ent:{group}")],
+            [InlineKeyboardButton(t(lang, "act_mocks"), callback_data="act:mocks")]]
     await send_long(context, chat_id, universities.grant_chances(group, score, lang), lang,
                     last_markup=share_keyboard(context, lang, chat_id, more))
 
@@ -461,7 +530,9 @@ async def reply_with_claude(context: ContextTypes.DEFAULT_TYPE, chat_id: int, la
     if not take_ai_quota(context):
         stats.log_event(chat_id, "limit")
         await send_long(context, chat_id, t(lang, "limit").format(
-            limit=config.DAILY_AI_LIMIT, contacts=formatting.esc(config.ADMISSIONS_CONTACTS)), lang)
+            limit=config.DAILY_AI_LIMIT, contacts=formatting.esc(config.ADMISSIONS_CONTACTS)), lang,
+            last_markup=InlineKeyboardMarkup([[InlineKeyboardButton(t(lang, "act_contacts"), callback_data="act:contacts")],
+                                              [InlineKeyboardButton(t(lang, "act_prices"), callback_data="act:prices")]]))
         return
 
     history = context.user_data.setdefault("history", [])
@@ -502,7 +573,8 @@ async def reply_with_claude(context: ContextTypes.DEFAULT_TYPE, chat_id: int, la
         stats.log_event(chat_id, "error", "unexpected")
         answer = t(lang, "err_generic")
 
-    await send_long(context, chat_id, answer, lang)
+    answer, buttons = extract_buttons(context, lang, answer)
+    await send_long(context, chat_id, answer, lang, last_markup=buttons)
 
 
 def api_error_text(err: Exception, lang: str) -> str:

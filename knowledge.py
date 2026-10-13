@@ -20,6 +20,8 @@ def build_knowledge_text() -> str:
         "<universities>\nВсе вузы и программы бакалавриата в базе (подробности о программе — в <program_details>):\n\n"
         + compact_catalog() + "\n</universities>\n\n"
         "<grants_2026>\n" + load_markdown("grants_2026.md") + "\n</grants_2026>\n\n"
+        "<admission_basics>\nОбщее для всех вузов: документы и сроки поступления\n\n"
+        + load_markdown("static/documents_ru.md") + "\n\n" + load_markdown("static/dates_ru.md") + "\n</admission_basics>\n\n"
         "<almau_details>\nДополнительные данные по AlmaU (учебные планы, магистратура, документы и даты приёма):\n\n"
         + load_markdown("almau_common.md") + "\n\n" + load_markdown("graduate_programs.md") + "\n\n"
         + load_markdown("admission.md") + "\n</almau_details>"
