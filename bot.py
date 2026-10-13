@@ -262,6 +262,12 @@ async def profile_command(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
     await profile_bot.show_page(context, update.effective_chat.id, get_lang(context))
 
 
+async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """/help — что умеет бот."""
+    lang = get_lang(context)
+    await update.message.reply_text(t(lang, "about"), reply_markup=start_keyboard(lang))
+
+
 async def progress_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """/progress — статистика пробных тестов."""
     await profile_bot.show_mocks(context, update.effective_chat.id, get_lang(context))
@@ -272,6 +278,7 @@ async def set_commands(app: Application) -> None:
     from telegram import BotCommand
     await app.bot.set_my_commands([
         BotCommand("start", "Начать / выбрать язык"),
+        BotCommand("help", "Что умеет бот"),
         BotCommand("profile", "Моя страница: цель, сроки ЕНТ, напоминания"),
         BotCommand("progress", "Мои пробники: баллы и график роста"),
         BotCommand("lang", "Сменить язык"),
@@ -644,6 +651,7 @@ def main() -> None:
     app.add_handler(CommandHandler("profile", profile_command))
     app.add_handler(CommandHandler("delete_me", delete_me_command))
     app.add_handler(CommandHandler("progress", progress_command))
+    app.add_handler(CommandHandler("help", help_command))
     app.add_handler(CallbackQueryHandler(on_callback))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     app.add_handler(MessageHandler(filters.VOICE | filters.AUDIO, handle_voice))
