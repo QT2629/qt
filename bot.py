@@ -228,6 +228,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """/start — выбор языка и новый разговор. /start ref_XXXX — пришёл по приглашению."""
     payload = context.args[0] if context.args else ""
     is_new = not context.user_data.get("joined") and "lang" not in context.user_data
+    if payload.startswith("src_") and is_new:  # ссылка партнёра: учитель, школа, центр подготовки
+        stats.log_event(update.effective_user.id, "src_join", payload[4:40])
     if payload.startswith("ref_") and is_new:
         ref = payload[4:20]
         if ref != stats.ref_code(update.effective_user.id):  # сам себя не приглашает
@@ -311,9 +313,22 @@ async def show_stats(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None
     c = profiles.counts()
     await update.message.reply_text(
         stats.overview() + f"\n\n👤 Личные страницы: {c['profiles']} (внесли баллы: {c['with_scores']}, "
-        f"всего результатов: {c['scores']}; напоминания включены у {c['reminders']})")
+        f"всего результатов: {c['scores']}; напоминания включены у {c['reminders']})\n\n" + profiles.score_stats())
     await update.message.reply_text(stats.report(1) + "\n\n" + stats.report(7))
     await update.message.reply_text(stats.report(30))
+
+
+async def partner_link(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """/link имя — ссылка для партнёра (только для администраторов); в /stats видно, сколько людей по ней пришло."""
+    if update.effective_user.id not in config.ADMIN_IDS:
+        return
+    name = re.sub(r"[^A-Za-z0-9_]", "", "_".join(context.args or []))[:36]
+    if not name:
+        await update.message.reply_text("Напиши имя латиницей: /link geo_teacher")
+        return
+    await update.message.reply_text(
+        f"Ссылка для партнёра «{name}»:\nhttps://t.me/{context.bot.username}?start=src_{name}\n\n"
+        "Сколько людей пришло по ней — смотри в /stats, раздел «Пришли по ссылкам партнёров».")
 
 
 # ---------------------------------------------------------------------------
@@ -648,6 +663,7 @@ def main() -> None:
     app.add_handler(CommandHandler("reset", reset))
     app.add_handler(CommandHandler("myid", my_id))
     app.add_handler(CommandHandler("stats", show_stats))
+    app.add_handler(CommandHandler("link", partner_link))
     app.add_handler(CommandHandler("profile", profile_command))
     app.add_handler(CommandHandler("delete_me", delete_me_command))
     app.add_handler(CommandHandler("progress", progress_command))

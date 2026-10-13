@@ -35,7 +35,7 @@ def _user_hash(user_id: int) -> str:
 
 
 def log_event(user_id: int, kind: str, detail: str = "", cost: float = 0.0) -> None:
-    """kind: start, button, ai, chance, card, ref_join, quiz_done, limit, error."""
+    """kind: start, button, ai, chance, card, ref_join, src_join, quiz_done, limit, error."""
     with _connect() as conn:
         conn.execute(
             "INSERT INTO events VALUES (?, ?, ?, ?, ?)",
@@ -76,6 +76,10 @@ def report(days: int) -> str:
             "SELECT detail, COUNT(*) FROM events WHERE ts >= ? AND kind = 'ref_join' "
             "GROUP BY detail ORDER BY 2 DESC LIMIT 1", (since,)
         ).fetchone()
+        sources = conn.execute(
+            "SELECT detail, COUNT(*) FROM events WHERE ts >= ? AND kind = 'src_join' "
+            "GROUP BY detail ORDER BY 2 DESC", (since,)
+        ).fetchall()
         quiz = one("SELECT COUNT(*) FROM events WHERE ts >= ? AND kind = 'quiz_done'")
         limit = one("SELECT COUNT(DISTINCT user) FROM events WHERE ts >= ? AND kind = 'limit'")
         errors = one("SELECT COUNT(*) FROM events WHERE ts >= ? AND kind = 'error'")
@@ -96,6 +100,9 @@ def report(days: int) -> str:
         f"Упёрлись в дневной лимит: {limit:.0f} чел.",
         f"Ошибки: {errors:.0f}",
     ]
+    if sources:
+        lines.append("\nПришли по ссылкам партнёров:")
+        lines += [f"• {name}: {count}" for name, count in sources]
     if buttons:
         lines.append("\nКнопки без ИИ:")
         lines += [f"• {name}: {count}" for name, count in buttons]

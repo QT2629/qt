@@ -109,6 +109,29 @@ def counts() -> dict:
                 "reminders": one("SELECT COUNT(*) FROM profiles WHERE reminders = 1")}
 
 
+def score_stats() -> str:
+    """Только для /stats (видит администратор): баллы пользователей в целом, без имён и без сравнения людей между собой."""
+    with _connect() as conn:
+        rows = conn.execute("SELECT user_id, kind, total FROM scores ORDER BY user_id, taken_on, id").fetchall()
+    if not rows:
+        return "📈 Баллы: пока никто не внёс."
+    by_user: dict[int, list] = {}
+    for r in rows:
+        by_user.setdefault(r["user_id"], []).append(r)
+    last = [rs[-1]["total"] for rs in by_user.values()]
+    growth = [rs[-1]["total"] - rs[0]["total"] for rs in by_user.values() if len(rs) >= 2]
+    ent = [r["total"] for r in rows if r["kind"] == "ent"]
+    buckets = (("до 60", 0, 59), ("60–79", 60, 79), ("80–99", 80, 99), ("100–119", 100, 119), ("120+", 120, 140))
+    lines = [f"📈 Баллы ({len(by_user)} чел.): последний результат в среднем {sum(last) / len(last):.0f}",
+             "Распределение последних баллов: " + ", ".join(
+                 f"{name} — {sum(lo <= v <= hi for v in last)}" for name, lo, hi in buckets)]
+    if growth:
+        lines.append(f"Рост с первого теста (у {len(growth)} чел. с 2+ тестами): в среднем {sum(growth) / len(growth):+.0f}")
+    if ent:
+        lines.append(f"Настоящее ЕНТ внесли {len(ent)} раз, средний балл {sum(ent) / len(ent):.0f}")
+    return "\n".join(lines)
+
+
 def all_with_reminders() -> list[dict]:
     with _connect() as conn:
         return [dict(r) for r in conn.execute("SELECT * FROM profiles WHERE reminders = 1")]
