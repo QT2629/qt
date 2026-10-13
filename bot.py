@@ -41,7 +41,7 @@ import universities
 from claude_client import NoApiKey, Refused, ask_claude
 from knowledge import build_knowledge_text
 from prompts import with_details
-from texts import LEGACY_BUTTONS, MENU_BUTTONS, TEXTS, t
+from texts import BOT_PROFILE, LEGACY_BUTTONS, MENU_BUTTONS, TEXTS, t
 
 logging.basicConfig(
     format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
@@ -278,6 +278,14 @@ async def set_commands(app: Application) -> None:
         BotCommand("reset", "Начать разговор заново"),
         BotCommand("delete_me", "Удалить мои данные"),
     ])
+    # Описание бота (экран до «Старт») и короткое «О боте» (профиль и превью ссылки) — с главной ценностью.
+    for code in (None, "ru", "kk"):
+        texts = BOT_PROFILE["kk" if code == "kk" else "ru"]
+        try:
+            await app.bot.set_my_description(texts["description"], language_code=code)
+            await app.bot.set_my_short_description(texts["short"], language_code=code)
+        except Exception as e:  # не критично: бот работает и без описания
+            logger.warning("Не удалось обновить описание бота (%s): %s", code, e)
 
 
 async def delete_me_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
