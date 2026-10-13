@@ -1,4 +1,4 @@
-# Все вузы бота на равных: AITU, AlmaU, ЕНУ, КБТУ, MNU, Нархоз, SDU (и любые новые из knowledge/universities/).
+# Все вузы бота на равных: AITU, AlmaU, ЕНУ, КазАТУ, КБТУ, MNU, Нархоз, Satbayev, SDU (и любые новые из knowledge/universities/).
 # Здесь — загрузка данных, краткий каталог для ИИ, подбор программ под вопрос и анкету,
 # тексты для кнопок. Всё работает без ИИ и ничего не стоит.
 #
@@ -203,7 +203,8 @@ def details(keys: list[str]) -> str | None:
         p = u["programs"][code]
         out.append({"university": u["name_ru"], "city": u["city"], "price_note": u["price_note"],
                     **{k: p[k] for k in ("code", "name_ru", "section", "ent_subjects", "ent_note", "price_kzt",
-                                         "tracks", "key_courses", "careers", "workplaces", "grant_2026")
+                                         "tracks", "track_courses", "about", "key_courses", "careers", "workplaces",
+                                         "grant_2026")
                        if p.get(k) not in (None, "", [])}, "links": links(slug, code)})
     return json.dumps(out, ensure_ascii=False, separators=(",", ":")) if out else None
 
