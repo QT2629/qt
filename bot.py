@@ -278,6 +278,8 @@ async def progress_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -
 async def set_commands(app: Application) -> None:
     """Список команд в меню Telegram (кнопка «/» рядом с полем ввода) — чтобы функции было видно."""
     from telegram import BotCommand
+    me = await app.bot.get_me()
+    logger.info("Бот в Telegram: @%s — ссылка https://t.me/%s", me.username, me.username)
     await app.bot.set_my_commands([
         BotCommand("start", "Начать / выбрать язык"),
         BotCommand("help", "Что умеет бот"),
