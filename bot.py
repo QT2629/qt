@@ -589,10 +589,12 @@ async def reply_with_claude(context: ContextTypes.DEFAULT_TYPE, chat_id: int, la
             while len(history) > config.MAX_HISTORY_MESSAGES:
                 del history[:2]
             context.user_data["recent"] = keys[:4]  # для уточнений вроде «а сколько она стоит?»
-            # Если ИИ всё же выдумал адрес бота — подставляем настоящий.
-            me = context.bot.username
-            answer = re.sub(r"(?:https?://)?t\.me/\w+bot\b", f"https://t.me/{me}", answer, flags=re.I)
-            answer = re.sub(r"@\w+bot\b", f"@{me}", answer, flags=re.I)
+            # Адрес бота ИИ не пишет: если всё же написал — убираем и показываем кнопку «Поделиться».
+            bot_link = re.compile(r"(?:https?://)?t\.me/\w+bot\b\S*|@\w+bot\b", re.I)
+            if bot_link.search(answer):
+                answer = bot_link.sub("👇", answer)
+                if "[[share]]" not in answer:
+                    answer += "\n[[share]]"
             answer = formatting.from_ai(answer)  # ИИ выделяет важное <b>…</b>; остальное экранируем
         else:
             answer = t(lang, "empty")
