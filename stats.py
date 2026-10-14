@@ -88,7 +88,7 @@ def report(days: int) -> str:
             "GROUP BY detail ORDER BY 2 DESC", (since,)
         ).fetchall()
 
-    period = "сегодня (24 ч)" if days == 1 else f"за {days} дней"
+    period = f"за {days} дней"
     lines = [
         f"📊 Статистика {period}",
         f"Людей: {users:.0f} — новых {new:.0f}, вернулись {users - new:.0f} (задавали вопросы ИИ: {ai_users:.0f})",
@@ -114,14 +114,13 @@ MONTHS_RU = ["январь", "февраль", "март", "апрель", "ма
 
 
 def overview(months: int = 6) -> str:
-    """Сколько людей пользуется ботом: за день / неделю / 30 дней / всё время и по календарным месяцам."""
+    """Сколько людей пользуется ботом: за 30 дней и по календарным месяцам."""
     now = datetime.now(ALMATY_TZ)
     with _connect() as conn:
         def active(days: int) -> int:
             since = (now - timedelta(days=days)).isoformat()
             return conn.execute("SELECT COUNT(DISTINCT user) FROM events WHERE ts >= ?", (since,)).fetchone()[0]
 
-        total = conn.execute("SELECT COUNT(DISTINCT user) FROM events").fetchone()[0]
         # Месяц — по времени Алматы (ts хранится с поясом +05:00, первые 7 символов — «ГГГГ-ММ»).
         by_month = dict((m, (u, 0)) for m, u in conn.execute(
             "SELECT substr(ts, 1, 7), COUNT(DISTINCT user) FROM events GROUP BY 1").fetchall())
@@ -129,9 +128,7 @@ def overview(months: int = 6) -> str:
                 "SELECT substr(first, 1, 7), COUNT(*) FROM (SELECT MIN(ts) AS first FROM events GROUP BY user) GROUP BY 1"):
             by_month[m] = (by_month.get(m, (0, 0))[0], n)
 
-    lines = ["👥 Пользователи",
-             f"За 24 часа: {active(1)}", f"За 7 дней: {active(7)}", f"За 30 дней: {active(30)}",
-             f"За всё время: {total}", "", "По месяцам (активные / из них новые):"]
+    lines = ["👥 Пользователи", f"За 30 дней: {active(30)}", "", "По месяцам (активные / из них новые):"]
     for i in range(months):
         y, m = now.year, now.month - i
         while m <= 0:

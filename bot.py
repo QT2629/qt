@@ -305,7 +305,7 @@ async def delete_me_command(update: Update, context: ContextTypes.DEFAULT_TYPE) 
 
 
 async def show_stats(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """/stats — пользователи по месяцам и статистика за сутки, 7 и 30 дней (только для администраторов)."""
+    """/stats — пользователи по месяцам и статистика за 30 дней (только для администраторов)."""
     if update.effective_user.id not in config.ADMIN_IDS:
         await update.message.reply_text(
             f"Команда /stats только для администраторов. Ваш ID: {update.effective_user.id}\n"
@@ -316,7 +316,6 @@ async def show_stats(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None
     await update.message.reply_text(
         stats.overview() + f"\n\n👤 Личные страницы: {c['profiles']} (внесли баллы: {c['with_scores']}, "
         f"всего результатов: {c['scores']}; напоминания включены у {c['reminders']})\n\n" + profiles.score_stats())
-    await update.message.reply_text(stats.report(1) + "\n\n" + stats.report(7))
     await update.message.reply_text(stats.report(30))
 
 
