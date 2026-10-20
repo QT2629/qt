@@ -9,6 +9,7 @@
 #
 # Запуск: python bot.py
 
+import asyncio
 import html
 import logging
 import re
@@ -19,7 +20,7 @@ from urllib.parse import urlencode
 import anthropic
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup, Update
 from telegram.constants import ChatAction, ParseMode
-from telegram.error import BadRequest
+from telegram.error import BadRequest, Forbidden, RetryAfter, TelegramError
 from telegram.ext import (
     Application,
     CallbackQueryHandler,
@@ -74,6 +75,54 @@ def static_text(name: str, lang: str) -> str:
 
 def get_lang(context: ContextTypes.DEFAULT_TYPE) -> str:
     return context.user_data.get("lang", "ru")
+
+
+# Версия меню и возможностей бота. Увеличь число, когда меняешь меню или добавляешь важное, —
+# бот сам пришлёт всем пользователям новое меню (без нажатия «Старт»).
+MENU_VERSION = 3
+
+
+async def ensure_fresh(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
+    """Перед любым ответом: язык не потерян, меню — последней версии. Возвращает язык."""
+    if "lang" not in context.user_data:  # данные потерялись (например, после переезда сервера) — не заставляем жать «Старт»
+        p = profiles.get(update.effective_chat.id)
+        code = (update.effective_user.language_code or "") if update.effective_user else ""
+        context.user_data["lang"] = (p or {}).get("lang") or ("kz" if code.startswith("kk") else "ru")
+        context.user_data["joined"] = True
+        context.user_data["menu_v"] = MENU_VERSION  # новое меню — без сообщения «обновился»
+        await context.bot.send_message(update.effective_chat.id, "👋", reply_markup=menu_keyboard(get_lang(context)))
+    lang = get_lang(context)
+    if context.user_data.get("menu_v") != MENU_VERSION:
+        context.user_data["menu_v"] = MENU_VERSION
+        await context.bot.send_message(update.effective_chat.id, t(lang, "menu_updated"), reply_markup=menu_keyboard(lang))
+    return lang
+
+
+async def announce_update(context: ContextTypes.DEFAULT_TYPE) -> None:
+    """После обновления бота: всем, у кого старое меню, — короткое сообщение с новым меню (один раз на версию)."""
+    sent = 0
+    for user_id, data in list(context.application.user_data.items()):
+        if not data.get("lang") or data.get("menu_v") == MENU_VERSION:
+            continue
+        try:
+            await context.bot.send_message(user_id, t(data["lang"], "menu_updated"), reply_markup=menu_keyboard(data["lang"]))
+            sent += 1
+        except RetryAfter as e:  # Telegram просит подождать — ждём и пробуем ещё раз
+            await asyncio.sleep(e.retry_after + 1)
+            try:
+                await context.bot.send_message(user_id, t(data["lang"], "menu_updated"), reply_markup=menu_keyboard(data["lang"]))
+                sent += 1
+            except TelegramError:
+                continue
+        except Forbidden:  # пользователь заблокировал бота
+            pass
+        except TelegramError as e:
+            logger.warning("Не удалось отправить новое меню %s: %s", user_id, e)
+            continue
+        data["menu_v"] = MENU_VERSION
+        context.application.mark_data_for_update_persistence(user_ids=[user_id])
+        await asyncio.sleep(0.05)  # не больше ~20 сообщений в секунду
+    logger.info("Новое меню (версия %s) разослано: %s пользователям", MENU_VERSION, sent)
 
 
 # ---------------------------------------------------------------------------
@@ -277,6 +326,7 @@ async def reset(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     context.user_data["history"] = []
     context.user_data["recent"] = []
     lang = get_lang(context)
+    context.user_data["menu_v"] = MENU_VERSION
     await update.message.reply_text(t(lang, "reset_done"), reply_markup=menu_keyboard(lang))
 
 
@@ -365,7 +415,7 @@ async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
     query = update.callback_query
     await query.answer()
     data = query.data
-    lang = get_lang(context)
+    lang = get_lang(context) if data.startswith("lang:") else await ensure_fresh(update, context)
     chat_id = update.effective_chat.id
     user_id = update.effective_user.id
 
@@ -383,6 +433,7 @@ async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
         if profiles.get(chat_id):
             profiles.update(chat_id, lang=lang)
         await query.edit_message_text(t(lang, "lang_set"))
+        context.user_data["menu_v"] = MENU_VERSION
         await context.bot.send_message(chat_id, "👋", reply_markup=menu_keyboard(lang))
         await context.bot.send_message(chat_id, t(lang, "welcome"), reply_markup=start_keyboard(lang))
 
@@ -514,7 +565,7 @@ BUTTON_STATS_NAMES = {
 # ---------------------------------------------------------------------------
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Обычное сообщение или нажатие кнопки меню."""
-    lang = get_lang(context)
+    lang = await ensure_fresh(update, context)
     text = update.message.text
     chat_id = update.effective_chat.id
     button = BUTTON_KEYS.get(text)
@@ -726,6 +777,8 @@ def main() -> None:
                 config.CLAUDE_MODEL, config.DAILY_AI_LIMIT)
     # Напоминания о сроках ЕНТ и просьбы внести баллы — каждый день в 10:00 по Алматы.
     app.job_queue.run_daily(profile_bot.daily_reminders, time=time(10, 0, tzinfo=timezone(timedelta(hours=5))))
+    # Через минуту после запуска — новое меню всем, у кого оно устарело.
+    app.job_queue.run_once(announce_update, 60)
     app.run_polling(allowed_updates=Update.ALL_TYPES)
 
 
