@@ -17,7 +17,7 @@ def load_markdown(name: str) -> str:
 
 def build_knowledge_text() -> str:
     return (
-        "<universities>\nВсе вузы и программы бакалавриата в базе (подробности о программе — в <program_details>):\n\n"
+        "<universities>\nВсе вузы в базе (программы и подробности — в <program_details> к каждому вопросу):\n\n"
         + compact_catalog() + "\n</universities>\n\n"
         "<grants_2026>\n" + load_markdown("grants_2026.md") + "\n</grants_2026>\n\n"
         "<admission_basics>\nОбщее для всех вузов: документы и сроки поступления\n\n"

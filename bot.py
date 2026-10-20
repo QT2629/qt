@@ -147,7 +147,7 @@ async def run_action(context: ContextTypes.DEFAULT_TYPE, chat_id: int, user_id: 
     elif action == "ent":
         await send(chat_id, t(lang, "choose_ent"), reply_markup=ent_keyboard(lang, "ent:", False))
     elif action == "prices":
-        await send(chat_id, t(lang, "choose_uni"), reply_markup=unis_keyboard(lang))
+        await send(chat_id, t(lang, "choose_uni"), reply_markup=unis_keyboard(lang, 0, home_region(chat_id)))
     elif action == "docs":
         await send(chat_id, static_text("documents", lang))
     elif action == "dates":
@@ -158,8 +158,13 @@ async def run_action(context: ContextTypes.DEFAULT_TYPE, chat_id: int, user_id: 
         await profile_bot.show_page(context, chat_id, lang, with_card=True)
     elif action == "share":
         await send(chat_id, t(lang, "share_intro"), reply_markup=share_keyboard(context, lang, user_id))
-    elif action == "contacts":
-        await send(chat_id, universities.contacts_text(lang), disable_web_page_preview=True)
+    elif action == "contacts":  # вузы, о которых шла речь, иначе — вузы города человека
+        recent = [k.split(":")[0] for k in context.user_data.get("recent", []) if ":" in k]
+        slugs = [s for s in dict.fromkeys(recent) if s in universities.UNIS]
+        home = home_region(chat_id)
+        if not slugs and home:
+            slugs = [s for s in universities.UNIS if universities.uni_region(s) == home]
+        await send(chat_id, universities.contacts_text(lang, slugs), disable_web_page_preview=True)
 
 
 def ent_keyboard(lang: str, prefix: str, with_unknown: bool) -> InlineKeyboardMarkup:
@@ -170,17 +175,38 @@ def ent_keyboard(lang: str, prefix: str, with_unknown: bool) -> InlineKeyboardMa
     return InlineKeyboardMarkup(rows)
 
 
-def ent_unis_keyboard(group: str, lang: str) -> InlineKeyboardMarkup:
-    """Предметы ЕНТ выбраны → в каких вузах есть программы."""
-    rows = [[InlineKeyboardButton(universities.uni_name(slug, lang), callback_data=f"ug:{slug}:{group}")]
-            for slug in universities.unis_with(group)]
+def page_row(prefix: str, page: int, total: int, lang: str) -> list[InlineKeyboardButton]:
+    """«◀ Назад / Ещё ▶» для длинных списков вузов (по 10 на странице)."""
+    row = []
+    if page > 0:
+        row.append(InlineKeyboardButton("◀ " + ("Артқа" if lang == "kz" else "Назад"), callback_data=f"{prefix}{page - 1}"))
+    if (page + 1) * universities.PAGE < total:
+        row.append(InlineKeyboardButton(("Тағы" if lang == "kz" else "Ещё") + " ▶", callback_data=f"{prefix}{page + 1}"))
+    return row
+
+
+def ent_unis_keyboard(group: str, lang: str, page: int = 0, home: str | None = None) -> InlineKeyboardMarkup:
+    """Предметы ЕНТ выбраны → в каких вузах есть программы (сначала вузы города человека)."""
+    slugs = universities.unis_with(group, home)
+    rows = [[InlineKeyboardButton(f"{universities.UNIS[s]['short']} · {universities.UNIS[s]['city']}"[:60],
+                                  callback_data=f"ug:{s}:{group}")]
+            for s in slugs[page * universities.PAGE:(page + 1) * universities.PAGE]]
+    nav = page_row(f"eu:{group}:", page, len(slugs), lang)
+    if nav:
+        rows.append(nav)
     rows.append([InlineKeyboardButton(t(lang, "btn_help_choose"), callback_data=f"qg:{group}")])
     return InlineKeyboardMarkup(rows)
 
 
-def unis_keyboard(lang: str) -> InlineKeyboardMarkup:
-    return InlineKeyboardMarkup([[InlineKeyboardButton(universities.uni_name(slug, lang), callback_data=f"u:{slug}")]
-                                 for slug in universities.UNIS])
+def unis_keyboard(lang: str, page: int = 0, home: str | None = None) -> InlineKeyboardMarkup:
+    slugs = universities.ordered(list(universities.UNIS), home)
+    rows = [[InlineKeyboardButton(f"{universities.UNIS[s]['short']} · {universities.UNIS[s]['city']}"[:60],
+                                  callback_data=f"u:{s}")]
+            for s in slugs[page * universities.PAGE:(page + 1) * universities.PAGE]]
+    nav = page_row("ul:", page, len(slugs), lang)
+    if nav:
+        rows.append(nav)
+    return InlineKeyboardMarkup(rows)
 
 
 def uni_groups_keyboard(slug: str, lang: str) -> InlineKeyboardMarkup:
@@ -388,7 +414,18 @@ async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
     elif data.startswith("ent:"):  # «Мои предметы ЕНТ» → в каких вузах есть программы
         group = data.split(":")[1]
         stats.log_event(user_id, "button", f"ЕНТ: {group}")
-        await query.edit_message_text(universities.ent_text(group, lang), reply_markup=ent_unis_keyboard(group, lang))
+        home = home_region(chat_id)
+        await query.edit_message_text(universities.ent_text(group, lang, 0, home),
+                                      reply_markup=ent_unis_keyboard(group, lang, 0, home))
+
+    elif data.startswith("eu:"):  # следующая страница вузов по предметам ЕНТ
+        _, group, page = data.split(":")
+        home = home_region(chat_id)
+        await query.edit_message_text(universities.ent_text(group, lang, int(page), home),
+                                      reply_markup=ent_unis_keyboard(group, lang, int(page), home))
+
+    elif data.startswith("ul:"):  # следующая страница «Вузы и цены»
+        await query.edit_message_reply_markup(reply_markup=unis_keyboard(lang, int(data[3:]), home_region(chat_id)))
 
     elif data.startswith("gc:"):  # «Шанс на грант» → предметы выбраны, ждём балл
         group = data.split(":")[1]
@@ -517,7 +554,7 @@ async def send_chances(context: ContextTypes.DEFAULT_TYPE, chat_id: int, lang: s
     more = [[InlineKeyboardButton(t(lang, "chance_again"), callback_data=f"gc:{group}")],
             [InlineKeyboardButton(t(lang, "chance_programs"), callback_data=f"ent:{group}")],
             [InlineKeyboardButton(t(lang, "act_mocks"), callback_data="act:mocks")]]
-    await send_long(context, chat_id, universities.grant_chances(group, score, lang), lang,
+    await send_long(context, chat_id, universities.grant_chances(group, score, lang, home_region(chat_id)), lang,
                     last_markup=share_keyboard(context, lang, chat_id, more))
 
 
@@ -527,7 +564,7 @@ async def handle_voice(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 
 
 def home_region(chat_id: int) -> str | None:
-    """Регион из личной страницы (Алматы / Астана) — его вузы предлагаем первыми."""
+    """Город из личной страницы — его вузы предлагаем первыми."""
     p = profiles.get(chat_id)
     return universities.region_of(p.get("city")) if p else None
 
@@ -572,7 +609,7 @@ async def reply_with_claude(context: ContextTypes.DEFAULT_TYPE, chat_id: int, la
     # Показываем «печатает...», пока Claude думает.
     await context.bot.send_chat_action(chat_id=chat_id, action=ChatAction.TYPING)
 
-    details = universities.details(keys)
+    details = universities.details(keys, user_text)
     profile = profile_bot.ai_context(chat_id)
     messages = history + [{"role": "user", "content": with_details(user_text, details, profile)}]
 

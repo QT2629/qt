@@ -5,6 +5,7 @@
 # Данные: knowledge/universities/<вуз>/university.json + programs.json.
 # AlmaU хранится в своём старом формате (knowledge/programs/*.json, см. catalog.py) — здесь он
 # приводится к общему виду, поэтому для бота это такой же вуз, как остальные.
+import gzip
 import json
 import re
 from pathlib import Path
@@ -14,6 +15,9 @@ from formatting import b, esc
 from catalog import INTERESTS, _contains, find_groups, money
 
 UNI_DIR = Path(__file__).parent / "knowledge" / "universities"
+# Каталог бакалавриата всех вузов страны (univision.kz + studyinkz.kz + реестр epvo.kz, гранты 2026).
+# Собирается программой tools/build_catalog.py.
+CATALOG_PATH = Path(__file__).parent / "knowledge" / "catalog" / "kz_bachelor.json.gz"
 
 # Пары профильных предметов ЕНТ (порядок = порядок кнопок).
 ENT_LABELS = {
@@ -97,10 +101,61 @@ def _load() -> dict[str, dict]:
             p["open"] = True
         info["programs"] = {p["code"]: p for p in programs}
         unis[info["slug"]] = info
+    unis.update(_catalog_unis(unis))
     for slug, u in unis.items():
         for p in u["programs"].values():
             p["key"] = f"{slug}:{p['code']}"
     return dict(sorted(unis.items(), key=lambda kv: kv[1]["short"]))  # по алфавиту — никого не выделяем
+
+
+def _catalog_unis(unis: dict) -> dict[str, dict]:
+    """Вузы из общего каталога. Для вузов с подробной справкой берём из каталога только
+    предметы по курсам, цель программы и профессии — остальное остаётся из справки."""
+    if not CATALOG_PATH.exists():
+        return {}
+    with gzip.open(CATALOG_PATH, "rt", encoding="utf-8") as f:
+        data = json.load(f)
+    out = {}
+    for u in data["universities"]:
+        progs = {p["code"]: p for p in u["programs"]}
+        if u.get("existing") in unis:
+            for code, p in unis[u["existing"]]["programs"].items():
+                c = progs.get(code)
+                if not c:
+                    continue
+                if not p.get("track_courses") and c.get("study_path"):
+                    p["study_path"] = c["study_path"]
+                for field in ("about", "careers"):
+                    if not p.get(field) and c.get(field):
+                        p[field] = c[field]
+            continue
+        slug = f"u{u['id']}"
+        names = [u["short"], u["name_ru"], u.get("name_en", "")]
+        aliases = [a.lower() for a in names if a and len(a) >= 5]
+        aliases += [a for a in u.get("aliases", []) if len(a) >= 4 or a.isascii() and len(a) >= 3]
+        for p in progs.values():
+            p["ent_groups"] = [g for g in [ent_group(p.get("ent_subjects", ""))] if g]
+            if p["ent_groups"] and p["ent_groups"][0] not in ("kaz", "rus", "lang_lit"):  # «Математика и Физика» → «+»
+                p["ent_subjects"] = p["ent_subjects"].replace(" и ", " + ")
+            p["open"] = True
+            p["source_url"] = p.pop("url", "")
+            for field in ("tracks", "key_courses", "careers", "workplaces"):
+                p.setdefault(field, [])
+            p.setdefault("ent_subjects", "")
+            p.setdefault("section", "")
+            p.setdefault("price_kzt", None)
+        out[slug] = {
+            "slug": slug, "short": u["short"], "name_ru": u["name_ru"], "name_kz": u["name_ru"],
+            "aliases": list(dict.fromkeys(aliases)), "city": u.get("city") or "город не указан", "type": "",
+            "website": u.get("website", ""), "programs_url": u.get("univision_url") or u.get("studyinkz_url", ""),
+            "admissions": {"phones": u.get("phones", []), "email": (u.get("emails") or [""])[0],
+                           "address": u.get("contacts_raw", ""), "url": u.get("website", "")},
+            "price_note": "Цены — по данным univision.kz и studyinkz.kz, есть не у всех программ; "
+                          "актуальную стоимость уточняй в приёмной комиссии.",
+            "notes": "Данные открытого каталога (univision.kz, studyinkz.kz), коды программ сверены с реестром epvo.kz.",
+            "catalog": True, "programs": progs,
+        }
+    return out
 
 
 UNIS = _load()
@@ -122,6 +177,8 @@ def prog_name(p: dict, lang: str) -> str:
 def price_text(p: dict, lang: str) -> str:
     if p["price_kzt"]:
         return money(p["price_kzt"]) + (" жылына" if lang == "kz" else " в год")
+    if p.get("price_other"):
+        return p["price_other"] + (" (studyinkz.kz дерегі)" if lang == "kz" else " (по данным studyinkz.kz)")
     return "бағасы нақтыланады" if lang == "kz" else "цена уточняется"
 
 
@@ -164,31 +221,30 @@ def links(slug: str, code: str | None = None) -> dict:
            "bachelor_list": u.get("programs_url", "")}
     if code and u["programs"].get(code, {}).get("url"):
         out["program"] = u["programs"][code]["url"]
+    if code and u["programs"].get(code, {}).get("source_url"):  # страница в каталоге, не сайт вуза
+        out["program_catalog_page"] = u["programs"][code]["source_url"]
     return {k: v for k, v in out.items() if v}
 
 
 def compact_catalog() -> str:
-    """Короткий список программ всех вузов — лежит в кэшируемом system prompt."""
-    blocks = []
-    for u in UNIS.values():
-        lines = [f"{u['name_ru']} — {u['city']}, {u['type']}. {u['price_note']} {u['notes']}",
-                 "Официальный сайт: " + u.get("website", ""),
-                 "Приёмная комиссия: " + admissions_line(u),
-                 "(код | программа | предметы ЕНТ | цена в год | группа ГОП для гранта)"]
-        for p in u["programs"].values():
-            if not p["open"]:
-                lines.append(f"{p['code']} | {p['name_ru']} | НАБОРА В 2026 НЕТ")
-                continue
-            price = f"{p['price_kzt']} тг" if p["price_kzt"] else "цена не объявлена"
-            gop = p["grant_2026"]["gop"].split()[0] if p.get("grant_2026") else "—"
-            lines.append(f"{p['code']} | {p['name_ru']} | {p['ent_subjects']} | {price} | {gop}")
-        blocks.append("\n".join(lines))
-    return "\n\n".join(blocks)
+    """Список всех вузов (по одной строке) — лежит в кэшируемом system prompt.
+    Программы и их подробности бот добавляет к каждому вопросу в <program_details>."""
+    lines = ["(вуз | полное название | город | программ бакалавриата | официальный сайт | приёмная комиссия)"]
+    for u in sorted(UNIS.values(), key=lambda u: (u["city"], u["short"])):
+        n = sum(1 for p in u["programs"].values() if p["open"])
+        lines.append(f"{u['short']} | {u['name_ru']} | {u['city']} | {n} | {u.get('website', '')} | {admissions_line(u)}")
+    return "\n".join(lines)
 
 
-def details(keys: list[str]) -> str | None:
-    """Подробные данные выбранных программ для блока <program_details> (JSON)."""
+def details(keys: list[str], text: str = "") -> str | None:
+    """Подробные данные выбранных программ для блока <program_details> (JSON).
+    Если в вопросе назван вуз (1–2) — ещё и полный список его программ, чтобы ИИ знал, что там есть."""
     out = []
+    for slug in mentioned_unis(text)[:2] if text else []:
+        u = UNIS[slug]
+        out.append({"university": u["name_ru"], "city": u["city"], "website": u.get("website", ""),
+                    "admissions": admissions_line(u),
+                    "all_bachelor_programs": [f"{p['name_ru']} ({p['code']})" for p in u["programs"].values() if p["open"]]})
     for key in keys:
         slug, code = key.split(":")
         u = UNIS[slug]
@@ -202,10 +258,11 @@ def details(keys: list[str]) -> str | None:
             continue
         p = u["programs"][code]
         out.append({"university": u["name_ru"], "city": u["city"], "price_note": u["price_note"],
+                    **({"data_source": u["notes"], "admissions": admissions_line(u)} if u.get("catalog") else {}),
                     **{k: p[k] for k in ("code", "name_ru", "section", "ent_subjects", "ent_note", "price_kzt",
-                                         "tracks", "track_courses", "about", "key_courses", "careers", "workplaces",
-                                         "grant_2026")
-                       if p.get(k) not in (None, "", [])}, "links": links(slug, code)})
+                                         "price_other", "duration", "languages", "tracks", "track_courses", "about",
+                                         "study_path", "key_courses", "careers", "workplaces", "grant_2026")
+                       if p.get(k) not in (None, "", [], {})}, "links": links(slug, code)})
     return json.dumps(out, ensure_ascii=False, separators=(",", ":")) if out else None
 
 
@@ -213,8 +270,12 @@ def details(keys: list[str]) -> str | None:
 # Подбор программ под вопрос
 # ---------------------------------------------------------------------------
 def mentioned_unis(text: str) -> list[str]:
-    low = text.lower()
-    return [slug for slug, u in UNIS.items() if any(a in low for a in u["aliases"])]
+    low = " " + re.sub(r"[^\w-]+", " ", text.lower()) + " "  # пробелы по краям — чтобы находить «ЮКУ» как слово
+    return [slug for slug, u in UNIS.items() if any(_norm(a) in low for a in u["aliases"])]
+
+
+def _norm(alias: str) -> str:
+    return re.sub(r"[^\w-]+", " ", alias.lower()) if alias.strip() == alias else " " + alias.strip() + " "
 
 
 _STOP = {"бакалавр", "делового", "администрирования", "области", "программы", "программа", "двойной", "диплом",
@@ -284,12 +345,36 @@ REGIONS = {
     "astana": ("астан", "astana", "нур-султан", "нурсултан", "акмол", "ақмол"),
 }
 REGION_NAMES = {"almaty": "Алматы", "astana": "Астана"}
+# Другие города — как их пишут по-русски, по-казахски и латиницей.
+CITY_WORDS = {
+    "Шымкент": ("шымкент", "shymkent"), "Караганда": ("караганд", "қарағанды", "karaganda"),
+    "Актобе": ("актобе", "ақтөбе", "aktobe"), "Атырау": ("атырау", "atyrau"), "Павлодар": ("павлодар", "pavlodar"),
+    "Костанай": ("костанай", "қостанай", "kostanay", "kostanai"), "Кызылорда": ("кызылорд", "қызылорда", "kyzylorda"),
+    "Тараз": ("тараз", "taraz"), "Туркестан": ("туркестан", "түркістан", "turkestan"), "Уральск": ("уральск", "uralsk"),
+    "Усть-Каменогорск": ("усть-каменогорск", "өскемен", "оскемен", "oskemen", "ust-kamenogorsk"),
+    "Семей": ("семей", "семипалатинск", "semey"), "Кокшетау": ("кокшетау", "көкшетау", "kokshetau"),
+    "Талдыкорган": ("талдыкорган", "талдықорған", "taldykorgan"), "Петропавловск": ("петропавл", "petropavl"),
+    "Актау": ("актау", "ақтау", "aktau"), "Темиртау": ("темиртау", "теміртау", "temirtau"),
+    "Экибастуз": ("экибастуз", "екібастұз", "ekibastuz"), "Жезказган": ("жезказган", "жезқазған", "zhezkazgan"),
+    "Рудный": ("рудном", "рудного", "г. рудный", "rudny"), "Аркалык": ("аркалык", "арқалық", "arkalyk"),
+}
+
+
+def _add_cities() -> None:
+    """Регионы для всех городов, где есть вузы базы (Алматы и Астана уже есть выше)."""
+    for city in sorted({u["city"] for u in UNIS.values()}):
+        if city in CITY_WORDS and city not in REGIONS:
+            REGIONS[city] = CITY_WORDS[city]
+            REGION_NAMES[city] = city
 
 
 def region_of(text: str | None) -> str | None:
     """Регион по тексту (городу из профиля или вопросу). None — если в базе нет вузов этого города."""
     low = (text or "").lower()
     return next((r for r, words in REGIONS.items() if any(w in low for w in words)), None)
+
+
+_add_cities()
 
 
 def uni_region(slug: str) -> str | None:
@@ -324,6 +409,8 @@ def relevant(text: str, recent: list[str], limit: int = 8, home: str | None = No
         result = [p["key"] for p in pool if p["open"]]
     if not result:  # «а сколько стоит?» — продолжаем про недавние программы
         result = [k for k in recent if not slugs or k.split(":")[0] in slugs]
+    if not result and slugs and len(slugs) <= 2:  # «что есть в КазНУ?» — программы этого вуза
+        result = [p["key"] for p in pool if p["open"]]
     return _balanced(_home_first(result, home), limit, per_uni=limit if len(slugs) == 1 else 2)
 
 
@@ -366,15 +453,29 @@ def programs_in(slug: str, group: str) -> list[dict]:
     return [p for p in UNIS[slug]["programs"].values() if p["open"] and group in p["ent_groups"]]
 
 
-def unis_with(group: str) -> list[str]:
-    return [slug for slug in UNIS if programs_in(slug, group)]
+def unis_with(group: str, home: str | None = None) -> list[str]:
+    return ordered([slug for slug in UNIS if programs_in(slug, group)], home)
+
+
+def ordered(slugs: list[str], home: str | None = None) -> list[str]:
+    """Сначала вузы города человека, потом остальные по алфавиту."""
+    return sorted(slugs, key=lambda s: (uni_region(s) != home if home else False, UNIS[s]["short"].lower()))
+
+
+PAGE = 10
+
+
+def unis_word(n: int) -> str:
+    if n % 10 == 1 and n % 100 != 11:
+        return "вуз"
+    return "вуза" if 2 <= n % 10 <= 4 and not 12 <= n % 100 <= 14 else "вузов"
 
 
 def uni_text(slug: str, lang: str) -> str:
     u = UNIS[slug]
     kz = lang == "kz"
     n = sum(1 for p in u["programs"].values() if p["open"])
-    return (f"🏛 {b(uni_name(slug, lang))}\n{esc(u['city'])} · {esc(u['type'])}\n"
+    return (f"🏛 {b(uni_name(slug, lang))}\n{esc(' · '.join(x for x in (u['city'], u['type']) if x))}\n"
             + (f"Бағдарламалар: {n}\n\n" if kz else f"Программ: {n}\n\n") + f"{esc(u['notes'])}\n\n💰 {esc(u['price_note'])}\n\n"
             + ("ҰБТ пәндеріңді таңда — бағдарламаларды көрсетемін:" if kz
                else "Выбери свои предметы ЕНТ — покажу программы:"))
@@ -386,12 +487,16 @@ def programs_word(n: int) -> str:
     return "программы" if 2 <= n % 10 <= 4 and not 12 <= n % 100 <= 14 else "программ"
 
 
-def ent_text(group: str, lang: str) -> str:
+def ent_text(group: str, lang: str, page: int = 0, home: str | None = None) -> str:
     kz = lang == "kz"
-    lines = [f"📝 {b(ENT_LABELS[group][lang])}\n", "Осы пәндермен түсуге болатын ЖОО:" if kz else "Где можно учиться с этими предметами:"]
-    for slug in unis_with(group):
+    slugs = unis_with(group, home)
+    shown = slugs[page * PAGE:(page + 1) * PAGE]
+    lines = [f"📝 {b(ENT_LABELS[group][lang])}\n",
+             (f"Осы пәндермен түсуге болатын ЖОО: {len(slugs)}" if kz else f"Где можно учиться с этими предметами — вузов: {len(slugs)}")
+             + (f" ({page * PAGE + 1}–{page * PAGE + len(shown)})" if len(slugs) > PAGE else "")]
+    for slug in shown:
         n = len(programs_in(slug, group))
-        lines.append(f"• {b(UNIS[slug]['short'])} — {n} " + ("бағдарлама" if kz else programs_word(n)))
+        lines.append(f"• {b(UNIS[slug]['short'])}, {esc(UNIS[slug]['city'])} — {n} " + ("бағдарлама" if kz else programs_word(n)))
     lines.append("\nЖОО-ны таңда:" if kz else "\nВыбери вуз:")
     return "\n".join(lines)
 
@@ -417,6 +522,8 @@ def program_card(key: str, lang: str) -> str:
     lines = [head, f"🏛 {esc(uni_name(slug, lang))} · {esc(UNIS[slug]['city'])}", esc(p["section"])]
     if extra.get("degree"):
         lines.append(f"{esc(extra['degree'])} · {extra['duration_years']} " + ("жыл" if kz else "года"))
+    elif p.get("duration") or p.get("languages"):
+        lines.append(esc(" · ".join(x for x in (p.get("duration"), p.get("languages")) if x)))
     if not p["open"]:
         lines.append("⚠️ " + b("2026 жылы бұл бағдарламаға қабылдау жоқ." if kz else "В 2026 году набора на эту программу нет."))
     else:
@@ -426,10 +533,16 @@ def program_card(key: str, lang: str) -> str:
             lines.append(esc(grant_text(p, lang)))
     if p.get("ent_note"):
         lines.append("⚠️ " + esc(p["ent_note"]))
+    if p.get("about"):
+        lines.append("\n" + b("Бағдарлама туралы:" if kz else "О программе:") + " " + esc(p["about"]))
     if p.get("tracks"):
         lines.append("\n" + b("Траекториялар (мамандану):" if kz else "Траектории обучения (специализации):"))
         lines += [f"• {b(t)}" for t in p["tracks"]]
-    if p.get("key_courses"):
+    elif p.get("study_path"):
+        lines.append("\n" + b("Оқу траекториясы — курстар бойынша:" if kz else "Траектория обучения по курсам:"))
+        for year, items in p["study_path"].items():
+            lines.append(f"• {b(year)}: " + esc(", ".join(items[:4])))
+    if p.get("key_courses") and not p.get("study_path"):
         lines.append("\n" + b("Негізгі пәндер:" if kz else "Ключевые предметы:"))
         lines += [f"• {esc(c)}" for c in p["key_courses"][:8]]
     if extra.get("practice"):
@@ -440,8 +553,12 @@ def program_card(key: str, lang: str) -> str:
         lines.append(b("Қайда:" if kz else "Где:") + " " + esc(", ".join(p["workplaces"])))
     if extra.get("note"):
         lines.append("\nℹ️ " + esc(extra["note"]))
-    lines.append("\nℹ️ " + ("Деректер бағдар ретінде берілген — ЖОО қабылдау комиссиясынан нақтыла." if kz
-                           else "Данные ориентировочные — уточняй в приёмной комиссии вуза."))
+    if UNIS[slug].get("catalog"):
+        lines.append("\nℹ️ " + ("Деректер univision.kz және studyinkz.kz ашық каталогынан алынды — ЖОО қабылдау комиссиясынан нақтыла."
+                               if kz else "Данные из открытого каталога univision.kz и studyinkz.kz — уточняй в приёмной комиссии вуза."))
+    else:
+        lines.append("\nℹ️ " + ("Деректер бағдар ретінде берілген — ЖОО қабылдау комиссиясынан нақтыла." if kz
+                               else "Данные ориентировочные — уточняй в приёмной комиссии вуза."))
     lines.append(esc(link_line(key, lang)))
     return "\n".join(lines)
 
@@ -449,6 +566,9 @@ def program_card(key: str, lang: str) -> str:
 def link_line(key: str, lang: str) -> str:
     slug, code = key.split(":")
     ln = links(slug, code)
+    if ln.get("program_catalog_page"):
+        site = (("\n🌐 ЖОО сайты: " if lang == "kz" else "\n🌐 Сайт вуза: ") + ln["site"]) if ln.get("site") else ""
+        return ("🔗 Каталогтағы бағдарлама беті: " if lang == "kz" else "🔗 Программа в каталоге: ") + ln["program_catalog_page"] + site
     if ln.get("program"):
         return ("🔗 Бағдарлама сайтта: " if lang == "kz" else "🔗 Программа на сайте вуза: ") + ln["program"]
     if ln.get("bachelor_list"):
@@ -476,7 +596,7 @@ def gop_stats(group: str) -> dict[str, dict]:
     return out
 
 
-def grant_chances(group: str, score: int, lang: str) -> str:
+def grant_chances(group: str, score: int, lang: str, home: str | None = None) -> str:
     """Ответ калькулятора «Шанс на грант» (по данным 2026 года, общий конкурс)."""
     kz = lang == "kz"
     stats = sorted(gop_stats(group).items(), key=lambda kv: kv[1]["kz_min"])
@@ -490,18 +610,27 @@ def grant_chances(group: str, score: int, lang: str) -> str:
         lines.append("✅ " + b("Осы баллмен грант берілген топтар:" if kz else "С таким баллом давали грант по группам:"))
         for gop, st in yes:
             lines.append(f"\n{b(gop)} — " + (f"ел бойынша {st['kz_min']} бастап" if kz else f"по стране от {st['kz_min']}"))
-            for slug in sorted(st["programs"], key=lambda s: UNIS[s]["short"]):
+            ok, near, none = [], [], []
+            for slug in ordered(list(st["programs"]), home):
                 u = st["unis"].get(slug)
                 short = b(UNIS[slug]["short"])
                 if u and score >= u["min"]:
-                    mark = f"✅ {short}: " + (f"{u['min']} бастап ({u['count']} грант)" if kz else f"от {u['min']} (грантов: {u['count']})")
+                    ok.append(f"✅ {short}: " + (f"{u['min']} бастап ({u['count']} грант)" if kz else f"от {u['min']} (грантов: {u['count']})"))
                 elif u:
                     gap = u["min"] - score
-                    mark = f"🟡 {short}: " + (f"{u['min']} бастап — {gap} балл жетпейді" if kz
-                                              else f"от {u['min']} — не хватает {gap}")
+                    near.append(f"🟡 {short}: " + (f"{u['min']} бастап — {gap} балл жетпейді" if kz
+                                                  else f"от {u['min']} — не хватает {gap}"))
                 else:
-                    mark = f"⚪ {short}: " + ("2026 жылы бұл ЖОО-ға грант берілмеді" if kz else "в 2026 году грантов в этот вуз не было")
-                lines.append("   " + mark)
+                    none.append(slug)
+            lines += ["   " + x for x in ok[:12]]
+            if len(ok) > 12:
+                lines.append("   " + (f"…тағы {len(ok) - 12} ЖОО" if kz else f"…и ещё {len(ok) - 12} {unis_word(len(ok) - 12)}"))
+            lines += ["   " + x for x in near[:5]]
+            if len(near) > 5:
+                lines.append("   " + (f"…тағы {len(near) - 5} ЖОО-ға сәл жетпейді" if kz else f"…и ещё {len(near) - 5} {unis_word(len(near) - 5)}, где чуть не хватает"))
+            if none:
+                lines.append("   ⚪ " + (f"2026 жылы грант берілмеген ЖОО: {len(none)}" if kz
+                                        else f"вузов, куда в 2026 году грантов не было: {len(none)}"))
     if no:
         lines.append("\n❌ " + b("Әзірге жетпейді:" if kz else "Пока не хватает:"))
         for gop, st in no:
@@ -516,17 +645,25 @@ def grant_chances(group: str, score: int, lang: str) -> str:
         "мүмкіндік жоғарырақ." if kz else
         "Грант дают на группу программ, а не на вуз: прошёл по группе — выбираешь любой вуз, но в популярные вузы нужен балл выше. "
         "Это данные 2026 года, не гарантия: в следующем году границы будут другими. С сельской квотой шансы выше."))
+    if home:
+        lines.append("📍 " + ("Алдымен — сенің қалаңның ЖОО-лары." if kz else "Сначала — вузы твоего города."))
     lines.append("✅ — " + ("ЖОО-ға осындай баллмен грант берілген" if kz else "в этот вуз с таким баллом брали") + " · 🟡 — "
                  + ("сәл жетпейді" if kz else "чуть не хватает") + " · ⚪ — " + ("ЖОО-ға грант берілмеді" if kz else "грантов в вуз не было"))
     return "\n".join(lines)
 
 
-def contacts_text(lang: str) -> str:
+def contacts_text(lang: str, slugs: list[str] | None = None) -> str:
+    """Контакты приёмных комиссий: вузов, о которых шла речь, или вузов города человека."""
     kz = lang == "kz"
+    if not slugs:
+        return ("☎️ Базада 120 ЖОО бар. Қай ЖОО-ның қабылдау комиссиясы керек екенін жаз, мысалы: «ҚазҰУ байланыстары» — "
+                "немесе профильде қалаңды көрсет, сонда сол қаланың ЖОО-ларын көрсетемін." if kz else
+                "☎️ В базе 120 вузов. Напиши, чья приёмная комиссия нужна, например: «контакты КазНУ» — "
+                "или укажи город в профиле, и я покажу вузы твоего города.")
     lines = [b("☎️ ЖОО қабылдау комиссиялары:" if kz else "☎️ Приёмные комиссии вузов:")]
-    for u in UNIS.values():
+    for u in (UNIS[s] for s in slugs[:12]):
         a = u.get("admissions") or {}
-        block = [f"\n🏛 {b(u['name_kz' if kz else 'name_ru'])}"]
+        block = [f"\n🏛 {b(u['name_kz' if kz else 'name_ru'])}" + (f" ({esc(u['city'])})" if u.get("catalog") else "")]
         block += [f"📞 {esc(p)}" for p in a.get("phones", [])]
         if a.get("email"):
             block.append(f"✉️ {a['email']}")
@@ -534,9 +671,10 @@ def contacts_text(lang: str) -> str:
             block.append(f"🕘 {a['hours']}")
         if a.get("address"):
             block.append(f"📍 {esc(a['address'])}")
-        block.append(f"🌐 {a.get('url') or u.get('website', '')}")
+        if a.get("url") or u.get("website"):
+            block.append(f"🌐 {a.get('url') or u.get('website', '')}")
         lines.append("\n".join(block))
-    lines.append("\nКонтактілер ЖОО ресми сайттарынан алынды (қазан 2026) — құжат тапсырар алдында сайттан тексер." if kz
-                 else "\nКонтакты взяты с официальных сайтов вузов (октябрь 2026) — перед подачей документов сверь на сайте.")
+    lines.append("\nКонтактілер ЖОО сайттарынан және univision.kz каталогынан алынды (қазан 2026) — құжат тапсырар алдында сайттан тексер." if kz
+                 else "\nКонтакты — с сайтов вузов и из каталога univision.kz (октябрь 2026). Перед подачей документов сверь на сайте вуза.")
     return "\n".join(lines)
 

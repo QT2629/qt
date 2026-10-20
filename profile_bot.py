@@ -48,7 +48,7 @@ T = {
         "q_age": "Сколько тебе лет? Напиши число.",
         "q_city": "Из какого ты города (или района)?",
         "q_ent_group": "Какие у тебя профильные предметы ЕНТ?",
-        "q_target_uni": "В какой вуз хочешь поступить? Если вуза нет в списке — нажми «Другой» и напиши название.",
+        "q_target_uni": "В какой вуз хочешь поступить? Если его нет среди кнопок — нажми «Другой вуз» и напиши название.",
         "q_target_uni_text": "Напиши название вуза.",
         "q_target_program": "На какую специальность? Напиши название, например: «IT», «Финансы», «Психология».",
         "q_session": "Какие ЕНТ будешь сдавать? Можно выбрать несколько — отметь все и нажми «Готово».",
@@ -158,7 +158,7 @@ T = {
         "q_age": "Жасың нешеде? Санмен жаз.",
         "q_city": "Қай қаладансың (немесе қай аудан)?",
         "q_ent_group": "ҰБТ бейіндік пәндерің қандай?",
-        "q_target_uni": "Қай ЖОО-ға түскің келеді? Тізімде жоқ болса — «Басқа ЖОО» батырмасын басып, атауын жаз.",
+        "q_target_uni": "Қай ЖОО-ға түскің келеді? Батырмалар арасында жоқ болса — «Басқа ЖОО» батырмасын басып, атауын жаз.",
         "q_target_uni_text": "ЖОО атауын жаз.",
         "q_target_program": "Қай мамандыққа? Атауын жаз, мысалы: «IT», «Қаржы», «Психология».",
         "q_session": "Қай ҰБТ-ларды тапсырасың? Бірнешеуін таңдауға болады — барлығын белгілеп, «Дайын» батырмасын бас.",
@@ -291,9 +291,11 @@ def groups_keyboard(lang: str) -> Kb:
     return Kb(rows + [[Btn(t(lang, "skip"), callback_data="pf:skip")]])
 
 
-def unis_keyboard(lang: str) -> Kb:
-    btns = [Btn(u["short"], callback_data=f"pf:u:{slug}") for slug, u in universities.UNIS.items()]
-    rows = [btns[i:i + 3] for i in range(0, len(btns), 3)]
+def unis_keyboard(lang: str, home: str | None = None) -> Kb:
+    """Вузы города человека (до 12); остальные — по названию через «Другой вуз»."""
+    slugs = [s for s in universities.ordered(list(universities.UNIS), home) if universities.uni_region(s) == home][:12] if home else []
+    btns = [Btn(universities.UNIS[s]["short"][:30], callback_data=f"pf:u:{s}") for s in slugs]
+    rows = [btns[i:i + 2] for i in range(0, len(btns), 2)]
     return Kb(rows + [[Btn(t(lang, "other"), callback_data="pf:u:other"),
                        Btn(t(lang, "undecided"), callback_data="pf:u:none")]])
 
@@ -492,7 +494,8 @@ async def ask(context: ContextTypes.DEFAULT_TYPE, chat_id: int, lang: str, field
     if field == "ent_group":
         await context.bot.send_message(chat_id, t(lang, "q_ent_group"), reply_markup=groups_keyboard(lang))
     elif field == "target_uni":
-        await context.bot.send_message(chat_id, t(lang, "q_target_uni"), reply_markup=unis_keyboard(lang))
+        home = universities.region_of((profiles.get(chat_id) or {}).get("city"))
+        await context.bot.send_message(chat_id, t(lang, "q_target_uni"), reply_markup=unis_keyboard(lang, home))
     elif field == "session":
         selected = profiles.user_sessions(profiles.get(chat_id) or {})
         await context.bot.send_message(chat_id, t(lang, "q_session"), reply_markup=sessions_keyboard(lang, selected))
@@ -537,7 +540,8 @@ async def on_text(context: ContextTypes.DEFAULT_TYPE, chat_id: int, lang: str, t
     elif field == "city":
         profiles.update(chat_id, city=text[:60])
     elif field == "uni_text":
-        profiles.update(chat_id, target_uni="other:" + text[:60])
+        found = universities.mentioned_unis(text)  # «КазНУ», «Ауэзова» — узнаём вуз из базы
+        profiles.update(chat_id, target_uni=found[0] if len(found) == 1 else "other:" + text[:60])
         field = "target_uni"
     elif field == "target_program":
         profiles.update(chat_id, target_program=text[:80])
