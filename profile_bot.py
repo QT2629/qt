@@ -753,7 +753,7 @@ def ai_context(chat_id: int) -> str | None:
     facts = []
     if p.get("city"):
         region = universities.region_of(p["city"])
-        near = (f"в базе есть вузы этого города ({universities.REGION_NAMES[region]})" if region
+        near = ("в базе есть вузы этого города" if region
                 else "в его городе вузов из базы нет — учёба будет в другом городе (Алматы или Астана)")
         facts.append(f"город: {p['city']} ({near})")
     if p.get("ent_group") in universities.ENT_LABELS:

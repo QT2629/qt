@@ -8,6 +8,7 @@
 import gzip
 import json
 import re
+import runpy
 from pathlib import Path
 
 import catalog
@@ -18,6 +19,68 @@ UNI_DIR = Path(__file__).parent / "knowledge" / "universities"
 # Каталог бакалавриата всех вузов страны (univision.kz + studyinkz.kz + реестр epvo.kz, гранты 2026).
 # Собирается программой tools/build_catalog.py.
 CATALOG_PATH = Path(__file__).parent / "knowledge" / "catalog" / "kz_bachelor.json.gz"
+NAME_TR = runpy.run_path(str(CATALOG_PATH.parent / "name_translations.py"))["NAMES"]
+
+# Записи каталога, которые не являются программами (факультеты, коды групп, пустые названия).
+_NOT_PROGRAM = re.compile(r"^(-|–|b\d{3}|faculty\b.*|institute\b.*|humanities and social sciences|social sciences( and humanities)?|"
+                          r"medicine and health sciences|engineering and technology)$", re.I)
+# Казахская «І» вместо латинской I в аббревиатурах: «ІТ», «(ІР)», «ВІМ».
+_FIX_ABBR = {"ІТ": "IT", "ІР": "IP", "ВІМ": "BIM", "ІоТ": "IoT"}
+_YEARS_EN = re.compile(r"^(\d+)(?:\s*-\s*(\d+))?\s*years?$", re.I)
+_LANGS = {"english": "английский", "russian": "русский", "kazakh": "казахский", "german": "немецкий",
+          "chinese": "китайский", "turkish": "турецкий", "french": "французский"}
+_LANGS_KZ = {"русский": "орыс", "казахский": "қазақ", "английский": "ағылшын", "немецкий": "неміс",
+             "китайский": "қытай", "турецкий": "түрік", "французский": "француз"}
+
+
+def _years_ru(a: int, b: int | None = None) -> str:
+    n = b or a
+    word = "год" if n % 10 == 1 and n % 100 != 11 else "года" if 2 <= n % 10 <= 4 and not 12 <= n % 100 <= 14 else "лет"
+    return f"{a}–{b} лет" if b else f"{a} {word}"
+
+
+def clean_program(p: dict) -> bool:
+    """Приводит программу к единому виду: русское название (английское — в name_en), срок и языки по-русски.
+    False — если это не программа (факультет, код группы)."""
+    name = re.sub(r"^[–-]\s*", "", p["name_ru"]).strip(" «»\"")
+    if not name or _NOT_PROGRAM.match(name):
+        return False
+    for bad, good in _FIX_ABBR.items():
+        name = re.sub(rf"(?<![\w]){bad}(?![\w])", good, name)
+    tr = NAME_TR.get(name.lower())
+    if tr and (not re.search(r"[а-яё]", name, re.I) or re.search(r"[әғқңөұүһі]", name, re.I)):
+        p["name_en"], name = name, tr[0]
+        p.setdefault("name_kz", tr[1])
+    p["name_ru"] = name
+    d = (p.get("duration") or "").strip()
+    m = _YEARS_EN.match(d)
+    if m:
+        d = _years_ru(int(m.group(1)), int(m.group(2)) if m.group(2) else None)
+    elif "then 3 years" in d:
+        d = "1 год подготовительного курса + 3 года бакалавриата"
+    elif not re.match(r"^\d", d):
+        d = ""
+    p["duration"] = d
+    langs = [x.strip().lower() for x in (p.get("languages") or "").split(",") if x.strip() and x.strip().lower() != "язык"]
+    p["languages"] = ", ".join(dict.fromkeys(_LANGS.get(x, x) for x in langs))
+    return True
+
+
+def duration_text(p: dict, lang: str) -> str:
+    d = p.get("duration", "")
+    if lang != "kz" or not d:
+        return d
+    if "подготовительного" in d:
+        return "1 жыл дайындық курсы + 3 жыл бакалавриат"
+    return re.sub(r"\s*(год|года|лет)\b", " жыл", d)
+
+
+def languages_text(p: dict, lang: str) -> str:
+    if not p.get("languages"):
+        return ""
+    if lang == "kz":
+        return "оқу тілі: " + ", ".join(_LANGS_KZ.get(x, x) for x in p["languages"].split(", "))
+    return "язык обучения: " + p["languages"]
 
 # Пары профильных предметов ЕНТ (порядок = порядок кнопок).
 ENT_LABELS = {
@@ -101,6 +164,10 @@ def _load() -> dict[str, dict]:
             p["open"] = True
         info["programs"] = {p["code"]: p for p in programs}
         unis[info["slug"]] = info
+    for slug, u in unis.items():  # английские названия в справках вузов — тоже с переводом
+        if slug != "almau":
+            for p in u["programs"].values():
+                clean_program(p)
     unis.update(_catalog_unis(unis))
     for slug, u in unis.items():
         for p in u["programs"].values():
@@ -133,6 +200,7 @@ def _catalog_unis(unis: dict) -> dict[str, dict]:
         names = [u["short"], u["name_ru"], u.get("name_en", "")]
         aliases = [a.lower() for a in names if a and len(a) >= 5]
         aliases += [a for a in u.get("aliases", []) if len(a) >= 4 or a.isascii() and len(a) >= 3]
+        progs = {c: p for c, p in progs.items() if clean_program(p)}
         for p in progs.values():
             p["ent_groups"] = [g for g in [ent_group(p.get("ent_subjects", ""))] if g]
             if p["ent_groups"] and p["ent_groups"][0] not in ("kaz", "rus", "lang_lit"):  # «Математика и Физика» → «+»
@@ -257,7 +325,7 @@ def details(keys: list[str], text: str = "") -> str | None:
         p = u["programs"][code]
         out.append({"university": u["name_ru"], "city": u["city"], "price_note": u["price_note"],
                     **({"data_source": u["notes"], "admissions": admissions_line(u)} if u.get("catalog") else {}),
-                    **{k: p[k] for k in ("code", "name_ru", "section", "ent_subjects", "ent_note", "price_kzt",
+                    **{k: p[k] for k in ("code", "name_ru", "name_kz", "name_en", "section", "ent_subjects", "ent_note", "price_kzt",
                                          "price_other", "duration", "languages", "tracks", "track_courses", "about",
                                          "study_path", "key_courses", "careers", "workplaces", "grant_2026")
                        if p.get(k) not in (None, "", [], {})}, "links": links(slug, code)})
@@ -309,7 +377,7 @@ def _stems(text: str) -> list[str]:
 
 
 def _score(p: dict, stems: list[str]) -> int:
-    name = (p["name_ru"] + " " + p.get("name_kz", "")).lower()
+    name = (p["name_ru"] + " " + p.get("name_kz", "") + " " + p.get("name_en", "")).lower()
     rest = " ".join(p["key_courses"] + p["careers"] + p.get("tracks", [])).lower()
     score = 0
     for st in stems:
@@ -502,12 +570,23 @@ def ent_text(group: str, lang: str, page: int = 0, home: str | None = None) -> s
 def group_text(slug: str, group: str, lang: str) -> str:
     kz = lang == "kz"
     lines = [f"🏛 {b(UNIS[slug]['short'])} · {esc(ENT_LABELS[group][lang])}\n"]
+    items = []
     for p in programs_in(slug, group):
         g = p.get("grant_2026") or {}
         grant = (f", грант 2026: {g['min']} бастап" if kz else f", грант 2026 от {g['min']}") if g.get("count") else ""
-        lines.append(f"• {b(prog_name(p, lang))} — {esc(price_text(p, lang))}{grant}")
-    lines.append("\nТолығырақ білу үшін бағдарламаны бас." if kz else "\nНажми на программу, чтобы узнать подробнее.")
-    return "\n".join(lines)
+        items.append((f"• {b(prog_name(p, lang))} — {esc(price_text(p, lang))}{grant}", f"• {b(prog_name(p, lang))}"))
+    tail = "\nТолығырақ білу үшін бағдарламаны бас." if kz else "\nНажми на программу, чтобы узнать подробнее."
+    full = "\n".join(lines + [x for x, _ in items] + [tail])
+    if len(full) <= 3900:
+        return full
+    # Не помещается в одно сообщение Telegram — только названия; цена и грант — в карточке программы.
+    short = lines + [y for _, y in items]
+    note = ("\nБағасы мен гранты — бағдарлама карточкасында." if kz else "\nЦена и грант — в карточке программы.")
+    text = "\n".join(short + [note, tail])
+    while len(text) > 3900 and len(short) > 2:
+        short.pop()
+        text = "\n".join(short + ["…", note, tail])
+    return text
 
 
 def program_card(key: str, lang: str) -> str:
@@ -517,15 +596,18 @@ def program_card(key: str, lang: str) -> str:
     extra = catalog.PROGRAMS.get(code, {}) if slug == "almau" else {}   # у AlmaU есть срок, практика, оговорки
     kz = lang == "kz"
     head = f"🎓 {b(prog_name(p, lang))} ({esc(p['code'])})"
-    lines = [head, f"🏛 {esc(uni_name(slug, lang))} · {esc(UNIS[slug]['city'])}", esc(p["section"])]
+    lines = [head, f"🏛 {esc(uni_name(slug, lang))} · {esc(UNIS[slug]['city'])}"] + ([esc(p["section"])] if p.get("section") else [])
     if extra.get("degree"):
         lines.append(f"{esc(extra['degree'])} · {extra['duration_years']} " + ("жыл" if kz else "года"))
     elif p.get("duration") or p.get("languages"):
-        lines.append(esc(" · ".join(x for x in (p.get("duration"), p.get("languages")) if x)))
+        lines.append("⏳ " + esc(" · ".join(x for x in (duration_text(p, lang), languages_text(p, lang)) if x)))
+    if p.get("name_en"):
+        lines.append(("Ресми атауы: " if kz else "Официальное название: ") + esc(p["name_en"]))
     if not p["open"]:
         lines.append("⚠️ " + b("2026 жылы бұл бағдарламаға қабылдау жоқ." if kz else "В 2026 году набора на эту программу нет."))
     else:
-        lines.append(("📝 ҰБТ: " if kz else "📝 ЕНТ: ") + b(p["ent_subjects"] or ("приёмнан нақтыла" if kz else "уточнять в приёмной")))
+        ent = ENT_LABELS[p["ent_groups"][0]][lang] if p.get("ent_groups") and (kz or not p["ent_subjects"]) else p["ent_subjects"]
+        lines.append(("📝 ҰБТ: " if kz else "📝 ЕНТ: ") + b(ent or ("қабылдау комиссиясынан нақтыла" if kz else "уточнять в приёмной комиссии")))
         lines.append("💰 " + b(price_text(p, lang)))
         if p.get("grant_2026"):
             lines.append(esc(grant_text(p, lang)))
@@ -595,7 +677,7 @@ def grant_chances(group: str, score: int, lang: str, home: str | None = None) ->
     """Ответ калькулятора «Шанс на грант» (по данным 2026 года, общий конкурс)."""
     kz = lang == "kz"
     stats = sorted(gop_stats(group).items(), key=lambda kv: kv[1]["kz_min"])
-    lines = [f"🎯 {'Балың' if kz else 'Твой балл'}: {b(score)} · {b(ENT_LABELS[group][lang])}",
+    lines = [f"🎯 {'Баллың' if kz else 'Твой балл'}: {b(score)} · {b(ENT_LABELS[group][lang])}",
              "2026 жылғы грант нәтижелері бойынша (жалпы конкурс, квотасыз):\n" if kz
              else "По итогам грантов 2026 года (общий конкурс, без квот):\n"]
     yes, no = [], []
