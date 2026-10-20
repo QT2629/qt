@@ -35,6 +35,7 @@ from telegram.ext import (
 import catalog
 import config
 import formatting
+import photos
 import profile_bot
 import profiles
 import stats
@@ -380,6 +381,12 @@ async def delete_me_command(update: Update, context: ContextTypes.DEFAULT_TYPE) 
     await profile_bot.delete_me(context, update.effective_chat.id, get_lang(context))
 
 
+async def credits_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """/credits — авторы фотографий вузов (этого требуют свободные лицензии; под самими фото подписей нет)."""
+    for chunk in formatting.split(formatting.esc(photos.credits_text()), TELEGRAM_MESSAGE_LIMIT - 100):
+        await update.message.reply_text(chunk, disable_web_page_preview=True)
+
+
 async def show_stats(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """/stats — пользователи по месяцам и статистика за 30 дней (только для администраторов)."""
     if update.effective_user.id not in config.ADMIN_IDS:
@@ -487,7 +494,9 @@ async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
     elif data.startswith("u:"):  # «Вузы и цены» → вуз
         slug = data.split(":")[1]
         stats.log_event(user_id, "button", f"вуз {slug}")
-        await query.edit_message_text(universities.uni_text(slug, lang), reply_markup=uni_groups_keyboard(slug, lang))
+        # Список вузов оставляем (можно выбрать другой), ниже — фото вуза и его карточка.
+        await photos.send_uni_photo(context.bot, chat_id, slug, lang)
+        await context.bot.send_message(chat_id, universities.uni_text(slug, lang), reply_markup=uni_groups_keyboard(slug, lang))
 
     elif data.startswith("ug:"):  # вуз + предметы ЕНТ → список программ
         _, slug, group = data.split(":")
@@ -763,6 +772,7 @@ def main() -> None:
     app.add_handler(CommandHandler("delete_me", delete_me_command))
     app.add_handler(CommandHandler("progress", progress_command))
     app.add_handler(CommandHandler("help", help_command))
+    app.add_handler(CommandHandler("credits", credits_command))
     app.add_handler(CallbackQueryHandler(on_callback))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     app.add_handler(MessageHandler(filters.VOICE | filters.AUDIO, handle_voice))

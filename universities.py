@@ -250,7 +250,7 @@ def _catalog_unis(unis: dict) -> dict[str, dict]:
             p.setdefault("section", "")
             p.setdefault("price_kzt", None)
         out[slug] = {
-            "slug": slug, "short": u["short"], "name_ru": u["name_ru"], "name_kz": u["name_ru"],
+            "slug": slug, "short": u["short"], "name_ru": u["name_ru"], "name_kz": u["name_ru"], "name_en": u.get("name_en", ""),
             "aliases": list(dict.fromkeys(aliases)), "city": u.get("city") or "город не указан", "type": u.get("type", ""),
             "students": u.get("students"), "region": u.get("region", ""), "rating": u.get("rating", ""),
             "website": u.get("website", ""),
@@ -634,7 +634,8 @@ def match_unis(text: str) -> tuple[list[str], set[str]]:
         phrase = next((ph for ph in prof["phrases"]
                        if any(stems[i:i + len(ph)] == ph for i in range(len(stems) - len(ph) + 1))), None)
         # Имя собственное в названии («Туран», «Мирас», «Болашак») — слово, которого нет в названиях специальностей.
-        proper = {st for st in hit if prof["inf"][st] == 2 and st not in _CITY_STEMS and st not in _common_stems()}
+        proper = {st for st in hit if prof["inf"][st] == 2 and st not in _CITY_STEMS and st not in _common_stems()
+                  and not st.isascii()}  # английские слова названия (irrigation…) вуз сами по себе не определяют
         score = 0
         if sur:
             score = 30 + got
