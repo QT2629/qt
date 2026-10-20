@@ -393,6 +393,45 @@ _CITY_STEMS = {"алмат", "астан", "карег", "караг", "шымк
                "рудне", "рудны", "аркал", "запад", "восто", "север", "южно", "центр", "евраз", "каспи"}
 
 
+# Сокращения, которыми называют вузы (в том числе старые: КарГУ, ЮКГУ, ПГУ). Ключ — вуз в базе.
+ABBR = {
+    "almau": ["АлмаУ"], "enu": ["ЕНУ"], "kbtu": ["КБТУ"], "narxoz": ["КазЭУ"], "sdu": ["СДУ"], "mnu": ["МНУ", "КазГЮУ"],
+    "aitu": ["АйТУ", "АИТУ"], "satbayev": ["КазНИТУ", "КазНТУ", "КазПТИ"], "kazatu": ["КазАТУ", "КАТУ", "КазАТИУ"],
+    "u69": ["КазНУ", "КазГУ"], "u67": ["КазНПУ"], "u66": ["КазНМУ"], "u63": ["КазНАУ", "КазНАИУ"],
+    "u71": ["КазУМОиМЯ", "КазУМО"], "u64": ["КазНацЖенПУ", "КазНЖПУ", "КазЖенПУ"], "u58": ["КазНАИ"], "u60": ["КазНК"],
+    "u59": ["КазНАХ"], "u70": ["КазНУИ"], "u55": ["КазАДИ"], "u56": ["КазАСТ"], "u24": ["АЛТ"], "u30": ["АТУ"],
+    "u31": ["АУЭС", "АИЭС"], "u23": ["АГА"], "u45": ["ЕТУ"], "u29": ["АГЭУ"], "u105": ["МУИТ"], "u128": ["КИМЭП"],
+    "u99": ["МОК", "КазГАСА"], "u100": ["МИТУ"], "u102": ["МТГУ"], "u130": ["УМБ"], "u80": ["КНУ"], "u81": ["КРМУ"],
+    "u76": ["ВШОЗ"], "u32": ["МИФИ"], "u97": ["МУА", "АМУ"], "u43": ["ЕГИ"], "u73": ["КазУТБ"], "u36": ["АтГУ"],
+    "u37": ["АУНГ", "АИНГ"], "u35": ["АИГИ"], "u48": ["ЖезУ", "ЖезГУ"], "u84": ["КарТУ", "КарГТУ"], "u85": ["КарУ", "КарГУ"],
+    "u83": ["КГМУ", "КарГМУ"], "u86": ["КЭУК"], "u137": ["ЦКА"], "u41": ["ГТА"], "u89": ["КУАМ"], "u91": ["КИнЭУ"],
+    "u92": ["КРУ"], "u93": ["КСТУ"], "u94": ["КОУ"], "u54": ["ИнЕУ"], "u108": ["ППУ", "ПГПИ"], "u116": ["ПГУ"],
+    "u112": ["СКУ", "СКГУ"], "u111": ["РИИ", "РИУ"], "u98": ["МУС", "ГМУС"], "u49": ["ЖУ", "ЖГУ"], "u115": ["ТарУ", "ТарГУ"],
+    "u114": ["ТИГУ"], "u82": ["КГИУ"], "u101": ["МКТУ"], "u106": ["МУТиГ"], "u50": ["ЗКАТУ"], "u51": ["ЗКИТУ"],
+    "u53": ["ЗКУ", "ЗКГУ"], "u77": ["КазУИТС"], "u39": ["ВКТУ", "ВКГТУ"], "u40": ["ВКУ", "ВКГУ"], "u78": ["КАСУ"],
+    "u123": ["УДН"], "u135": ["ЦАИУ"], "u139": ["ЮКМА"], "u140": ["ЮКПУ", "ЮКГПУ"], "u141": ["ЮКУ", "ЮКГУ"],
+    "u47": ["ЕИТИ"], "u28": ["АРУ", "АРГУ"], "u52": ["ЗКМУ", "ЗКГМУ"], "u88": ["КУТИ"], "u68": ["КазНУВХИ"],
+}
+# Сокращения, похожие на обычные слова («карту», «тару», «ага»), засчитываем, только если написаны заглавными.
+_ABBR_WORDS = {"карту", "кару", "тару", "ару", "ага", "касу", "кату", "мок", "мус", "алт", "ату", "ету", "жу", "кну", "умб",
+               "ппу", "пгу", "кру", "цка", "гта", "коу", "рии", "риу", "ску", "вку", "зку", "удн", "муа", "аму", "ену", "сду",
+               "мну", "еги", "кгу"}
+
+
+def _abbr_list(slug: str, u: dict) -> list[tuple[str, bool]]:
+    """(сокращение в нижнем регистре, нужно ли писать заглавными)."""
+    out = list(ABBR.get(slug, []))
+    first = u["short"].split()[0]  # «КарТУ им. Сагинова» → КарТУ
+    if sum(c.isupper() for c in first) >= 2 and len(first) <= 9 and first.lower() not in ("кму", "ку", "ау", "жу"):
+        out.append(first)
+    res = {}
+    for a in out:
+        low = a.lower()
+        caps = low in _ABBR_WORDS and low not in ("ену", "сду", "мну")  # ЕНУ, СДУ, МНУ обычных слов не задевают
+        res[low] = res.get(low, True) and caps
+    return list(res.items())
+
+
 def _stem(word: str) -> str:
     return word[:5] if len(word) >= 5 else word
 
@@ -402,7 +441,8 @@ def _surname(words: list[str]) -> set[str]:
     out = set()
     for i, w in enumerate(words):
         if w in ("им", "имени"):
-            nxt = next((x for x in words[i + 1:] if len(x) > 2 and x not in ("аль", "ибн")), "")
+            nxt = next((x for x in words[i + 1:] if len(x) > 2 and x not in ("аль", "ибн", "академика", "академик",
+                                                                             "профессора", "героя")), "")
             if nxt:
                 out.add(nxt[:max(4, min(6, len(nxt) - 1))])
     return out
@@ -430,9 +470,7 @@ def _name_profile(u: dict) -> dict:
         if len(w) < 4 or st in _GENERIC_STEMS or any(w.startswith(x) for x in surname):
             continue
         inf[st] = 1 if st in _PROFILE_STEMS else 2
-    first = u["short"].split()[0]  # «КарТУ им. Сагинова» → КарТУ (сокращение: 2+ заглавные буквы)
-    abbr = first.lower() if sum(c.isupper() for c in first) >= 2 and len(first) <= 9 else ""
-    return {"surname": surname, "inf": inf, "phrases": _phrases(u["name_ru"]), "abbr": abbr}
+    return {"surname": surname, "inf": inf, "phrases": _phrases(u["name_ru"]), "abbr": _abbr_list(u["slug"], u)}
 
 
 def _alias_tokens(alias: str, tokens: list[str]) -> list[int]:
@@ -478,16 +516,23 @@ def match_unis(text: str) -> tuple[list[str], set[str]]:
     # 1) Варианты названий (сокращения, фамилии, английские названия) — сначала длинные, чтобы
     #    «Туран-Астана» не превратилось в «Туран».
     variants = sorted(((a, slug) for slug, u in UNIS.items() for a in u["aliases"]), key=lambda x: -len(x[0]))
+    abbrs = []
     for slug, u in UNIS.items():
         prof = u.setdefault("_profile", _name_profile(u))
-        if prof["abbr"]:
-            variants.append(("\x00" + prof["abbr"], slug))
+        abbrs += [(ab, caps, slug) for ab, caps in prof["abbr"]]
+    for ab, caps, slug in sorted(abbrs, key=lambda x: -len(x[0])):  # сокращения — целым словом
+        pos = [i for i, t in enumerate(tokens) if t == ab
+               and (not caps or i < len(orig) and sum(c.isupper() for c in orig[i]) >= 2)]
+        if pos:
+            if slug not in found:
+                found.append(slug)
+            for i in pos:
+                used.add(_stem(tokens[i]))
+                tokens[i] = "\x00"
     for alias, slug in variants:
-        if alias.startswith("\x00"):  # сокращение из короткого названия — только если написано заглавными (КарТУ, не «карту»)
-            ab = alias[1:]
-            pos = [i for i, t in enumerate(tokens) if t == ab and i < len(orig) and sum(c.isupper() for c in orig[i]) >= 2]
-        else:
-            pos = _alias_tokens(alias, tokens)
+        if len(alias.strip()) <= 6 and alias.strip().lower() in _ABBR_WORDS:  # короткие варианты-слова — только через сокращения выше
+            continue
+        pos = _alias_tokens(alias, tokens)
         if pos:
             if slug not in found:
                 found.append(slug)

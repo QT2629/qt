@@ -41,6 +41,21 @@ def main() -> None:
             got = U.mentioned_unis(q)
             if slug not in got or len(got) > 2:
                 bad.append(("вуз", u["short"], q, [U.UNIS[s]["short"] for s in got]))
+    n_abbr = 0
+    for slug, u in U.UNIS.items():  # сокращения: «хочу в КарГУ», «есть ли IT в кбту»
+        written = {x.lower(): x for x in U.ABBR.get(slug, []) + [u["short"].split()[0]]}
+        for ab, caps in U._abbr_list(slug, u):
+            forms = [written.get(ab, ab.upper())] + ([] if caps else [ab])
+            for form in forms:
+                for q in (f"хочу поступить в {form}", f"есть ли IT в {form}?"):
+                    n_abbr += 1
+                    got = U.mentioned_unis(q)
+                    if got != [slug]:
+                        bad.append(("сокращение", u["short"], q, [U.UNIS[s]["short"] for s in got]))
+            if caps:  # то же слово строчными — обычное слово, вуз не находим
+                n_abbr += 1
+                if U.mentioned_unis(f"покажи {ab} пожалуйста"):
+                    bad.append(("сокращение-слово", u["short"], ab, U.mentioned_unis(f"покажи {ab} пожалуйста")))
     names = {p["name_ru"] for u in U.UNIS.values() for p in u["programs"].values()}
     for n in names:  # название специальности не должно приниматься за вуз
         if U.mentioned_unis(n):
@@ -55,7 +70,7 @@ def main() -> None:
                 keys = U.select(q, [])
                 if not any(k.startswith(slug + ":") and U.program(k)["name_ru"].lower() == p["name_ru"].lower() for k in keys):
                     bad.append(("программа", u["short"], q, [U.program(k)["name_ru"] for k in keys][:3]))
-    print(f"Вузов: {len(U.UNIS)}, проверок названий вузов: {n_uni}, названий специальностей: {len(names)}, "
+    print(f"Вузов: {len(U.UNIS)}, проверок названий вузов: {n_uni}, сокращений: {n_abbr}, названий специальностей: {len(names)}, "
           f"проверок поиска программ: {n_prog}. Ошибок: {len(bad)}")
     print(collections.Counter(b[0] for b in bad))
     for b in bad[:30]:
