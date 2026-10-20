@@ -138,7 +138,7 @@ def _catalog_unis(unis: dict) -> dict[str, dict]:
             if p["ent_groups"] and p["ent_groups"][0] not in ("kaz", "rus", "lang_lit"):  # «Математика и Физика» → «+»
                 p["ent_subjects"] = p["ent_subjects"].replace(" и ", " + ")
             p["open"] = True
-            p["source_url"] = p.pop("url", "")
+            p.pop("url", None)  # ссылки — только на сайты вузов, страницы каталога не показываем
             for field in ("tracks", "key_courses", "careers", "workplaces"):
                 p.setdefault(field, [])
             p.setdefault("ent_subjects", "")
@@ -147,12 +147,12 @@ def _catalog_unis(unis: dict) -> dict[str, dict]:
         out[slug] = {
             "slug": slug, "short": u["short"], "name_ru": u["name_ru"], "name_kz": u["name_ru"],
             "aliases": list(dict.fromkeys(aliases)), "city": u.get("city") or "город не указан", "type": "",
-            "website": u.get("website", ""), "programs_url": u.get("univision_url") or u.get("studyinkz_url", ""),
+            "website": u.get("website", ""),
             "admissions": {"phones": u.get("phones", []), "email": (u.get("emails") or [""])[0],
                            "address": u.get("contacts_raw", ""), "url": u.get("website", "")},
-            "price_note": "Цены — по данным univision.kz и studyinkz.kz, есть не у всех программ; "
+            "price_note": "Цены — по данным открытого каталога вузов, есть не у всех программ; "
                           "актуальную стоимость уточняй в приёмной комиссии.",
-            "notes": "Данные открытого каталога (univision.kz, studyinkz.kz), коды программ сверены с реестром epvo.kz.",
+            "notes": "Данные открытого каталога вузов; коды программ сверены с официальным реестром образовательных программ.",
             "catalog": True, "programs": progs,
         }
     return out
@@ -178,7 +178,7 @@ def price_text(p: dict, lang: str) -> str:
     if p["price_kzt"]:
         return money(p["price_kzt"]) + (" жылына" if lang == "kz" else " в год")
     if p.get("price_other"):
-        return p["price_other"] + (" (studyinkz.kz дерегі)" if lang == "kz" else " (по данным studyinkz.kz)")
+        return p["price_other"] + (" (каталог дерегі)" if lang == "kz" else " (по данным каталога)")
     return "бағасы нақтыланады" if lang == "kz" else "цена уточняется"
 
 
@@ -221,8 +221,6 @@ def links(slug: str, code: str | None = None) -> dict:
            "bachelor_list": u.get("programs_url", "")}
     if code and u["programs"].get(code, {}).get("url"):
         out["program"] = u["programs"][code]["url"]
-    if code and u["programs"].get(code, {}).get("source_url"):  # страница в каталоге, не сайт вуза
-        out["program_catalog_page"] = u["programs"][code]["source_url"]
     return {k: v for k, v in out.items() if v}
 
 
@@ -554,8 +552,8 @@ def program_card(key: str, lang: str) -> str:
     if extra.get("note"):
         lines.append("\nℹ️ " + esc(extra["note"]))
     if UNIS[slug].get("catalog"):
-        lines.append("\nℹ️ " + ("Деректер univision.kz және studyinkz.kz ашық каталогынан алынды — ЖОО қабылдау комиссиясынан нақтыла."
-                               if kz else "Данные из открытого каталога univision.kz и studyinkz.kz — уточняй в приёмной комиссии вуза."))
+        lines.append("\nℹ️ " + ("Деректер ЖОО-лардың ашық каталогынан алынды — қабылдау комиссиясынан нақтыла."
+                               if kz else "Данные из открытого каталога вузов — уточняй в приёмной комиссии вуза."))
     else:
         lines.append("\nℹ️ " + ("Деректер бағдар ретінде берілген — ЖОО қабылдау комиссиясынан нақтыла." if kz
                                else "Данные ориентировочные — уточняй в приёмной комиссии вуза."))
@@ -566,9 +564,6 @@ def program_card(key: str, lang: str) -> str:
 def link_line(key: str, lang: str) -> str:
     slug, code = key.split(":")
     ln = links(slug, code)
-    if ln.get("program_catalog_page"):
-        site = (("\n🌐 ЖОО сайты: " if lang == "kz" else "\n🌐 Сайт вуза: ") + ln["site"]) if ln.get("site") else ""
-        return ("🔗 Каталогтағы бағдарлама беті: " if lang == "kz" else "🔗 Программа в каталоге: ") + ln["program_catalog_page"] + site
     if ln.get("program"):
         return ("🔗 Бағдарлама сайтта: " if lang == "kz" else "🔗 Программа на сайте вуза: ") + ln["program"]
     if ln.get("bachelor_list"):
@@ -674,7 +669,7 @@ def contacts_text(lang: str, slugs: list[str] | None = None) -> str:
         if a.get("url") or u.get("website"):
             block.append(f"🌐 {a.get('url') or u.get('website', '')}")
         lines.append("\n".join(block))
-    lines.append("\nКонтактілер ЖОО сайттарынан және univision.kz каталогынан алынды (қазан 2026) — құжат тапсырар алдында сайттан тексер." if kz
-                 else "\nКонтакты — с сайтов вузов и из каталога univision.kz (октябрь 2026). Перед подачей документов сверь на сайте вуза.")
+    lines.append("\nКонтактілер ЖОО сайттарынан және ашық каталогтан алынды (қазан 2026) — құжат тапсырар алдында ЖОО сайтынан тексер." if kz
+                 else "\nКонтакты — с сайтов вузов и из открытого каталога (октябрь 2026). Перед подачей документов сверь на сайте вуза.")
     return "\n".join(lines)
 
