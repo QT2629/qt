@@ -411,25 +411,107 @@ ABBR = {
     "u53": ["ЗКУ", "ЗКГУ"], "u77": ["КазУИТС"], "u39": ["ВКТУ", "ВКГТУ"], "u40": ["ВКУ", "ВКГУ"], "u78": ["КАСУ"],
     "u123": ["УДН"], "u135": ["ЦАИУ"], "u139": ["ЮКМА"], "u140": ["ЮКПУ", "ЮКГПУ"], "u141": ["ЮКУ", "ЮКГУ"],
     "u47": ["ЕИТИ"], "u28": ["АРУ", "АРГУ"], "u52": ["ЗКМУ", "ЗКГМУ"], "u88": ["КУТИ"], "u68": ["КазНУВХИ"],
+    # Переименованные вузы: новое название по каталогу и сокращения по нему
+    "u25": ["КНУС", "КазНУС", "КНАС", "КазНАС", "АФКиМС", "АФКМС"], "u56": ["КазАСТ", "КАСТ"],
+    "u114": ["МТУ", "МТарУ"], "u129": ["ЕЮА"], "u100": ["МЕТУ", "METU"],
 }
+# Как ещё называют вуз (новые названия после переименования, имена в названии).
+EXTRA_ALIASES = {
+    "u25": ["национальный университет спорта", "национальная академия спорта", "university of sports"],
+    "u24": ["тынышбаев", "alt university"], "u108": ["маргулан"], "u114": ["муртаз", "шерхан", "международный таразский"],
+    "u119": ["ташенов"], "u129": ["евразийская юридическая академия"], "u140": ["жанибеков"], "u70": ["байсеитов"],
+    "u88": ["yessenov"], "u85": ["карагандинский национальный исследовательский"],
+}
+for _slug, _extra in EXTRA_ALIASES.items():
+    if _slug in UNIS:
+        UNIS[_slug]["aliases"] = list(dict.fromkeys(UNIS[_slug]["aliases"] + _extra))
 # Сокращения, похожие на обычные слова («карту», «тару», «ага»), засчитываем, только если написаны заглавными.
 _ABBR_WORDS = {"карту", "кару", "тару", "ару", "ага", "касу", "кату", "мок", "мус", "алт", "ату", "ету", "жу", "кну", "умб",
                "ппу", "пгу", "кру", "цка", "гта", "коу", "рии", "риу", "ску", "вку", "зку", "удн", "муа", "аму", "ену", "сду",
                "мну", "еги", "кгу"}
 
 
-def _abbr_list(slug: str, u: dict) -> list[tuple[str, bool]]:
-    """(сокращение в нижнем регистре, нужно ли писать заглавными)."""
-    out = list(ABBR.get(slug, []))
-    first = u["short"].split()[0]  # «КарТУ им. Сагинова» → КарТУ
-    if sum(c.isupper() for c in first) >= 2 and len(first) <= 9 and first.lower() not in ("кму", "ку", "ау", "жу"):
-        out.append(first)
-    res = {}
-    for a in out:
-        low = a.lower()
-        caps = low in _ABBR_WORDS and low not in ("ену", "сду", "мну")  # ЕНУ, СДУ, МНУ обычных слов не задевают
-        res[low] = res.get(low, True) and caps
-    return list(res.items())
+_CITY_PREFIX = ("алмат", "астан", "караг", "тараз", "павло", "семей", "актюб", "атыра", "кокше", "коста", "кызыл", "шымке",
+                "туркес", "ураль", "петро", "жезка", "экиба", "рудне", "аркал", "актау", "талды")
+_SKIP_WORDS = {"и", "в", "на", "по", "г", "города", "при", "для", "филиал"}
+
+
+def _generated_abbr(name: str) -> set[str]:
+    """Сокращения, которые люди составляют из названия: первые буквы слов («Каз» для «Казахский»,
+    «Кар» для «Карагандинский»), с «Г» (государственный — старые названия) и без."""
+    name = re.split(r"(?:^|\s)(?:им\.|имени)(?:\s|$)", re.sub(r"[«\"].*?[»\"]|\(.*?\)", " ", name) + " ")[0]
+    words = [w for w in re.findall(r"[А-ЯЁа-яё]+", name) if w.lower() not in _SKIP_WORDS]
+    if len(words) < 2:
+        return set()
+    plain, kaz, city = [], [], []
+    for i, w in enumerate(words):
+        low = w.lower()
+        letter = w[0].upper()
+        plain.append(letter)
+        kaz.append("Каз" if low.startswith("казах") and i == 0 else letter)
+        city.append(w[:3].capitalize() if i == 0 and low.startswith(_CITY_PREFIX) else letter)
+    out = set()
+    for v in (plain, kaz, city):
+        a = "".join(v)
+        if len(a) >= 3:
+            out.add(a)
+            if a.endswith("У") and "Г" not in a:  # КарУ → КарГУ, ЮКУ → ЮКГУ, ВКТУ → ВКГТУ
+                out.add(a[:-1] + "ГУ")
+                if len(a) >= 4 and a[-2] in "ТПМАИ":
+                    out.add(a[:-2] + "Г" + a[-2:])
+    return out
+
+
+_ABBR_CACHE: dict = {}
+
+
+def _abbr_table() -> dict[str, list[tuple[str, bool, str]]]:
+    """Сокращения всех вузов: (строчными, только заглавными, как пишется). Совпавшие у двух вузов автосокращения
+    не берём — по ним вуз не понять."""
+    if _ABBR_CACHE:
+        return _ABBR_CACHE
+    common = _common_stems()
+    gen: dict[str, set[str]] = {}
+    for slug, u in UNIS.items():
+        names = [u["name_ru"]] + re.findall(r"\((.*?)\)", u["name_ru"])
+        gen[slug] = set().union(*(_generated_abbr(n) for n in names))
+    count = {}
+    for slug, abbrs in gen.items():
+        for a in abbrs:
+            count[a.lower()] = count.get(a.lower(), 0) + 1
+    manual = {a.lower() for v in ABBR.values() for a in v}
+    for slug, u in UNIS.items():
+        out = list(ABBR.get(slug, []))
+        first = u["short"].split()[0]  # «КарТУ им. Сагинова» → КарТУ
+        if sum(c.isupper() for c in first) >= 2 and len(first) <= 9 and first.lower() not in ("кму", "ку", "ау", "жу"):
+            out.append(first)
+        out += [a for a in gen[slug] if count[a.lower()] == 1 and a.lower() not in manual]
+        res = {}
+        for a in out:
+            low = a.lower()
+            if low in ("ент", "вуз", "гоп", "нцт", "орт", "кгу", "кму"):
+                continue
+            # Короткие и похожие на обычные слова — только заглавными (КарТУ ≠ «карту»).
+            caps = (low in _ABBR_WORDS or low[:5] in common or len(low) <= 4) \
+                and low not in _LOWER_OK \
+                and not low.isascii() and low not in u["aliases"]  # латиница (SDU, AITU) и явные варианты — любым регистром
+            if low not in res:
+                res[low] = (caps, a)
+            else:
+                res[low] = (res[low][0] and caps, res[low][1])
+        _ABBR_CACHE[slug] = [(low, caps, a) for low, (caps, a) in res.items()]
+    return _ABBR_CACHE
+
+
+# Короткие сокращения, которые пишут и строчными и которые не совпадают с обычными словами.
+_LOWER_OK = {"ену", "сду", "мну", "кбту", "муит", "аиту", "айту", "кнус", "юку", "вкту", "зкму", "агэу", "ауэс", "мкту",
+             "юкма", "юкпу", "ксту", "аунг", "еити", "кути", "мифи", "вшоз", "крму", "аинг", "аиги", "тигу", "кгиу",
+             "кэук", "кгму", "скгу", "вкгу", "зкгу", "аргу", "атгу", "жгу", "ппу"}
+
+
+def _abbr_list(slug: str, u: dict) -> list[tuple[str, bool, str]]:
+    """(сокращение строчными, нужно ли писать заглавными, как пишется)."""
+    return _abbr_table()[slug]
 
 
 def _stem(word: str) -> str:
@@ -519,7 +601,7 @@ def match_unis(text: str) -> tuple[list[str], set[str]]:
     abbrs = []
     for slug, u in UNIS.items():
         prof = u.setdefault("_profile", _name_profile(u))
-        abbrs += [(ab, caps, slug) for ab, caps in prof["abbr"]]
+        abbrs += [(ab, caps, slug) for ab, caps, _ in prof["abbr"]]
     for ab, caps, slug in sorted(abbrs, key=lambda x: -len(x[0])):  # сокращения — целым словом
         pos = [i for i, t in enumerate(tokens) if t == ab
                and (not caps or i < len(orig) and sum(c.isupper() for c in orig[i]) >= 2)]

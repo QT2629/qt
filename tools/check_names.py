@@ -43,9 +43,8 @@ def main() -> None:
                 bad.append(("вуз", u["short"], q, [U.UNIS[s]["short"] for s in got]))
     n_abbr = 0
     for slug, u in U.UNIS.items():  # сокращения: «хочу в КарГУ», «есть ли IT в кбту»
-        written = {x.lower(): x for x in U.ABBR.get(slug, []) + [u["short"].split()[0]]}
-        for ab, caps in U._abbr_list(slug, u):
-            forms = [written.get(ab, ab.upper())] + ([] if caps else [ab])
+        for ab, caps, form0 in U._abbr_list(slug, u):
+            forms = [form0] + ([] if caps else [ab])
             for form in forms:
                 for q in (f"хочу поступить в {form}", f"есть ли IT в {form}?"):
                     n_abbr += 1
