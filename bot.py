@@ -10,6 +10,7 @@
 # Запуск: python bot.py
 
 import asyncio
+import hashlib
 import html
 import logging
 import re
@@ -78,32 +79,68 @@ def get_lang(context: ContextTypes.DEFAULT_TYPE) -> str:
     return context.user_data.get("lang", "ru")
 
 
-# Версия меню и возможностей бота. Увеличь число, когда меняешь меню или добавляешь важное, —
-# бот сам пришлёт всем пользователям новое меню (без нажатия «Старт»).
-MENU_VERSION = 3
+# Обновления без «Старт».
+# CODE_VERSION — отпечаток кода и данных бота: после каждого обновления на сервере он новый, и у пользователя
+# при следующем сообщении тихо очищается история разговора (чтобы ИИ не опирался на старые ответы).
+# MENU_SIGNATURE — отпечаток нижнего меню: если кнопки поменялись, бот сам пришлёт новое меню (один раз).
+def _code_version() -> str:
+    root = Path(__file__).parent
+    h = hashlib.sha1()
+    for path in sorted([*root.glob("*.py"), *(root / "knowledge").rglob("*")]):
+        if path.is_file():
+            h.update(path.name.encode())
+            h.update(path.read_bytes() if path.suffix == ".py" else str(path.stat().st_size).encode())
+    return h.hexdigest()[:12]
+
+
+CODE_VERSION = _code_version()
+MENU_SIGNATURE = hashlib.sha1("|".join(t(lang, k) for lang in TEXTS for k in ("btn_pick", "btn_chance", "btn_profile"))
+                              .encode()).hexdigest()[:12]
+MENU_VERSION = 3  # прежняя ручная версия меню: у кого она есть, у того меню уже нынешнее
+
+
+def _menu_is_current(data: dict) -> bool:
+    if data.get("menu_sig") == MENU_SIGNATURE:
+        return True
+    if data.get("menu_v") == MENU_VERSION and "menu_sig" not in data:  # получили нынешнее меню до этой версии бота
+        data["menu_sig"] = MENU_SIGNATURE
+        return True
+    return False
 
 
 async def ensure_fresh(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
-    """Перед любым ответом: язык не потерян, меню — последней версии. Возвращает язык."""
-    if "lang" not in context.user_data:  # данные потерялись (например, после переезда сервера) — не заставляем жать «Старт»
+    """Перед любым ответом: язык не потерян, история не устарела, меню — актуальное. Возвращает язык."""
+    data = context.user_data
+    if "lang" not in data:  # данные потерялись (например, после переезда сервера) — не заставляем жать «Старт»
         p = profiles.get(update.effective_chat.id)
         code = (update.effective_user.language_code or "") if update.effective_user else ""
-        context.user_data["lang"] = (p or {}).get("lang") or ("kz" if code.startswith("kk") else "ru")
-        context.user_data["joined"] = True
-        context.user_data["menu_v"] = MENU_VERSION  # новое меню — без сообщения «обновился»
+        data["lang"] = (p or {}).get("lang") or ("kz" if code.startswith("kk") else "ru")
+        data["joined"] = True
+        data["menu_sig"] = MENU_SIGNATURE  # новое меню — без сообщения «обновился»
         await context.bot.send_message(update.effective_chat.id, "👋", reply_markup=menu_keyboard(get_lang(context)))
+    if data.get("code_v") != CODE_VERSION:  # бот обновился — разговор начинаем с актуальными данными
+        data["code_v"] = CODE_VERSION
+        data["history"] = []
+        data["recent"] = []
+        data.pop("opts", None)
     lang = get_lang(context)
-    if context.user_data.get("menu_v") != MENU_VERSION:
-        context.user_data["menu_v"] = MENU_VERSION
+    if not _menu_is_current(data):
+        data["menu_sig"] = MENU_SIGNATURE
         await context.bot.send_message(update.effective_chat.id, t(lang, "menu_updated"), reply_markup=menu_keyboard(lang))
     return lang
 
 
+def mark_menu(context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Пользователь только что получил меню (выбор языка, /reset)."""
+    context.user_data["menu_sig"] = MENU_SIGNATURE
+    context.user_data["code_v"] = CODE_VERSION
+
+
 async def announce_update(context: ContextTypes.DEFAULT_TYPE) -> None:
-    """После обновления бота: всем, у кого старое меню, — короткое сообщение с новым меню (один раз на версию)."""
+    """После обновления бота: если кнопки меню поменялись — всем короткое сообщение с новым меню (один раз)."""
     sent = 0
     for user_id, data in list(context.application.user_data.items()):
-        if not data.get("lang") or data.get("menu_v") == MENU_VERSION:
+        if not data.get("lang") or _menu_is_current(data):
             continue
         try:
             await context.bot.send_message(user_id, t(data["lang"], "menu_updated"), reply_markup=menu_keyboard(data["lang"]))
@@ -120,10 +157,10 @@ async def announce_update(context: ContextTypes.DEFAULT_TYPE) -> None:
         except TelegramError as e:
             logger.warning("Не удалось отправить новое меню %s: %s", user_id, e)
             continue
-        data["menu_v"] = MENU_VERSION
+        data["menu_sig"] = MENU_SIGNATURE
         context.application.mark_data_for_update_persistence(user_ids=[user_id])
         await asyncio.sleep(0.05)  # не больше ~20 сообщений в секунду
-    logger.info("Новое меню (версия %s) разослано: %s пользователям", MENU_VERSION, sent)
+    logger.info("Версия бота %s; новое меню разослано: %s пользователям", CODE_VERSION, sent)
 
 
 # ---------------------------------------------------------------------------
@@ -327,7 +364,7 @@ async def reset(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     context.user_data["history"] = []
     context.user_data["recent"] = []
     lang = get_lang(context)
-    context.user_data["menu_v"] = MENU_VERSION
+    mark_menu(context)
     await update.message.reply_text(t(lang, "reset_done"), reply_markup=menu_keyboard(lang))
 
 
@@ -419,6 +456,18 @@ async def partner_link(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 # Кнопки под сообщениями (inline)
 # ---------------------------------------------------------------------------
 async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Кнопки под сообщениями. Кнопка из старого сообщения, которая больше не работает, — не молчим,
+    а показываем актуальное меню."""
+    try:
+        await _on_callback(update, context)
+    except Exception:
+        logger.exception("Кнопка %s не сработала", getattr(update.callback_query, "data", ""))
+        lang = get_lang(context)
+        await context.bot.send_message(update.effective_chat.id, t(lang, "old_button"), reply_markup=menu_keyboard(lang))
+        await context.bot.send_message(update.effective_chat.id, t(lang, "welcome"), reply_markup=start_keyboard(lang))
+
+
+async def _on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     query = update.callback_query
     await query.answer()
     data = query.data
@@ -440,7 +489,7 @@ async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
         if profiles.get(chat_id):
             profiles.update(chat_id, lang=lang)
         await query.edit_message_text(t(lang, "lang_set"))
-        context.user_data["menu_v"] = MENU_VERSION
+        mark_menu(context)
         await context.bot.send_message(chat_id, "👋", reply_markup=menu_keyboard(lang))
         await context.bot.send_message(chat_id, t(lang, "welcome"), reply_markup=start_keyboard(lang))
 
