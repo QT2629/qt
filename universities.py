@@ -40,7 +40,7 @@ def _years_ru(a: int, b: int | None = None) -> str:
 
 
 def clean_program(p: dict) -> bool:
-    """Приводит программу к единому виду: русское название (английское — в name_en), срок и языки по-русски.
+    """Приводит программу к единому виду: название как у вуза (перевод — в name_translation для поиска), срок и языки по-русски.
     False — если это не программа (факультет, код группы)."""
     name = re.sub(r"^[–-]\s*", "", p["name_ru"]).strip(" «»\"")
     if not name or _NOT_PROGRAM.match(name):
@@ -48,9 +48,8 @@ def clean_program(p: dict) -> bool:
     for bad, good in _FIX_ABBR.items():
         name = re.sub(rf"(?<![\w]){bad}(?![\w])", good, name)
     tr = NAME_TR.get(name.lower())
-    if tr and (not re.search(r"[а-яё]", name, re.I) or re.search(r"[әғқңөұүһі]", name, re.I)):
-        p["name_en"], name = name, tr[0]
-        p.setdefault("name_kz", tr[1])
+    if tr:  # название остаётся как у вуза (на английском или казахском), перевод — для поиска и для ИИ
+        p["name_translation"] = f"{tr[0]} / {tr[1]}"
     p["name_ru"] = name
     d = (p.get("duration") or "").strip()
     m = _YEARS_EN.match(d)
@@ -325,7 +324,7 @@ def details(keys: list[str], text: str = "") -> str | None:
         p = u["programs"][code]
         out.append({"university": u["name_ru"], "city": u["city"], "price_note": u["price_note"],
                     **({"data_source": u["notes"], "admissions": admissions_line(u)} if u.get("catalog") else {}),
-                    **{k: p[k] for k in ("code", "name_ru", "name_kz", "name_en", "section", "ent_subjects", "ent_note", "price_kzt",
+                    **{k: p[k] for k in ("code", "name_ru", "name_kz", "name_translation", "section", "ent_subjects", "ent_note", "price_kzt",
                                          "price_other", "duration", "languages", "tracks", "track_courses", "about",
                                          "study_path", "key_courses", "careers", "workplaces", "grant_2026")
                        if p.get(k) not in (None, "", [], {})}, "links": links(slug, code)})
@@ -377,7 +376,7 @@ def _stems(text: str) -> list[str]:
 
 
 def _score(p: dict, stems: list[str]) -> int:
-    name = (p["name_ru"] + " " + p.get("name_kz", "") + " " + p.get("name_en", "")).lower()
+    name = " ".join((p["name_ru"], p.get("name_kz", ""), p.get("name_translation", ""))).lower()
     rest = " ".join(p["key_courses"] + p["careers"] + p.get("tracks", [])).lower()
     score = 0
     for st in stems:
@@ -601,8 +600,6 @@ def program_card(key: str, lang: str) -> str:
         lines.append(f"{esc(extra['degree'])} · {extra['duration_years']} " + ("жыл" if kz else "года"))
     elif p.get("duration") or p.get("languages"):
         lines.append("⏳ " + esc(" · ".join(x for x in (duration_text(p, lang), languages_text(p, lang)) if x)))
-    if p.get("name_en"):
-        lines.append(("Ресми атауы: " if kz else "Официальное название: ") + esc(p["name_en"]))
     if not p["open"]:
         lines.append("⚠️ " + b("2026 жылы бұл бағдарламаға қабылдау жоқ." if kz else "В 2026 году набора на эту программу нет."))
     else:
