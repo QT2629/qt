@@ -418,6 +418,14 @@ async def delete_me_command(update: Update, context: ContextTypes.DEFAULT_TYPE) 
     await profile_bot.delete_me(context, update.effective_chat.id, get_lang(context))
 
 
+async def photos_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """/photos — проверить фото всех вузов (только для администраторов). Идёт в фоне 3–5 минут."""
+    if update.effective_user.id not in config.ADMIN_IDS:
+        return
+    await update.message.reply_text("📷 Проверяю фото всех вузов — пришлю каждое и в конце итог. Это займёт 3–5 минут.")
+    context.application.create_task(photos.check_all(context.bot, update.effective_chat.id))
+
+
 async def credits_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """/credits — авторы фотографий вузов (этого требуют свободные лицензии; под самими фото подписей нет)."""
     for chunk in formatting.split(formatting.esc(photos.credits_text()), TELEGRAM_MESSAGE_LIMIT - 100):
@@ -822,6 +830,7 @@ def main() -> None:
     app.add_handler(CommandHandler("progress", progress_command))
     app.add_handler(CommandHandler("help", help_command))
     app.add_handler(CommandHandler("credits", credits_command))
+    app.add_handler(CommandHandler("photos", photos_command))
     app.add_handler(CallbackQueryHandler(on_callback))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     app.add_handler(MessageHandler(filters.VOICE | filters.AUDIO, handle_voice))

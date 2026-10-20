@@ -523,9 +523,12 @@ def _surname(words: list[str]) -> set[str]:
     out = set()
     for i, w in enumerate(words):
         if w in ("им", "имени"):
-            nxt = next((x for x in words[i + 1:] if len(x) > 2 and x not in ("аль", "ибн", "академика", "академик",
-                                                                             "профессора", "героя")), "")
-            if nxt:
+            # «имени Ахмет Байтұрсынұлы» → фамилия (последнее слово), но «Абылай хана», «Коркыт Ата» → первое
+            cand = [x for x in words[i + 1:i + 6] if len(x) > 2 and x not in ("аль", "ибн", "академика", "академик",
+                                                                                "профессора", "героя", "города")]
+            cand = [x for x in cand if x not in ("хана", "хан", "ата", "би")] or cand
+            if cand:
+                nxt = cand[-1]
                 out.add(nxt[:max(4, min(6, len(nxt) - 1))])
     return out
 
@@ -544,7 +547,7 @@ def _phrases(name: str) -> list[list[str]]:
 
 def _name_profile(u: dict) -> dict:
     """Что из названия вуза помогает его узнать: фамилия, отличительные слова, вся фраза названия, сокращение."""
-    words = _TOKEN.findall(u["name_ru"].lower().replace("ё", "е"))
+    words = _TOKEN.findall(re.sub(r"\(.*?\)", " ", u["name_ru"]).lower().replace("ё", "е"))
     surname = _surname(words)
     inf = {}
     for w in _TOKEN.findall(" ".join((u["name_ru"], u.get("name_en", ""))).lower().replace("ё", "е")):
@@ -620,6 +623,15 @@ def match_unis(text: str) -> tuple[list[str], set[str]]:
             for i in pos:
                 used.add(_stem(tokens[i]))
                 tokens[i] = "\x00"  # это слово уже «занято» названием
+    # Вуз узнан по сокращению или фамилии — остальные слова его названия («Кокшетауский университет»)
+    # тоже его, они не должны «найти» соседний вуз с похожим названием.
+    for slug in found:
+        prof = UNIS[slug]["_profile"]
+        own = set(prof["inf"]) | {x for ph in prof["phrases"] for x in ph}
+        for i, t in enumerate(tokens):
+            if t != "\x00" and _stem(t) in own:
+                used.add(_stem(t))
+                tokens[i] = "\x00"
     # 2) По словам полного названия: фамилия, вся фраза или отличительные слова (в любом падеже).
     stems = [_stem(t) for t in tokens]
     scores, hits = {}, {}

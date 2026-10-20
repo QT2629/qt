@@ -4,6 +4,7 @@
 #    Авторов фото лицензия требует где-то указать — они в команде /credits (под фото их нет).
 #    Логотипы и гербы не берём. Статья должна быть именно про этот вуз (проверяем по названию).
 # Найденное запоминаем в data/photos.json (Telegram file_id), чтобы не искать заново.
+import asyncio
 import html
 import json
 import logging
@@ -14,6 +15,7 @@ from pathlib import Path
 import httpx
 
 import config
+from formatting import esc
 import universities
 
 logger = logging.getLogger("pro4u")
@@ -23,6 +25,7 @@ CACHE_PATH = Path(config.DATA_DIR) / "photos.json"
 WIKI_API = "https://{lang}.wikipedia.org/w/api.php"
 HEADERS = {"User-Agent": "Pro4U-bot/1.0 (Telegram bot for applicants in Kazakhstan)"}
 RETRY_AFTER_DAYS = 30           # не нашли фото — попробуем снова через месяц
+SEARCH_TIMEOUT = 6              # дольше фото не ждём — карточка вуза важнее
 _LOGO = re.compile(r"logo|лого|emblem|эмблем|герб|coat|seal|печать|flag|флаг|icon|symbol|\.svg$", re.I)
 
 
@@ -59,6 +62,8 @@ async def _wiki_photo(slug: str) -> dict | None:
             r = await client.get(WIKI_API.format(lang=lang), params={
                 "action": "query", "format": "json", "generator": "search", "gsrsearch": q, "gsrlimit": 3,
                 "prop": "pageimages", "piprop": "original|name", "pilicense": "free"})
+            if r.status_code != 200:
+                continue
             pages = sorted((r.json().get("query") or {}).get("pages", {}).values(), key=lambda p: p.get("index", 99))
             for page in pages:
                 # Статья должна быть про этот вуз: по её названию бот узнаёт именно его.
@@ -85,8 +90,9 @@ async def _wiki_photo(slug: str) -> dict | None:
     return None
 
 
-async def send_uni_photo(bot, chat_id: int, slug: str, lang: str) -> None:
-    """Отправляет главное фото вуза над его карточкой. Ничего не нашли или ошибка — просто без фото."""
+async def send_uni_photo(bot, chat_id: int, slug: str, lang: str, wait: float = SEARCH_TIMEOUT) -> str:
+    """Отправляет главное фото вуза над его карточкой. Ничего не нашли или ошибка — просто без фото.
+    Возвращает, что получилось: own (своё фото), wiki, cache (уже было), none (нет фото), slow, error."""
     u = universities.UNIS[slug]
     title = f"🏛 {u['name_kz' if lang == 'kz' else 'name_ru']}"
     cache = _cache()
@@ -95,28 +101,61 @@ async def send_uni_photo(bot, chat_id: int, slug: str, lang: str) -> None:
         own = own_photo(slug)
         if own:
             if item.get("own") and item.get("file_id"):
-                await bot.send_photo(chat_id, item["file_id"], caption=html.escape(title))
-                return
+                await bot.send_photo(chat_id, item["file_id"], caption=esc(title))
+                return "own"
             with own.open("rb") as f:
-                msg = await bot.send_photo(chat_id, f, caption=html.escape(title))
+                msg = await bot.send_photo(chat_id, f, caption=esc(title))
             cache[slug] = {"own": True, "file_id": msg.photo[-1].file_id}
             _save(cache)
-            return
+            return "own"
         if item.get("file_id"):
-            await bot.send_photo(chat_id, item["file_id"], caption=html.escape(title))
-            return
+            await bot.send_photo(chat_id, item["file_id"], caption=esc(title))
+            return "cache"
         if item.get("none") and date.fromisoformat(item["checked"]) > date.today() - timedelta(days=RETRY_AFTER_DAYS):
-            return
-        found = await _wiki_photo(slug)
+            return "none"
+        try:
+            found = await asyncio.wait_for(_wiki_photo(slug), wait)
+        except asyncio.TimeoutError:  # Википедия отвечает медленно — карточку не задерживаем, попробуем завтра
+            cache[slug] = {"none": True, "checked": (date.today() - timedelta(days=RETRY_AFTER_DAYS - 1)).isoformat()}
+            _save(cache)
+            return "slow"
         if not found:
             cache[slug] = {"none": True, "checked": date.today().isoformat()}
             _save(cache)
-            return
-        msg = await bot.send_photo(chat_id, found["url"], caption=html.escape(title))
+            return "none"
+        msg = await bot.send_photo(chat_id, found["url"], caption=esc(title))
         cache[slug] = {"file_id": msg.photo[-1].file_id, "credit": found["credit"], "checked": date.today().isoformat()}
         _save(cache)
+        return "wiki"
     except Exception as e:  # фото — дополнение: из-за него карточка вуза не должна ломаться
         logger.warning("Фото вуза %s не отправлено: %s", slug, e)
+        return "error"
+
+
+async def check_all(bot, chat_id: int) -> None:
+    """Для /photos (администратор): ищет фото всех вузов заново (кроме своих), присылает каждое с названием
+    вуза — чтобы проверить глазами, — и в конце итог: у каких вузов фото есть, у каких нет."""
+    cache = _cache()
+    for slug in list(cache):  # «не нашли» забываем — ищем заново; найденные оставляем
+        if cache[slug].get("none"):
+            del cache[slug]
+    _save(cache)
+    result: dict[str, list[str]] = {}
+    for slug, u in universities.UNIS.items():
+        status = await send_uni_photo(bot, chat_id, slug, "ru", wait=25)
+        result.setdefault(status, []).append(u["short"])
+        await asyncio.sleep(1.1 if status in ("own", "wiki", "cache") else 0.2)  # лимит Telegram — не больше ~1 фото в секунду
+    with_photo = sum(len(result.get(k, [])) for k in ("own", "wiki", "cache"))
+    lines = [f"📷 Проверка фото: {with_photo} из {len(universities.UNIS)} вузов с фото.",
+             f"Своих фото: {len(result.get('own', []))}, из Википедии: {len(result.get('wiki', [])) + len(result.get('cache', []))}."]
+    for key, label in (("none", "Без фото (в Википедии нет подходящего)"), ("slow", "Википедия не ответила"),
+                       ("error", "Ошибка отправки")):
+        if result.get(key):
+            lines.append(f"\n{label} — {len(result[key])}:\n" + "\n".join(f"• {x}" for x in result[key]))
+    lines.append("\nДля вуза без фото или с неудачным фото положи своё в assets/universities/<код вуза>.jpg.")
+    text = "\n".join(lines)
+    for i in range(0, len(text), 3900):
+        await bot.send_message(chat_id, esc(text[i:i + 3900]))
 
 
 def credits_text() -> str:
