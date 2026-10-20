@@ -17,6 +17,9 @@ import sys
 from pathlib import Path
 
 OUT = Path(__file__).resolve().parent.parent / "knowledge" / "catalog" / "kz_bachelor.json.gz"
+NAME_TR = __import__("runpy").run_path(str(OUT.parent / "name_translations.py"))["NAMES"]
+FORMAT = {"On Campus": "очно", "Blended": "смешанный (очно + онлайн)", "Hybrid": "смешанный (очно + онлайн)",
+          "On Campus, Blended": "очно или смешанный"}
 
 # Города, которых нет в исходных данных (определены по названию и сайту вуза).
 CITY_FIX = {1: "Кызылорда", 3: "Астана", 4: "Алматы", 6: "Алматы", 8: "Астана", 9: "Алматы", 10: "Актобе",
@@ -124,6 +127,9 @@ SHORT = {
     77: ("КазУИТС (Уральск)", ["казуитс", "инновационных и телекоммуникационных"]),
 }
 
+# Вузы искусств: консерватория, академии искусств и хореографии, университет искусств.
+ARTS = {58, 59, 60, 70}
+
 # Вузы, по которым у бота уже есть подробные справки: из каталога берём только «предметы по курсам», цель, профессии.
 EXISTING = {33: "almau", 44: "enu", 79: "kbtu", 131: "narxoz", 124: "sdu", 127: "mnu", 3: "aitu", 65: "satbayev",
             61: "kazatu"}
@@ -188,7 +194,7 @@ def study_path(discs: list[dict]) -> tuple[dict, list[str]]:
         by_year[year if year.isdigit() else ""].append((credits, name))
     path = {}
     for year in sorted(y for y in by_year if y):
-        items = sorted(by_year[year], key=lambda x: -x[0])[:5]
+        items = sorted(by_year[year], key=lambda x: -x[0])[:8]
         path[f"{year} курс"] = [n for _, n in items]
     key = [n for _, n in sorted((x for y, xs in by_year.items() if y not in ("", "1") for x in xs), key=lambda x: -x[0])][:8]
     if not path and by_year.get(""):
@@ -239,54 +245,112 @@ def main() -> None:
         if p.get("degree") == "Bachelor" and p.get("university_id"):
             bach[p["university_id"]].append(p)
 
-    out = []
+    # Проход 1: программы каждого вуза (дубли из двух источников склеиваем).
+    items = []
     for uid, plist in sorted(bach.items()):
-        u = unis[uid]
         coded = any(p["code"] for p in plist)
         merged = {}
         for p in plist:
             if coded and not p["code"]:
                 continue  # без кода — обычно дубль той же программы с английским названием (studyinkz)
-            key = p["code"] or f"x{p['id']}"
+            key = p["code"] or next((k for k, q in merged.items() if not q["code"] and
+                                     (q.get("name") or "").strip().lower() == (p.get("name") or "").strip().lower()),
+                                    f"x{p['id']}")  # одинаковые программы без кода — одна запись
             if key in merged:  # одна программа из двух источников — дополняем пустые поля
                 old = merged[key]
                 for k, v in p.items():
                     if not old.get(k) and v:
                         old[k] = v
-                old.setdefault("_ids", []).append(p["id"])
+                old["_ids"].append(p["id"])
                 continue
             merged[key] = dict(p, _ids=[p["id"]])
-        progs = []
         for key, p in merged.items():
-            dl = next((discs[str(i)] for i in p["_ids"] if discs.get(str(i))), [])
-            path, key_courses = study_path(dl)
-            kzt, other = price(p.get("tuition"))
-            gop = (p.get("group") or "").split()[0] if p.get("group") else ""
-            grant = None
-            if gop and gop in nat:
-                g = by_uni_grant.get((u.get("vuz_code"), gop), {})
-                grant = {"gop": nat[gop]["gop"], "count": g.get("count", 0), "min": g.get("min"),
-                         "kz_min": nat[gop]["kz_min"], "kz_count": nat[gop]["kz_count"]}
-            urls = [s["url"] for s in p.get("sources", []) if s.get("url") and s.get("site") != "drive"]
-            progs.append({k: v for k, v in {
-                "code": key, "name_ru": strip_uni(clean(p.get("name") or p.get("name_en", ""), 150)),
-                "section": p.get("group") or p.get("direction") or "", "ent_subjects": p.get("ent_subjects", ""),
-                "price_kzt": kzt, "price_other": other, "duration": p.get("duration", ""),
-                "languages": p.get("languages", ""), "about": clean(p.get("goal", ""), 400),
-                "careers": [clean(x, 90) for x in (p.get("professions") or [])[:6]],
-                "study_path": path, "key_courses": key_courses, "grant_2026": grant,
-                "url": urls[0] if urls else "", "in_registry": p.get("epvo") == "in_registry",
-            }.items() if v not in (None, "", [], {})} )
+            p["_name"] = strip_uni(clean(p.get("name") or p.get("name_en", ""), 150))
+            items.append((uid, key, p))
+
+    # Проход 2: восстанавливаем пустые «предметы ЕНТ» и «группу ГОП» по похожим программам —
+    # только когда похожие программы почти единодушны (80%+), и с пометкой inferred.
+    def name_key(p: dict) -> str:
+        n = re.sub(r"\s*\(.*?\)", "", p["_name"].lower()).strip(" .«»\"")
+        return NAME_TR.get(n, (n,))[0].lower()
+
+    def majority(counter: collections.Counter, need: int) -> str:
+        if not counter:
+            return ""
+        value, n = counter.most_common(1)[0]
+        return value if n >= need and n / sum(counter.values()) >= 0.8 else ""
+
+    gop_ent, dir_gop, name_gop, name_ent = (collections.defaultdict(collections.Counter) for _ in range(4))
+    for _, key, p in items:
+        if p.get("group"):
+            if p.get("ent_subjects"):
+                gop_ent[p["group"]][p["ent_subjects"]] += 1
+            if p.get("code"):
+                dir_gop[p["code"][:5]][p["group"]] += 1
+            name_gop[name_key(p)][p["group"]] += 1
+        if p.get("ent_subjects"):
+            name_ent[name_key(p)][p["ent_subjects"]] += 1
+    for uid, key, p in items:
+        p["_inferred"] = []
+        if not p.get("group"):
+            g = (majority(dir_gop[p["code"][:5]], 3) if p.get("code") else "") or majority(name_gop[name_key(p)], 2)
+            if g:
+                p["group"] = g
+                p["_inferred"].append("group")
+        if not p.get("ent_subjects"):
+            e = (majority(gop_ent[p["group"]], 3) if p.get("group") else "") or majority(name_ent[name_key(p)], 2)
+            e = e or ("Творческий экзамен" if uid in ARTS else "")  # вузы искусств принимают по творческому экзамену
+            if e:
+                p["ent_subjects"] = e
+                p["_inferred"].append("ent_subjects")
+
+    # Проход 3: итоговые записи.
+    progs_by_uni = collections.defaultdict(list)
+    for uid, key, p in items:
+        u = unis[uid]
+        dl = next((discs[str(i)] for i in p["_ids"] if discs.get(str(i))), [])
+        path, key_courses = study_path(dl)
+        kzt, other = price(p.get("tuition"))
+        gop = p["group"].split()[0] if p.get("group") else ""
+        grant = None
+        if gop and gop in nat:
+            g = by_uni_grant.get((u.get("vuz_code"), gop), {})
+            grant = {"gop": nat[gop]["gop"], "count": g.get("count", 0), "min": g.get("min"),
+                     "kz_min": nat[gop]["kz_min"], "kz_count": nat[gop]["kz_count"]}
+        urls = [s["url"] for s in p.get("sources", []) if s.get("url") and s.get("site") != "drive"]
+        fmt = FORMAT.get((p.get("format") or "").strip(), "")
+        progs_by_uni[uid].append({k: v for k, v in {
+            "code": key, "name_ru": p["_name"],
+            "section": p.get("group") or p.get("direction") or "", "ent_subjects": p.get("ent_subjects", ""),
+            "area": p.get("area", ""), "direction": p.get("direction", ""),
+            "price_kzt": kzt, "price_other": other, "duration": p.get("duration", ""),
+            "credits": p.get("credits", ""), "languages": p.get("languages", ""), "format": fmt,
+            "thesis": {"yes": "да", "no": "нет"}.get(p.get("thesis", ""), ""),
+            "about": clean(p.get("goal", ""), 400),
+            "careers": list(dict.fromkeys(clean(x, 90) for x in (p.get("professions") or [])))[:10],
+            "outcomes": [clean(x, 250) for x in (p.get("learning_outcomes") or [])[:5]],
+            "study_path": path, "key_courses": key_courses, "grant_2026": grant,
+            "inferred": p["_inferred"], "url": urls[0] if urls else "", "in_registry": p.get("epvo") == "in_registry",
+        }.items() if v not in (None, "", [], {})})
+
+    out = []
+    for uid in sorted(progs_by_uni):
+        u = unis[uid]
+        progs = progs_by_uni[uid]
         city = u.get("city") or CITY_FIX.get(uid, "")
         short, aliases = SHORT.get(uid, (None, []))
         name = u.get("name_ru") or u.get("name_en") or ""
+        kind = (u.get("type") or "").split("|")[0].strip().lower()
         out.append({k: v for k, v in {
             "id": uid, "existing": EXISTING.get(uid), "vuz_code": u.get("vuz_code") if u.get("vuz_code") not in ("", "000") else "",
             "name_ru": name, "name_en": u.get("name_en") or ", ".join(u.get("studyinkz_names") or []),
             "short": short or (name if len(name) <= 48 else name[:46].rsplit(" ", 1)[0] + "…"),
             "aliases": aliases, "city": city, "region": u.get("region", ""),
+            "type": {"частный": "частный", "государственный": "государственный", "акционированный": "акционерное общество",
+                     "международный": "международный"}.get(kind, ""),
+            "students": int(u["students"]) if str(u.get("students", "")).isdigit() else None,
+            "rating": clean(u.get("rating", ""), 300),
             "website": (u.get("official_site") or "").replace("https:// ", "https://").strip(),
-            "univision_url": u.get("univision_url", ""), "studyinkz_url": (u.get("studyinkz_urls") or [""])[0],
             "phones": [("+" + ph if re.match(r"7[ (]", ph) else ph) for ph in u.get("phones", [])[:3]], "emails": u.get("emails", [])[:2],
             "contacts_raw": "" if u.get("phones") else clean(u.get("contacts_raw", ""), 160), "programs": progs,
         }.items() if v not in (None, "", [])})
