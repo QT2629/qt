@@ -717,6 +717,9 @@ def main() -> None:
     app.add_handler(MessageHandler(filters.VOICE | filters.AUDIO, handle_voice))
 
     logger.info("Администраторы (ADMIN_IDS): %s", ", ".join(map(str, config.ADMIN_IDS)) or "не заданы")
+    if universities.UNTRANSLATED:
+        logger.warning("Названия программ без перевода (добавь в knowledge/catalog/name_translations.py): %s",
+                       "; ".join(universities.UNTRANSLATED))
     if not config.ANTHROPIC_API_KEY:
         logger.warning("ANTHROPIC_API_KEY не задан: кнопки работают, вопросы к ИИ отключены")
     logger.info("Pro4U запущен (модель: %s, лимит %s вопросов к ИИ в день). Остановить: Ctrl+C",

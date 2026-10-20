@@ -141,12 +141,18 @@ GENERAL = re.compile(
     r"цифровая грамотность|казахстанский путь|рухани", re.I)
 
 LAT2CYR = str.maketrans("aopecxyAOPECXHKMBT", "аоресхуАОРЕСХНКМВТ")
+CYR2LAT = str.maketrans("аоресхуАОРЕСХНКМВТ", "aopecxyAOPECXHKMBT")
 
 
 def fix_letters(text: str) -> str:
-    """Латинские буквы-двойники внутри русских слов (фopмиpoвaние → формирование)."""
-    return re.sub(r"\w+", lambda m: m.group(0).translate(LAT2CYR)
-                  if re.search(r"[а-яё]", m.group(0), re.I) and re.search(r"[a-z]", m.group(0), re.I) else m.group(0), text)
+    """Слова, где смешаны латиница и кириллица-двойники: «Соmрutеr» → «Computer», «фopмиpoвaние» → «формирование».
+    Если в слове есть латинские буквы без кириллических двойников (m, u, t…) — слово английское, иначе русское."""
+    def one(m: re.Match) -> str:
+        w = m.group(0)
+        if not (re.search(r"[а-яё]", w, re.I) and re.search(r"[a-z]", w, re.I)):
+            return w
+        return w.translate(CYR2LAT) if re.search(r"[b-df-np-wzBDFGIJLNQRSUVWYZ]", w.translate(CYR2LAT).translate(str.maketrans("", "", "aopecxyAOPECXHKMBT"))) else w.translate(LAT2CYR)
+    return re.sub(r"\w+", one, text)
 
 
 def strip_uni(name: str) -> str:

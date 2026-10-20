@@ -47,7 +47,7 @@ def clean_program(p: dict) -> bool:
         return False
     for bad, good in _FIX_ABBR.items():
         name = re.sub(rf"(?<![\w]){bad}(?![\w])", good, name)
-    tr = NAME_TR.get(name.lower())
+    tr = NAME_TR.get(re.sub(r"\s+", " ", name.lower()).strip(" .«»\"'"))
     if tr:  # название остаётся как у вуза (на английском или казахском), перевод — для поиска и для ИИ
         p["name_translation"] = f"{tr[0]} / {tr[1]}"
     p["name_ru"] = name
@@ -226,6 +226,9 @@ def _catalog_unis(unis: dict) -> dict[str, dict]:
 
 
 UNIS = _load()
+# Программы с названием без русских слов и без перевода — их не найдут по-русски; бот пишет их в лог при запуске.
+UNTRANSLATED = [f"{slug}: {p['name_ru']}" for slug, u in UNIS.items() for p in u["programs"].values()
+                if not p.get("name_translation") and not re.search(r"[а-яё]{3,}", p["name_ru"], re.I)]
 
 
 def program(key: str) -> dict:
