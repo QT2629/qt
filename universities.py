@@ -378,13 +378,158 @@ def details(keys: list[str], text: str = "") -> str | None:
 # ---------------------------------------------------------------------------
 # Подбор программ под вопрос
 # ---------------------------------------------------------------------------
+# --- Распознавание вуза в тексте: падежи, сокращения, фамилии в названии, части названия ---
+_TOKEN = re.compile(r"[a-zа-яёәғқңөұүһі0-9]+")
+# Слова, которые есть в названиях многих вузов, — сами по себе вуз не определяют.
+_GENERIC_STEMS = {"униве", "нацио", "госуд", "имени", "акаде", "инсти", "между", "казах", "высша", "школа", "филиа",
+                  "респу", "иссле", "unive", "natio", "insti", "acade", "inter", "kazak", "techn", "and", "the", "of",
+                  "колле", "корпо", "образ", "откры", "некомм", "акцио", "общес", "компа", "центр"}
+# Слова-«профили» (технический, медицинский…): уточняют, но вуз не определяют.
+_PROFILE_STEMS = {"техни", "педаг", "медиц", "аграр", "инжен", "гуман", "эконо", "техно", "иннов", "индус", "юриди",
+                  "транс", "спорт", "искус", "финан", "языко", "отнош", "миров", "социа", "регио", "биз", "бизне",
+                  "делов", "карье", "иност", "строи", "энерг", "связи", "путей", "сообщ", "дорож", "авиац", "граждa"}
+_CITY_STEMS = {"алмат", "астан", "карег", "караг", "шымке", "актоб", "актюб", "атыра", "павло", "коста", "кызыл", "тараз",
+               "турке", "ураль", "семей", "семип", "кокше", "талды", "петро", "актау", "темир", "экиба", "жезка",
+               "рудне", "рудны", "аркал", "запад", "восто", "север", "южно", "центр", "евраз", "каспи"}
+
+
+def _stem(word: str) -> str:
+    return word[:5] if len(word) >= 5 else word
+
+
+def _surname(words: list[str]) -> set[str]:
+    """Фамилия после «им./имени»: «им. Л.Н. Гумилева» → гумиле, «имени аль-Фараби» → фараби."""
+    out = set()
+    for i, w in enumerate(words):
+        if w in ("им", "имени"):
+            nxt = next((x for x in words[i + 1:] if len(x) > 2 and x not in ("аль", "ибн")), "")
+            if nxt:
+                out.add(nxt[:max(4, min(6, len(nxt) - 1))])
+    return out
+
+
+def _phrases(name: str) -> list[list[str]]:
+    """Название как последовательность основ слов (без «имени …»): и основное, и то, что в скобках."""
+    out = []
+    for part in [re.sub(r"\(.*?\)", " ", name)] + re.findall(r"\((.*?)\)", name):
+        words = _TOKEN.findall(part.lower().replace("ё", "е"))
+        cut = next((i for i, w in enumerate(words) if w in ("им", "имени")), len(words))
+        ph = [_stem(w) for w in words[:cut] if len(w) > 1]
+        if len(ph) >= 2:
+            out.append(ph)
+    return out
+
+
+def _name_profile(u: dict) -> dict:
+    """Что из названия вуза помогает его узнать: фамилия, отличительные слова, вся фраза названия, сокращение."""
+    words = _TOKEN.findall(u["name_ru"].lower().replace("ё", "е"))
+    surname = _surname(words)
+    inf = {}
+    for w in _TOKEN.findall(" ".join((u["name_ru"], u.get("name_en", ""))).lower().replace("ё", "е")):
+        st = _stem(w)
+        if len(w) < 4 or st in _GENERIC_STEMS or any(w.startswith(x) for x in surname):
+            continue
+        inf[st] = 1 if st in _PROFILE_STEMS else 2
+    first = u["short"].split()[0]  # «КарТУ им. Сагинова» → КарТУ (сокращение: 2+ заглавные буквы)
+    abbr = first.lower() if sum(c.isupper() for c in first) >= 2 and len(first) <= 9 else ""
+    return {"surname": surname, "inf": inf, "phrases": _phrases(u["name_ru"]), "abbr": abbr}
+
+
+def _alias_tokens(alias: str, tokens: list[str]) -> list[int]:
+    """Позиции слов текста, которые совпали с вариантом названия (пусто — не совпало)."""
+    a = _TOKEN.findall(alias.lower().replace("ё", "е"))
+    if not a:
+        return []
+    if len(a) > 1:                                     # фраза: слова подряд, допускаем падежные окончания
+        for i in range(len(tokens) - len(a) + 1):
+            if all(tokens[i + j] == w or len(w) >= 4 and tokens[i + j].startswith(w[:max(4, len(w) - 2)])
+                   for j, w in enumerate(a)):
+                return list(range(i, i + len(a)))
+        return []
+    a = a[0]
+    for i, t in enumerate(tokens):
+        if len(a) <= 6:                                # сокращения и короткие названия: КазНУ, ЕНУ, КБТУ, Туран
+            if t == a or (not a.isascii() and t.startswith(a) and len(t) - len(a) <= 2 and len(a) >= 4):
+                return [i]
+        elif t.startswith(a) or (a.startswith(t) and len(t) >= len(a) - 1):  # гумилев → гумилева, нарикбаева → нарикбаев
+            return [i]
+    return []
+
+
+_COMMON: set[str] = set()
+
+
+def _common_stems() -> set[str]:
+    """Основы обычных слов из названий специальностей и групп (информационные, автоматизация, логистика…)."""
+    if not _COMMON:
+        for u in UNIS.values():
+            for p in u["programs"].values():
+                for w in _TOKEN.findall(" ".join((p["name_ru"], p.get("section", ""), p.get("name_translation", ""))).lower()):
+                    _COMMON.add(_stem(w))
+    return _COMMON
+
+
+def match_unis(text: str) -> tuple[list[str], set[str]]:
+    """Какие вузы названы в тексте и какие основы слов ушли на их названия (их не считаем темой вопроса)."""
+    raw_tokens = _TOKEN.findall(text.replace("ё", "е").replace("Ё", "Е").lower())
+    orig = re.findall(r"[A-Za-zА-Яа-яЁёӘәҒғҚқҢңӨөҰұҮүҺһІі0-9]+", text)
+    tokens = list(raw_tokens)
+    found, used = [], set()
+    # 1) Варианты названий (сокращения, фамилии, английские названия) — сначала длинные, чтобы
+    #    «Туран-Астана» не превратилось в «Туран».
+    variants = sorted(((a, slug) for slug, u in UNIS.items() for a in u["aliases"]), key=lambda x: -len(x[0]))
+    for slug, u in UNIS.items():
+        prof = u.setdefault("_profile", _name_profile(u))
+        if prof["abbr"]:
+            variants.append(("\x00" + prof["abbr"], slug))
+    for alias, slug in variants:
+        if alias.startswith("\x00"):  # сокращение из короткого названия — только если написано заглавными (КарТУ, не «карту»)
+            ab = alias[1:]
+            pos = [i for i, t in enumerate(tokens) if t == ab and i < len(orig) and sum(c.isupper() for c in orig[i]) >= 2]
+        else:
+            pos = _alias_tokens(alias, tokens)
+        if pos:
+            if slug not in found:
+                found.append(slug)
+            for i in pos:
+                used.add(_stem(tokens[i]))
+                tokens[i] = "\x00"  # это слово уже «занято» названием
+    # 2) По словам полного названия: фамилия, вся фраза или отличительные слова (в любом падеже).
+    stems = [_stem(t) for t in tokens]
+    scores, hits = {}, {}
+    for slug, u in UNIS.items():
+        if slug in found:
+            continue
+        prof = u["_profile"]
+        sur = {i for i, t in enumerate(tokens) for x in prof["surname"] if t.startswith(x) and len(t) - len(x) <= 3}
+        hit = {st for st in prof["inf"] if st in stems}
+        total = sum(prof["inf"].values()) or 1
+        got = sum(prof["inf"][st] for st in hit)
+        phrase = next((ph for ph in prof["phrases"]
+                       if any(stems[i:i + len(ph)] == ph for i in range(len(stems) - len(ph) + 1))), None)
+        # Имя собственное в названии («Туран», «Мирас», «Болашак») — слово, которого нет в названиях специальностей.
+        proper = {st for st in hit if prof["inf"][st] == 2 and st not in _CITY_STEMS and st not in _common_stems()}
+        score = 0
+        if sur:
+            score = 30 + got
+        elif phrase:
+            score = 20 + len(phrase)
+        elif proper:
+            score = 10 + got
+        if score:
+            scores[slug] = score
+            hits[slug] = {stems[i] for i in sur} | hit | set(phrase or [])
+    if scores:
+        best = max(scores.values())
+        for slug, v in scores.items():
+            if v == best:
+                found.append(slug)
+                used |= hits[slug]
+    return found, used
+
+
 def mentioned_unis(text: str) -> list[str]:
-    low = " " + re.sub(r"[^\w-]+", " ", text.lower()) + " "  # пробелы по краям — чтобы находить «ЮКУ» как слово
-    return [slug for slug, u in UNIS.items() if any(_norm(a) in low for a in u["aliases"])]
-
-
-def _norm(alias: str) -> str:
-    return re.sub(r"[^\w-]+", " ", alias.lower()) if alias.strip() == alias else " " + alias.strip() + " "
+    return match_unis(text)[0]
 
 
 _STOP = {"бакалавр", "делового", "администрирования", "области", "программы", "программа", "двойной", "диплом",
@@ -403,11 +548,13 @@ def _stems(text: str) -> list[str]:
     """Основы слов вопроса: без служебных слов, названий вузов и предметов ЕНТ.
     Названия предметов отбрасываем, только когда в вопросе есть пара ЕНТ: иначе «право» или «история» —
     это направление, которое человек ищет."""
-    aliases = [a for u in UNIS.values() for a in u["aliases"]]
+    slugs, used = match_unis(text)
+    aliases = [a.lower() for slug in slugs for a in UNIS[slug]["aliases"]]
     subjects = _SUBJECT_STEMS if _groups(text) else ["ент", "ұбт", "экзамен"]
     out = []
     for w in re.findall(r"[\w-]+", text.lower()):
-        if w in _STOP or any(a in w for a in aliases) or any(w.startswith(s) for s in subjects) or region_of(w):
+        if (w in _STOP or _stem(w) in used or any(a in w for a in aliases) or any(w.startswith(s) for s in subjects)
+                or region_of(w)):
             continue
         stem = w[: max(4, len(w) - 2)] if len(w) >= 4 else w if re.fullmatch(r"[a-z]{2,3}|ии", w) else ""
         if stem == "прав":  # «право/праву» — не путать с «упРАВление»
@@ -507,6 +654,16 @@ def relevant(text: str, recent: list[str], limit: int = 8, home: str | None = No
         slugs = [s for s in UNIS if uni_region(s) == asked_city]
         home = None
     pool = [p for s in (slugs or UNIS) for p in UNIS[s]["programs"].values()]
+    # Название программы написано в вопросе целиком (в любом падеже) — она точно нужна, и первой.
+    text_stems = [_stem(t) for t in _TOKEN.findall(text.lower().replace("ё", "е")) if len(t) > 2]
+    # «Сдаю историю и право» / «у меня математика и физика» — это предметы ЕНТ, а не программы «История»,
+    # «Математика и физика». Такие названия считаем программой, только если в вопросе назван вуз.
+    pair = bool(_groups(text)) and not slugs
+    only_subjects = lambda seq: all(any(x.startswith(sub[:4]) for sub in _SUBJECTS) or x in ("основ", "язык", "литер")
+                                    for x in seq)
+    exact = [p["key"] for p in pool if p["open"] and _contains_seq(text_stems, _name_seq(p))
+             and not (pair and only_subjects(_name_seq(p)))]
+    exact.sort(key=lambda k: -len(_name_seq(program(k))))  # «Математика и информатика» важнее «Математика»
     groups = _groups(text)
     if groups:
         pool = [p for p in pool if set(p["ent_groups"]) & groups] or pool
@@ -520,7 +677,23 @@ def relevant(text: str, recent: list[str], limit: int = 8, home: str | None = No
         result = [k for k in recent if not slugs or k.split(":")[0] in slugs]
     if not result and slugs and len(slugs) <= 2:  # «что есть в КазНУ?» — программы этого вуза
         result = [p["key"] for p in pool if p["open"]]
+    if exact:
+        longest = len(_name_seq(program(exact[0])))
+        exact = [k for k in exact if len(_name_seq(program(k))) == longest]
+        result = exact + [k for k in result if k not in exact]
     return _balanced(_home_first(result, home), limit, per_uni=limit if len(slugs) == 1 else 2)
+
+
+def _name_seq(p: dict) -> list[str]:
+    seq = p.get("_seq")
+    if seq is None:
+        seq = p["_seq"] = [_stem(t) for t in _TOKEN.findall(p["name_ru"].lower().replace("ё", "е")) if len(t) > 2]
+    return seq
+
+
+def _contains_seq(stems: list[str], seq: list[str]) -> bool:
+    n = len(seq)
+    return n > 0 and any(stems[i:i + n] == seq for i in range(len(stems) - n + 1))
 
 
 def select(text: str, recent: list[str], asked: str | None = None, home: str | None = None) -> list[str]:
