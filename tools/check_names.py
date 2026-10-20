@@ -44,17 +44,12 @@ def main() -> None:
     n_abbr = 0
     for slug, u in U.UNIS.items():  # сокращения: «хочу в КарГУ», «есть ли IT в кбту»
         for ab, caps, form0 in U._abbr_list(slug, u):
-            forms = [form0] + ([] if caps else [ab])
-            for form in forms:
-                for q in (f"хочу поступить в {form}", f"есть ли IT в {form}?"):
+            for form in (form0, ab, ab.upper()):  # как пишется, строчными и ЗАГЛАВНЫМИ — всё должно работать
+                for q in (f"хочу поступить в {form}", f"какие программы есть в {form}?", f"покажи {form}", form):
                     n_abbr += 1
                     got = U.mentioned_unis(q)
                     if got != [slug]:
                         bad.append(("сокращение", u["short"], q, [U.UNIS[s]["short"] for s in got]))
-            if caps:  # то же слово строчными — обычное слово, вуз не находим
-                n_abbr += 1
-                if U.mentioned_unis(f"покажи {ab} пожалуйста"):
-                    bad.append(("сокращение-слово", u["short"], ab, U.mentioned_unis(f"покажи {ab} пожалуйста")))
     names = {p["name_ru"] for u in U.UNIS.values() for p in u["programs"].values()}
     for n in names:  # название специальности не должно приниматься за вуз
         if U.mentioned_unis(n):

@@ -602,9 +602,10 @@ def match_unis(text: str) -> tuple[list[str], set[str]]:
     for slug, u in UNIS.items():
         prof = u.setdefault("_profile", _name_profile(u))
         abbrs += [(ab, caps, slug) for ab, caps, _ in prof["abbr"]]
+    # Бот — для поступления: сокращение вуза засчитываем в любом регистре и в любой фразе
+    # («покажи карту» → КарТУ, «кнус» → университет спорта).
     for ab, caps, slug in sorted(abbrs, key=lambda x: -len(x[0])):  # сокращения — целым словом
-        pos = [i for i, t in enumerate(tokens) if t == ab
-               and (not caps or i < len(orig) and sum(c.isupper() for c in orig[i]) >= 2)]
+        pos = [i for i, t in enumerate(tokens) if t == ab]
         if pos:
             if slug not in found:
                 found.append(slug)
@@ -612,8 +613,6 @@ def match_unis(text: str) -> tuple[list[str], set[str]]:
                 used.add(_stem(tokens[i]))
                 tokens[i] = "\x00"
     for alias, slug in variants:
-        if len(alias.strip()) <= 6 and alias.strip().lower() in _ABBR_WORDS:  # короткие варианты-слова — только через сокращения выше
-            continue
         pos = _alias_tokens(alias, tokens)
         if pos:
             if slug not in found:
