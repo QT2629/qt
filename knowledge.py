@@ -15,14 +15,18 @@ def load_markdown(name: str) -> str:
     return re.sub(r"<!--.*?-->", "", text, flags=re.DOTALL).strip()
 
 
+def almau_details() -> str:
+    """Подробности AlmaU (учебные планы, магистратура, документы) — добавляются к вопросу, только когда речь об AlmaU,
+    чтобы в общих советах у AlmaU не было «лишнего веса» перед другими вузами."""
+    return (load_markdown("almau_common.md") + "\n\n" + load_markdown("graduate_programs.md") + "\n\n"
+            + load_markdown("admission.md"))
+
+
 def build_knowledge_text() -> str:
     return (
         "<universities>\nВсе вузы в базе (программы и подробности — в <program_details> к каждому вопросу):\n\n"
         + compact_catalog() + "\n</universities>\n\n"
         "<grants_2026>\n" + load_markdown("grants_2026.md") + "\n</grants_2026>\n\n"
         "<admission_basics>\nОбщее для всех вузов: документы и сроки поступления\n\n"
-        + load_markdown("static/documents_ru.md") + "\n\n" + load_markdown("static/dates_ru.md") + "\n</admission_basics>\n\n"
-        "<almau_details>\nДополнительные данные по AlmaU (учебные планы, магистратура, документы и даты приёма):\n\n"
-        + load_markdown("almau_common.md") + "\n\n" + load_markdown("graduate_programs.md") + "\n\n"
-        + load_markdown("admission.md") + "\n</almau_details>"
+        + load_markdown("static/documents_ru.md") + "\n\n" + load_markdown("static/dates_ru.md") + "\n</admission_basics>"
     )

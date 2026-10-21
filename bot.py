@@ -36,7 +36,9 @@ from telegram.ext import (
 import catalog
 import config
 import formatting
+import knowledge
 import photos
+import prefs
 import profile_bot
 import profiles
 import stats
@@ -614,7 +616,7 @@ async def finish_quiz(context: ContextTypes.DEFAULT_TYPE, chat_id: int, lang: st
         interests=", ".join(catalog.INTERESTS[tag][lang] for tag in quiz["interests"]),
         value=catalog.VALUES[value][lang],
     )
-    keys = universities.for_quiz(quiz["interests"], group=group, home=home_region(chat_id))
+    keys = universities.for_quiz(quiz["interests"], group=group, home=home_region(chat_id), avoid=prefs.get(context))
     await reply_with_claude(context, chat_id, lang, user_text, keys)
 
 
@@ -688,8 +690,9 @@ def home_region(chat_id: int) -> str | None:
 
 async def answer_question(context: ContextTypes.DEFAULT_TYPE, chat_id: int, lang: str, text: str) -> None:
     """Свободный вопрос → ИИ с данными нужных программ AlmaU и других вузов."""
+    prefs.update(context, chat_id, text)  # «не хочу в КазНУ», «теперь сдаю биологию и химию» — запоминаем
     keys = universities.select(text, context.user_data.get("recent", []), context.user_data.pop("ask_uni", None),
-                               home=home_region(chat_id))
+                               home=home_region(chat_id), avoid=prefs.get(context))
     await reply_with_claude(context, chat_id, lang, text, keys)
 
 
@@ -728,7 +731,10 @@ async def reply_with_claude(context: ContextTypes.DEFAULT_TYPE, chat_id: int, la
 
     details = universities.details(keys, user_text)
     profile = profile_bot.ai_context(chat_id)
-    messages = history + [{"role": "user", "content": with_details(user_text, details, profile)}]
+    content = with_details(user_text, details, profile, prefs.for_ai(context))
+    if any(k.startswith("almau:") for k in keys):  # подробности AlmaU — только когда речь о нём
+        content = f"<almau_details>\n{knowledge.almau_details()}\n</almau_details>\n\n" + content
+    messages = history + [{"role": "user", "content": content}]
 
     try:
         answer, cost = await ask_claude(KNOWLEDGE_TEXT, lang, messages)

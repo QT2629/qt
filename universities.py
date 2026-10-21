@@ -7,6 +7,7 @@
 # приводится к общему виду, поэтому для бота это такой же вуз, как остальные.
 import gzip
 import json
+import random
 import re
 import runpy
 from pathlib import Path
@@ -676,7 +677,11 @@ _STOP = {"бакалавр", "делового", "администрирован
          "какие", "какой", "какая", "есть", "можно", "поступить", "мне", "для", "где", "что", "как", "или", "вузе",
          "вуза", "вузы", "вузах", "лучше", "сравни", "сравнить", "про", "это", "специальность", "специальности",
          "предметы", "предмет", "балл", "баллы", "грант", "грантов", "цена", "цены", "стоимость", "куда", "меня",
-         "нужны", "нужно", "подходит", "подойдёт", "подойдет", "выбрать", "учеба", "учёба", "обучение"}
+         "нужны", "нужно", "подходит", "подойдёт", "подойдет", "выбрать", "учеба", "учёба", "обучение",
+         # «я поменяла предметы, теперь сдаю…», «хватит ли мне баллов» — это не тема программы
+         "сдаю", "сдала", "сдал", "сдавать", "буду", "поменяла", "поменял", "теперь", "передумала", "передумал",
+         "решила", "решил", "выбрала", "выбрал", "хватит", "хватает", "баллов", "баллами", "мне", "мой", "моя",
+         "ещё", "еще", "варианты", "вариант", "другие", "другое", "тоже", "тогда", "лучше", "есть", "там", "тут"}
 _SUBJECT_STEMS = list(_SUBJECTS) + ["ент", "ұбт", "экзамен", "творческ"]
 _SYNONYMS = {"it": ["информ", "программ", "компьютер"], "айти": ["информ", "программ", "компьютер"],
              "ai": ["искусствен"], "ии": ["искусствен"], "юрис": ["юрисп", "прав"], "юрист": ["юрисп", "прав"],
@@ -708,11 +713,21 @@ def _stems(text: str) -> list[str]:
 def _score(p: dict, stems: list[str]) -> int:
     name = " ".join((p["name_ru"], p.get("name_kz", ""), p.get("name_translation", ""))).lower()
     rest = " ".join(p["key_courses"] + p["careers"] + p.get("tracks", [])).lower()
-    score = 0
+    # Совпадение в названии — главное; в предметах и профессиях — максимум +1, чтобы вузы с подробными
+    # справками (больше текста) не получали преимущества над остальными.
+    name_hits = rest_hit = 0
     for st in stems:
         hit = (lambda t: _contains(t, st)) if len(st) <= 3 else (lambda t: st in t)
-        score += 3 if hit(name) else 1 if hit(rest) else 0
-    return score
+        if hit(name):
+            name_hits += 1
+        elif hit(rest):
+            rest_hit = 1
+    return 3 * name_hits + rest_hit
+
+
+def _ranked(items: list[tuple[int, str]]) -> list[tuple[int, str]]:
+    """По убыванию оценки; равные — в случайном порядке (никакой вуз не первый «по алфавиту»)."""
+    return sorted(items, key=lambda x: (-x[0], random.random()))
 
 
 def _balanced(keys: list[str], limit: int, per_uni: int = 2) -> list[str]:
@@ -784,7 +799,24 @@ def _home_first(keys: list[str], home: str | None) -> list[str]:
            [k for k in keys if uni_region(k.split(":")[0]) != home]
 
 
-def relevant(text: str, recent: list[str], limit: int = 8, home: str | None = None) -> list[str]:
+def _avoid_filter(pool: list[dict], text: str, slugs: list[str], avoid: dict | None) -> list[dict]:
+    """Убирает вузы и направления, от которых человек отказался (если он сейчас сам о них не спрашивает)."""
+    if not avoid:
+        return pool
+    asked = set(slugs) - set(avoid.get("just_rejected", []))       # вуз назван в вопросе — его не прячем
+    no_unis = [s for s in avoid.get("no_unis", []) if s not in asked]
+    low = text.lower()
+    just = set(avoid.get("just_topics", []))                        # отказ в этом же сообщении — прячем сразу
+    no_topics = [t for t in avoid.get("no_topics", []) if t in just or t not in low]
+    def ok(p: dict) -> bool:
+        if p["key"].split(":")[0] in no_unis:
+            return False
+        words = _TOKEN.findall(" ".join((p["name_ru"], p.get("name_translation", ""))).lower())
+        return not any(w.startswith(t) for w in words for t in no_topics)  # «право» ≠ «упРАВление»
+    return [p for p in pool if ok(p)] or pool
+
+
+def relevant(text: str, recent: list[str], limit: int = 8, home: str | None = None, avoid: dict | None = None) -> list[str]:
     """Какие программы (ключи «вуз:код») подробно показать ИИ для этого вопроса — из всех вузов поровну.
     home — регион из профиля: его вузы идут первыми. Если в вопросе назван город — берём только его вузы."""
     slugs = mentioned_unis(text)
@@ -792,7 +824,12 @@ def relevant(text: str, recent: list[str], limit: int = 8, home: str | None = No
     if not slugs and asked_city:  # «покажи вузы Алматы по IT» — только этот город
         slugs = [s for s in UNIS if uni_region(s) == asked_city]
         home = None
-    pool = [p for s in (slugs or UNIS) for p in UNIS[s]["programs"].values()]
+    if avoid and avoid.get("just_rejected"):  # «не хочу в КазНУ» — программы КазНУ в этом ответе не нужны
+        slugs = [s for s in slugs if s not in avoid["just_rejected"]]
+    named = [s for s in mentioned_unis(text) if not avoid or s not in avoid.get("just_rejected", [])]
+    pool = _avoid_filter([p for s in (slugs or UNIS) for p in UNIS[s]["programs"].values()], text, named, avoid)
+    allowed = {p["key"] for p in pool}
+    recent = [k for k in recent if k in allowed]
     # Название программы написано в вопросе целиком (в любом падеже) — она точно нужна, и первой.
     text_stems = [_stem(t) for t in _TOKEN.findall(text.lower().replace("ё", "е")) if len(t) > 2]
     # «Сдаю историю и право» / «у меня математика и физика» — это предметы ЕНТ, а не программы «История»,
@@ -802,20 +839,24 @@ def relevant(text: str, recent: list[str], limit: int = 8, home: str | None = No
                                     for x in seq)
     exact = [p["key"] for p in pool if p["open"] and _contains_seq(text_stems, _name_seq(p))
              and not (pair and only_subjects(_name_seq(p)))]
+    random.shuffle(exact)  # одинаковые названия в разных вузах — без порядка «по алфавиту»
     exact.sort(key=lambda k: -len(_name_seq(program(k))))  # «Математика и информатика» важнее «Математика»
     groups = _groups(text)
     if groups:
         pool = [p for p in pool if set(p["ent_groups"]) & groups] or pool
-    stems = _stems(text)
-    scored = sorted(((_score(p, stems), p["key"]) for p in pool), key=lambda x: -x[0])
+    query = avoid.get("query") if avoid and "query" in avoid else text  # в сообщении-отказе ищем без самого отказа
+    stems = _stems(query)
+    if avoid and "query" in avoid and not stems:  # чистый отказ: продолжаем прошлую тему без отвергнутого
+        return _balanced(_home_first(recent, home), limit, per_uni=limit if len(slugs) == 1 else 2)
+    scored = _ranked([(_score(p, stems), p["key"]) for p in pool])
     top = scored[0][0] if scored else 0
     result = [k for sc, k in scored if sc > 0 and sc * 2 >= top]  # отсекаем случайные совпадения
     if not result and groups:  # «у меня математика и физика — куда поступить?»
-        result = [p["key"] for p in pool if p["open"]]
+        result = random.sample([p["key"] for p in pool if p["open"]], k=sum(1 for p in pool if p["open"]))
     if not result:  # «а сколько стоит?» — продолжаем про недавние программы
         result = [k for k in recent if not slugs or k.split(":")[0] in slugs]
     if not result and slugs and len(slugs) <= 2:  # «что есть в КазНУ?» — программы этого вуза
-        result = [p["key"] for p in pool if p["open"]]
+        result = random.sample([p["key"] for p in pool if p["open"]], k=sum(1 for p in pool if p["open"]))
     if exact:
         longest = len(_name_seq(program(exact[0])))
         exact = [k for k in exact if len(_name_seq(program(k))) == longest]
@@ -835,7 +876,8 @@ def _contains_seq(stems: list[str], seq: list[str]) -> bool:
     return n > 0 and any(stems[i:i + n] == seq for i in range(len(stems) - n + 1))
 
 
-def select(text: str, recent: list[str], asked: str | None = None, home: str | None = None) -> list[str]:
+def select(text: str, recent: list[str], asked: str | None = None, home: str | None = None,
+           avoid: dict | None = None) -> list[str]:
     """Программы для ответа ИИ. asked — программа, под карточкой которой нажали «Задать вопрос ИИ»."""
     # старые записи (до объединения вузов) хранили коды AlmaU без «вуз:» — пропускаем всё неизвестное
     recent = [k for k in recent if ":" in k and k.split(":")[1] in UNIS.get(k.split(":")[0], {}).get("programs", {})]
@@ -843,16 +885,20 @@ def select(text: str, recent: list[str], asked: str | None = None, home: str | N
         asked = None
     if asked and not mentioned_unis(text):
         return [asked]
-    keys = relevant(text, recent, home=home)
+    keys = relevant(text, recent, home=home, avoid=avoid)
     return ([asked] + [k for k in keys if k != asked])[:8] if asked else keys
 
 
-def for_quiz(tags: list[str], group: str | None, limit: int = 8, home: str | None = None) -> list[str]:
+def for_quiz(tags: list[str], group: str | None, limit: int = 8, home: str | None = None,
+             avoid: dict | None = None) -> list[str]:
     """Программы для анкеты «Подобрать специальность»: по интересам и предметам ЕНТ, из всех вузов поровну."""
     words = [w for t in tags for w in INTERESTS[t]["words"]]
-    pool = [p for u in UNIS.values() for p in u["programs"].values()
-            if p["open"] and (group is None or group in p["ent_groups"])]
-    scored = sorted(((_score(p, words), p["key"]) for p in pool), key=lambda x: -x[0])
+    pool = _avoid_filter([p for u in UNIS.values() for p in u["programs"].values()
+                          if p["open"] and (group is None or group in p["ent_groups"])], "", [], avoid)
+    # Программа «на любые предметы» (AI + X в MNU) не должна выходить в каждой анкете — при выбранных предметах
+    # она чуть ниже программ, сделанных именно под эти предметы.
+    scored = _ranked([(_score(p, words) - (1 if group and len(p["ent_groups"]) >= 8 and _score(p, words) else 0), p["key"])
+                      for p in pool])
     keys = [k for sc, k in scored if sc > 0] or [k for _, k in scored]
     return _balanced(_home_first(keys, home), limit)
 
