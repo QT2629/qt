@@ -13,6 +13,7 @@ import runpy
 from pathlib import Path
 
 import catalog
+import grants
 from formatting import b, esc
 from catalog import INTERESTS, _contains, find_groups, money
 
@@ -175,7 +176,31 @@ def _load() -> dict[str, dict]:
     for slug, u in unis.items():
         for p in u["programs"].values():
             p["key"] = f"{slug}:{p['code']}"
+    _apply_grants(unis)
     return dict(sorted(unis.items(), key=lambda kv: kv[1]["short"]))  # по алфавиту — никого не выделяем
+
+
+def _apply_grants(unis: dict) -> None:
+    """Баллы на грант — из полных списков грантников 2026 и 2025 годов (grants.py): общий конкурс, сельская квота."""
+    for slug, u in unis.items():
+        known = slug in grants.DATA["unis"]
+        for p in u["programs"].values():
+            g = p.get("grant_2026")
+            if not g:
+                continue
+            gop = g["gop"].split()[0]
+            nat = grants.get(None, gop, "2026", "g")
+            if not nat:  # группы нет в новых списках — оставляем прежние цифры
+                continue
+            here = grants.get(slug, gop, "2026", "g") if known else ([g["count"], g["min"]] if g.get("count") else None)
+            g.update(count=here[0] if here else 0, min=here[1] if here else None, kz_min=nat[1], kz_count=nat[0])
+            for key, year, cat in (("min_2025", "2025", "g"), ("rural_min", "2026", "r"), ("kz_rural_min", "2026", "r"),
+                                   ("kz_min_2025", "2025", "g")):
+                v = grants.get(None if key.startswith("kz_") else slug, gop, year, cat)
+                if v and v[1] is not None:
+                    g[key] = v[1]
+                else:
+                    g.pop(key, None)
 
 
 _GENERIC = {"бакал", "делов", "админ", "облас", "бизне", "прогр", "образ", "подго", "специ", "техно", "основ"}
@@ -299,7 +324,7 @@ def grants_word(n: int) -> str:
 
 
 def grant_text(p: dict, lang: str) -> str:
-    """Строка о госгрантах 2026 для карточки и списков."""
+    """Строка о госгрантах (общий конкурс 2026, для сравнения 2025 и сельская квота) для карточки и списков."""
     g = p.get("grant_2026")
     if not g:
         return ""
@@ -307,11 +332,18 @@ def grant_text(p: dict, lang: str) -> str:
     gop = g["gop"].split()[0]
     head = f"🏆 {'Мемлекеттік грант 2026' if kz else 'Госгрант 2026'} ({'топ' if kz else 'группа'} {gop}): "
     if g["count"]:
-        return head + (f"ЖОО-ға {g['count']} грант, ең төменгі балл {g['min']} (ел бойынша {g['kz_min']} бастап)" if kz
+        text = head + (f"ЖОО-ға {g['count']} грант, ең төменгі балл {g['min']} (ел бойынша {g['kz_min']} бастап)" if kz
                        else f"{g['count']} {grants_word(g['count'])} в этот вуз, мин. балл {g['min']} "
                             f"(по стране от {g['kz_min']})")
-    return head + (f"ЖОО-ға грант берілмеді; ел бойынша ең төменгі балл {g['kz_min']}" if kz
-                   else f"в этот вуз грантов не было; по стране мин. балл {g['kz_min']}")
+    else:
+        text = head + (f"ЖОО-ға грант берілмеді; ел бойынша ең төменгі балл {g['kz_min']}" if kz
+                       else f"в этот вуз грантов не было; по стране мин. балл {g['kz_min']}")
+    extra = []
+    if g.get("min_2025") is not None:
+        extra.append(f"2025 жылы ЖОО-ға {g['min_2025']} бастап" if kz else f"в 2025 году в этот вуз — от {g['min_2025']}")
+    if g.get("kz_rural_min") is not None:
+        extra.append(f"ауыл квотасы ел бойынша {g['kz_rural_min']} бастап" if kz else f"сельская квота по стране — от {g['kz_rural_min']}")
+    return text + ("; " + "; ".join(extra) if extra else "")
 
 
 # ---------------------------------------------------------------------------
@@ -344,6 +376,13 @@ def compact_catalog() -> str:
     return "\n".join(lines)
 
 
+def _grants_ai(slug: str, p: dict) -> dict:
+    """Гранты 2026 и 2025 по группе программы: общий конкурс, сельская квота, квоты, целевой госзаказ."""
+    g = p.get("grant_2026")
+    data = grants.for_ai(slug, g["gop"].split()[0]) if g else None
+    return {"grants_by_year": data} if data else {}
+
+
 def details(keys: list[str], text: str = "") -> str | None:
     """Подробные данные выбранных программ для блока <program_details> (JSON).
     Если в вопросе назван вуз (1–2) — ещё и полный список его программ, чтобы ИИ знал, что там есть."""
@@ -362,7 +401,7 @@ def details(keys: list[str], text: str = "") -> str | None:
                       "practice", "note", "ent_subjects", "extra_ent_subjects", "ent_note", "price_kzt", "price_note",
                       "availability_note", "languages", "grant_2026"]
             out.append({"university": u["name_ru"], "city": u["city"], **{k: src[k] for k in fields if k in src},
-                        "links": links(slug, code)})
+                        **_grants_ai(slug, u["programs"][code]), "links": links(slug, code)})
             continue
         p = u["programs"][code]
         out.append({"university": u["name_ru"], "city": u["city"], "price_note": u["price_note"],
@@ -372,7 +411,7 @@ def details(keys: list[str], text: str = "") -> str | None:
                                          "price_other", "duration", "credits", "languages", "format", "thesis", "direction",
                                          "tracks", "track_courses", "about", "outcomes", "study_path", "key_courses",
                                          "careers", "workplaces", "grant_2026", "inferred", "not_in_reference")
-                       if p.get(k) not in (None, "", [], {})}, "links": links(slug, code)})
+                       if p.get(k) not in (None, "", [], {})}, **_grants_ai(slug, p), "links": links(slug, code)})
     return json.dumps(out, ensure_ascii=False, separators=(",", ":")) if out else None
 
 
@@ -1038,6 +1077,9 @@ def program_card(key: str, lang: str) -> str:
             lines.append(esc(grant_text(p, lang)) + ((" — топ ұқсас бағдарламалар бойынша анықталды" if kz else
                                                       " — группа определена по похожим программам")
                                                      if "group" in p.get("inferred", []) else ""))
+            q = grants.quota_line(slug, p["grant_2026"]["gop"].split()[0], lang)
+            if q:
+                lines.append(esc(q))
     if p.get("ent_note"):
         lines.append("⚠️ " + esc(p["ent_note"]))
     if p.get("about"):
@@ -1103,8 +1145,45 @@ def gop_stats(group: str) -> dict[str, dict]:
     return out
 
 
-def grant_chances(group: str, score: int, lang: str, home: str | None = None) -> str:
-    """Ответ калькулятора «Шанс на грант» (по данным 2026 года, общий конкурс)."""
+def quota_chances(group: str, score: int, lang: str, quotas: list[str], city: str | None = None) -> list[str]:
+    """Блок «По твоим квотам»: по каждой группе — самый низкий балл по стране среди конкурсов, где человек участвует
+    кроме общего (сельская квота, его квоты, целевой госзаказ; после колледжа — сокращённое обучение)."""
+    kz = lang == "kz"
+    cats = [c for c in grants.cats_for(quotas, city) if c not in ("g", "ped", "tech", "health")]
+    if not cats:
+        return []
+    names = ", ".join(grants.label(q, lang).replace("квота: ", "") for q in quotas)
+    lines = ["\n🎟 " + b(f"Сенің квоталарың мен мақсатты конкурстар бойынша ({esc(names)}), ел бойынша:" if kz
+                         else f"По твоим квотам и целевым конкурсам ({esc(names)}), по всей стране:")]
+    for gop in sorted(gop_stats(group)):
+        code = gop.split()[0]
+        rows, first = [], None
+        for year in grants.YEARS:
+            bst = grants.best(None, code, year, cats)
+            if not bst:
+                continue
+            cat, n, mn = bst
+            what = grants.label(cat, lang).replace("квота: ", "")
+            first = first or cat
+            if mn is None:
+                rows.append(f"{year}: {what} — {n} " + ("грант (балл көрсетілмеген)" if kz else f"{grants_word(n)} (балл в списке не указан)"))
+            elif year == "2026":
+                mark = "✅" if score >= mn else "🟡"
+                rows.append(f"{mark} {year}: {what} — " + (f"{mn} бастап" if kz else f"от {mn}")
+                            + ("" if score >= mn else (f", {mn - score} балл жетпейді" if kz else f", не хватает {mn - score}")))
+            else:
+                rows.append(f"{year}: " + (f"{what} — " if cat != first else "") + (f"{mn} бастап" if kz else f"от {mn}"))
+        if rows:
+            lines.append(f"• {b(code)}: " + " · ".join(rows))
+    if len(lines) > 1 and "s" in quotas:
+        lines.append("ℹ️ " + ("Колледжден кейін конкурс бөлек: баллыңды жоғарыдағы жалпы конкурспен емес, осы блокпен салыстыр."
+                              if kz else "После колледжа конкурс отдельный: сравнивай свой балл с этим блоком, а не с общим конкурсом выше."))
+    return lines if len(lines) > 1 else []
+
+
+def grant_chances(group: str, score: int, lang: str, home: str | None = None, quotas: list[str] | None = None,
+                  city: str | None = None) -> str:
+    """Ответ калькулятора «Шанс на грант» (по данным 2026 года, общий конкурс; если указаны квоты — и по ним)."""
     kz = lang == "kz"
     stats = sorted(gop_stats(group).items(), key=lambda kv: kv[1]["kz_min"])
     lines = [f"🎯 {'Баллың' if kz else 'Твой балл'}: {b(score)} · {b(ENT_LABELS[group][lang])}",
@@ -1146,12 +1225,16 @@ def grant_chances(group: str, score: int, lang: str, home: str | None = None) ->
                                           else f"от {st['kz_min']} (не хватает {gap})"))
     if not stats:
         lines.append("Бұл пәндер бойынша грант деректері жоқ." if kz else "По этим предметам данных о грантах нет.")
+    lines += quota_chances(group, score, lang, quotas or [], city)
     lines.append("\nℹ️ " + (
         "Грант ЖОО-ға емес, топқа беріледі: топ бойынша өтсең, кез келген ЖОО-ны таңдауға болады, бірақ танымал ЖОО-ға "
-        "балл жоғарырақ. Бұл 2026 жылғы деректер — келесі жылы шекті балл өзгереді, кепілдік емес. Ауыл квотасы бар болса, "
-        "мүмкіндік жоғарырақ." if kz else
+        "балл жоғарырақ. Бұл 2026 жылғы деректер — келесі жылы шекті балл өзгереді, кепілдік емес. "
+        + ("Квотаны грантқа өтініш бергенде құжатпен растау керек." if quotas else
+           "Ауыл квотасы не басқа квота болса, мүмкіндік жоғарырақ — оны «👤 Менің профилім» бөлімінде белгіле.") if kz else
         "Грант дают на группу программ, а не на вуз: прошёл по группе — выбираешь любой вуз, но в популярные вузы нужен балл выше. "
-        "Это данные 2026 года, не гарантия: в следующем году границы будут другими. С сельской квотой шансы выше."))
+        "Это данные 2026 года, не гарантия: в следующем году границы будут другими. "
+        + ("Квоту нужно подтвердить документами при подаче заявления на грант." if quotas else
+           "С сельской квотой или другой квотой шансы выше — отметь свою квоту в «👤 Мой профиль».")))
     if home:
         lines.append("📍 " + ("Алдымен — сенің қалаңның ЖОО-лары." if kz else "Сначала — вузы твоего города."))
     lines.append("✅ — " + ("ЖОО-ға осындай баллмен грант берілген" if kz else "в этот вуз с таким баллом брали") + " · 🟡 — "

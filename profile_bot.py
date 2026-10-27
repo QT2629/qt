@@ -1,5 +1,5 @@
 # Личная страница в боте: «👤 Мой профиль».
-# Профиль заполняется один раз (имя, возраст, город, предметы ЕНТ, вуз и специальность, какое ЕНТ сдаёт),
+# Профиль заполняется один раз (имя, возраст, город, предметы ЕНТ, вуз и специальность, квоты, какое ЕНТ сдаёт),
 # дальше бот помнит его и не спрашивает снова. Сюда же вносятся баллы пробных тестов и ЕНТ,
 # отсюда — график роста и напоминания о регистрации и тестировании.
 import logging
@@ -11,13 +11,14 @@ from telegram.error import Forbidden
 from telegram.ext import ContextTypes
 
 import card
+import grants
 import profiles
 import universities
 from formatting import b, esc
 
 logger = logging.getLogger("pro4u")
 
-WIZARD = ("name", "age", "city", "ent_group", "target_uni", "target_program", "session")
+WIZARD = ("name", "age", "city", "ent_group", "target_uni", "target_program", "quota", "session")
 
 T = {
     "ru": {
@@ -25,9 +26,9 @@ T = {
             "👤 <b>Моя страница</b>\n\n"
             "Здесь я запомню твои цели и баллы, чтобы не спрашивать каждый раз: буду напоминать о регистрации на ЕНТ, "
             "считать, сколько дней осталось, и показывать рост баллов по пробным тестам.\n\n"
-            "<b>Что сохраню:</b> имя, возраст, город, предметы ЕНТ, вуз и специальность, баллы.\n"
+            "<b>Что сохраню:</b> имя, возраст, город, предметы ЕНТ, вуз и специальность, квоты на грант (если сам отметишь), баллы.\n"
             "<b>Кто видит:</b> только ты. Вузам и другим людям данные не передаются. Для ответов ИИ использую город, "
-            "предметы, цель и баллы — без имени и возраста.\n"
+            "предметы, цель, квоты и баллы — без имени и возраста.\n"
             "<b>Удалить всё:</b> в любой момент командой /delete_me.\n\n"
             "Если тебе меньше 18 — можно указать только имя без фамилии."
         ),
@@ -52,6 +53,29 @@ T = {
         "q_target_uni_text": "Напиши название вуза.",
         "q_target_program": "На какую специальность? Напиши название, например: «IT», «Финансы», «Психология».",
         "q_session": "Какие ЕНТ будешь сдавать? Можно выбрать несколько — отметь все и нажми «Готово».",
+        "q_quota": ("🎟 <b>Есть ли у тебя квота на грант?</b>\n\n"
+                    "По квоте свой конкурс и проходной балл часто ниже: например, в 2026 году по «Информационным технологиям» "
+                    "в общем конкурсе грант давали от 100 баллов, по сельской квоте — от 63. "
+                    "Отметь всё, что подходит, и нажми «Готово». Если ничего — «Нет квоты». "
+                    "Квоту потом нужно подтвердить документами."),
+        "q_none": "Нет квоты", "b_qinfo": "ℹ️ Как работают квоты", "b_quota": "🎟 Мои квоты",
+        "quota": "🎟 Квоты: {v}",
+        "quota_info": (
+            "🎟 <b>Квоты на грант — как это работает</b>\n\n"
+            "• Грант дают на <b>группу программ</b> (например, B057 «Информационные технологии»), не на вуз. "
+            "Прошёл по группе — выбираешь вуз.\n"
+            "• <b>Сельская квота</b> — для выпускников сельских школ: отдельный конкурс внутри группы, проходной балл обычно "
+            "намного ниже.\n"
+            "• <b>Другие квоты</b>: многодетные и неполные семьи, семьи, где растят ребёнка с инвалидностью (или родитель с "
+            "инвалидностью), лица с инвалидностью, сироты и дети без попечения родителей, кандасы, отслужившие в армии, "
+            "ветераны боевых действий.\n"
+            "• С квотой ты участвуешь и в квотном, и в общем конкурсе.\n"
+            "• Квоту подтверждают документами при подаче заявления на грант — заранее узнай в школе или акимате, какие справки нужны.\n"
+            "• После колледжа поступают на <b>сокращённое обучение</b> — там свой конкурс и свои баллы.\n"
+            "• Есть и <b>целевой госзаказ</b>: на педагогов, на технические и сельскохозяйственные специальности, "
+            "для молодёжи Мангистауской и Атырауской областей, на медицину от Минздрава.\n\n"
+            "Цифры в боте — из официальных списков грантников 2025 и 2026 годов: самый низкий балл, с которым дали грант. "
+            "Это не официальный порог — в следующем году он будет другим."),
         "q_ent_which": "Какое это было ЕНТ?", "s_other": "Другое / не помню", "done": "✅ Готово",
         "s_none": "не выбрано",
         "q_exam_date": "Напиши дату своего ЕНТ, например: 15.05 (дату и время видно в UTO после регистрации). "
@@ -83,6 +107,13 @@ T = {
         "grant_gap": "🏆 Грант 2026 в {uni} ({gop}): от {min} — до него <b>{gap}</b> {balls} (лучший балл {best})",
         "grant_only": "🏆 Грант 2026 в {uni} ({gop}): от {min}",
         "grant_none": "🏆 В 2026 году грантов в {uni} по этой группе не было (по стране от {kz})",
+        "grant_2025": "   в 2025 году в {uni} — от {min}",
+        "q_line": "🎟 {what}, 2026: {v}", "q_in_uni": "в {uni} — от {min} ({n} {gw})",
+        "q_in_country": "по стране — от {min} ({n} {gw})",
+        "q_noscore": "🎟 {what}, 2026: {n} {gw} по стране — балл в списке не указан",
+        "q_ok": " — твоего балла <b>{best}</b> хватило бы ✅", "q_gap": " — до него <b>{gap}</b> {balls}",
+        "q_nodata": "🎟 {what}: в 2026 году грантов по этой группе не было",
+        "c_quota": "Грант по квоте",
         "session_line": "📅 {name} — {status}", "approx": " <i>(ориентировочно)</i>",
         "st_before_reg": "регистрация откроется через {d} ({date})", "st_reg": "идёт регистрация, осталось {d} (до {date})",
         "st_reg_open": "идёт регистрация; тестирование с {date}", "st_before_test": "тестирование начнётся через {d} ({date})",
@@ -105,7 +136,7 @@ T = {
         "b_undo": "↩️ Удалить последний результат", "b_chance": "🎯 Шанс на грант с этим баллом",
         "edit_which": "Что изменить?",
         "f_name": "Имя", "f_age": "Возраст", "f_city": "Город", "f_ent_group": "Предметы ЕНТ", "f_target_uni": "Вуз",
-        "f_target_program": "Специальность", "f_session": "Какое ЕНТ",
+        "f_target_program": "Специальность", "f_quota": "Квоты", "f_session": "Какое ЕНТ",
         "score_saved": "Записал: <b>{v}</b> {balls}{delta}.", "delta_up": " — на {d} больше, чем в прошлый раз 📈",
         "delta_down": " — на {d} меньше, чем в прошлый раз. Бывает — смотри, какой предмет просел.",
         "delta_same": " — как в прошлый раз",
@@ -135,9 +166,9 @@ T = {
             "👤 <b>Менің парақшам</b>\n\n"
             "Мұнда мақсаттарың мен баллдарыңды есте сақтаймын, қайта-қайта сұрамаймын: ҰБТ-ға тіркелу туралы еске саламын, "
             "қанша күн қалғанын есептеймін және сынақ тесттері бойынша баллдың өсуін көрсетемін.\n\n"
-            "<b>Не сақталады:</b> аты-жөнің, жасың, қалаң, ҰБТ пәндері, ЖОО мен мамандық, баллдар.\n"
+            "<b>Не сақталады:</b> аты-жөнің, жасың, қалаң, ҰБТ пәндері, ЖОО мен мамандық, грантқа квоталар (өзің белгілесең), баллдар.\n"
             "<b>Кім көреді:</b> тек сен. Деректер ЖОО-ларға және басқа адамдарға берілмейді. ЖИ жауаптары үшін қала, "
-            "пәндер, мақсат және баллдар қолданылады — атың мен жасың жоқ.\n"
+            "пәндер, мақсат, квоталар және баллдар қолданылады — атың мен жасың жоқ.\n"
             "<b>Бәрін өшіру:</b> кез келген уақытта /delete_me командасымен.\n\n"
             "18-ге толмасаң — тек атыңды жазсаң жеткілікті."
         ),
@@ -162,6 +193,28 @@ T = {
         "q_target_uni_text": "ЖОО атауын жаз.",
         "q_target_program": "Қай мамандыққа? Атауын жаз, мысалы: «IT», «Қаржы», «Психология».",
         "q_session": "Қай ҰБТ-ларды тапсырасың? Бірнешеуін таңдауға болады — барлығын белгілеп, «Дайын» батырмасын бас.",
+        "q_quota": ("🎟 <b>Грантқа квотаң бар ма?</b>\n\n"
+                    "Квота бойынша жеке конкурс өтеді, шекті балл жиі төмен: мысалы, 2026 жылы «Ақпараттық технологиялар» "
+                    "бойынша жалпы конкурста грант 100 баллдан, ауыл квотасы бойынша 63 баллдан берілді. "
+                    "Сәйкес келетіннің бәрін белгілеп, «Дайын» батырмасын бас. Ешқайсысы болмаса — «Квота жоқ». "
+                    "Квотаны кейін құжатпен растау керек."),
+        "q_none": "Квота жоқ", "b_qinfo": "ℹ️ Квоталар қалай жұмыс істейді", "b_quota": "🎟 Квоталарым",
+        "quota": "🎟 Квоталар: {v}",
+        "quota_info": (
+            "🎟 <b>Грантқа квоталар — қалай жұмыс істейді</b>\n\n"
+            "• Грант ЖОО-ға емес, <b>бағдарламалар тобына</b> беріледі (мысалы, B057 «Ақпараттық технологиялар»). "
+            "Топ бойынша өтсең — ЖОО-ны таңдайсың.\n"
+            "• <b>Ауыл квотасы</b> — ауыл мектебінің түлектеріне: топ ішіндегі жеке конкурс, шекті балл әдетте әлдеқайда төмен.\n"
+            "• <b>Басқа квоталар</b>: көпбалалы және толық емес отбасылар, мүгедектігі бар бала тәрбиелеп отырған (немесе ата-анасы "
+            "мүгедек) отбасылар, мүгедектігі бар адамдар, жетімдер және ата-ана қамқорлығынсыз қалған балалар, қандастар, "
+            "әскери қызметті өтегендер, ұрыс қимылдарының ардагерлері.\n"
+            "• Квотаң болса, квоталық конкурсқа да, жалпы конкурсқа да қатысасың.\n"
+            "• Квота грантқа өтініш бергенде құжатпен расталады — қандай анықтама керек екенін мектептен не әкімдіктен алдын ала біл.\n"
+            "• Колледжден кейін <b>қысқартылған оқуға</b> түседі — онда өз конкурсы мен баллдары бар.\n"
+            "• <b>Мақсатты мемлекеттік тапсырыс</b> та бар: педагогтерге, техникалық және ауыл шаруашылығы мамандықтарына, "
+            "Маңғыстау мен Атырау облысының жастарына, Денсаулық сақтау министрлігінен медицинаға.\n\n"
+            "Боттағы сандар — 2025 және 2026 жылғы грант иегерлерінің ресми тізімдерінен: грант берілген ең төменгі балл. "
+            "Бұл ресми шек емес — келесі жылы басқаша болады."),
         "q_ent_which": "Бұл қай ҰБТ болды?", "s_other": "Басқа / есімде жоқ", "done": "✅ Дайын",
         "s_none": "таңдалмады",
         "q_exam_date": "ҰБТ күніңді жаз, мысалы: 15.05 (тіркелгеннен кейін күні мен уақыты UTO-да көрінеді). "
@@ -193,6 +246,13 @@ T = {
         "grant_gap": "🏆 2026 жылғы грант, {uni} ({gop}): {min} бастап — тағы <b>{gap}</b> балл керек (ең жоғары баллың {best})",
         "grant_only": "🏆 2026 жылғы грант, {uni} ({gop}): {min} бастап",
         "grant_none": "🏆 2026 жылы бұл топ бойынша {uni}-ға грант берілмеді (ел бойынша {kz} бастап)",
+        "grant_2025": "   2025 жылы {uni}: {min} бастап",
+        "q_line": "🎟 {what}, 2026: {v}", "q_in_uni": "{uni} — {min} бастап ({n} грант)",
+        "q_in_country": "ел бойынша — {min} бастап ({n} грант)",
+        "q_noscore": "🎟 {what}, 2026: ел бойынша {n} грант — балл тізімде көрсетілмеген",
+        "q_ok": " — баллың <b>{best}</b> жеткілікті болар еді ✅", "q_gap": " — тағы <b>{gap}</b> балл керек",
+        "q_nodata": "🎟 {what}: 2026 жылы бұл топ бойынша грант берілмеді",
+        "c_quota": "Квота бойынша грант",
         "session_line": "📅 {name} — {status}", "approx": " <i>(болжамды)</i>",
         "st_before_reg": "тіркелу {d}нен кейін ашылады ({date})", "st_reg": "тіркелу жүріп жатыр, {d} қалды ({date} дейін)",
         "st_reg_open": "тіркелу жүріп жатыр; тестілеу {date} бастап", "st_before_test": "тестілеу {d}нен кейін басталады ({date})",
@@ -215,7 +275,7 @@ T = {
         "b_undo": "↩️ Соңғы нәтижені өшіру", "b_chance": "🎯 Осы баллмен грантқа мүмкіндік",
         "edit_which": "Нені өзгертеміз?",
         "f_name": "Аты", "f_age": "Жасы", "f_city": "Қала", "f_ent_group": "ҰБТ пәндері", "f_target_uni": "ЖОО",
-        "f_target_program": "Мамандық", "f_session": "Қай ҰБТ",
+        "f_target_program": "Мамандық", "f_quota": "Квоталар", "f_session": "Қай ҰБТ",
         "score_saved": "Жазып алдым: <b>{v}</b> балл{delta}.", "delta_up": " — өткен жолдан {d} балл жоғары 📈",
         "delta_down": " — өткен жолдан {d} балл төмен. Болады — қай пән төмендегенін қара.",
         "delta_same": " — өткен жолғыдай",
@@ -273,6 +333,7 @@ def page_keyboard(p: dict, lang: str) -> Kb:
         [Btn(t(lang, "b_mock"), callback_data="pf:addmock"), Btn(t(lang, "b_ent"), callback_data="pf:addent")],
         [Btn(t(lang, "b_progress"), callback_data="pf:progress"), Btn(t(lang, "b_exam"), callback_data="pf:examdate")],
         [Btn(t(lang, "b_card"), callback_data="pf:card"), Btn(t(lang, "b_edit"), callback_data="pf:edit")],
+        [Btn(t(lang, "b_quota"), callback_data="pf:e:quota"), Btn(t(lang, "b_qinfo"), callback_data="pf:qinfo")],
         [Btn(t(lang, "b_remind_off" if p.get("reminders") else "b_remind_on"), callback_data="pf:remind")],
         [Btn(t(lang, "b_delete"), callback_data="pf:delete")],
     ])
@@ -307,6 +368,19 @@ def sessions_keyboard(lang: str, selected: list[str]) -> Kb:
               + [[Btn(t(lang, "s_unknown"), callback_data="pf:s:unknown"), Btn(t(lang, "done"), callback_data="pf:s:done")]])
 
 
+def quotas_keyboard(lang: str, selected: list[str]) -> Kb:
+    """Квоты на грант — можно отметить несколько (например, сельская + многодетная семья)."""
+    mark = lambda q: ("✅ " if q in selected else "▫️ ") + grants.SHORT[q][lang == "kz"]
+    return Kb([[Btn(mark(q), callback_data=f"pf:q:{q}")] for q in grants.PROFILE_QUOTAS]
+              + [[Btn(t(lang, "q_none"), callback_data="pf:q:none"), Btn(t(lang, "done"), callback_data="pf:q:done")],
+                 [Btn(t(lang, "b_qinfo"), callback_data="pf:qinfo")]])
+
+
+def quotas_label(p: dict, lang: str) -> str:
+    chosen = grants.parse(p.get("quota"))
+    return ", ".join(grants.SHORT[q][lang == "kz"].split(" ", 1)[1] for q in chosen) if chosen else t(lang, "q_none")
+
+
 def sessions_label(p: dict, lang: str) -> str:
     chosen = profiles.user_sessions(p)
     return ", ".join(t(lang, f"s_{k}") for k in chosen) if chosen else t(lang, "s_none")
@@ -338,8 +412,42 @@ def target_grant(p: dict) -> dict | None:
         return None
     with_count = [g for g in grants if g.get("count")]
     g = min(with_count, key=lambda g: g["min"]) if with_count else grants[0]
-    return {"uni": universities.UNIS[slug]["short"], "gop": g["gop"].split()[0], "min": g.get("min") if g.get("count") else None,
-            "kz_min": g["kz_min"], "program": pool[0]["name_ru"] if len(pool) == 1 else None}
+    gop = g["gop"].split()[0]
+    return {"uni": universities.UNIS[slug]["short"], "gop": gop, "min": g.get("min") if g.get("count") else None,
+            "kz_min": g["kz_min"], "min_2025": g.get("min_2025"), "program": pool[0]["name_ru"] if len(pool) == 1 else None,
+            "quota": quota_grant(p, slug, gop)}
+
+
+def quota_grant(p: dict, slug: str, gop: str) -> list[dict] | None:
+    """Гранты 2026 по каждой квоте человека (и по грантам для западных регионов, если он оттуда):
+    [{what, what_kz, country: [грантов, мин.] | None, uni: [грантов, мин.] | None}]."""
+    quotas = grants.parse(p.get("quota"))
+    west = grants.west_of(p.get("city"))
+    cats = quotas + ([west] if west and "s" not in quotas else [])
+    if not cats:
+        return None
+    return [{"what": grants.label(c).replace("квота: ", ""), "what_kz": grants.label(c, "kz").replace("квота: ", ""),
+             "country": grants.get(None, gop, "2026", c), "uni": grants.get(slug, gop, "2026", c)} for c in cats]
+
+
+def quota_text(q: dict, uni: str, best: int | None, lang: str) -> str:
+    """Строка страницы: грант по одной квоте — в выбранном вузе и по стране, и сколько не хватает."""
+    what = esc(q["what_kz" if lang == "kz" else "what"])
+    if not q["country"]:
+        return t(lang, "q_nodata").format(what=what)
+    n, mn = q["country"]
+    if mn is None:
+        return t(lang, "q_noscore").format(what=what, n=n, gw=universities.grants_word(n))
+    parts = []
+    if q["uni"] and q["uni"][1] is not None:
+        parts.append(t(lang, "q_in_uni").format(uni=uni, min=q["uni"][1], n=q["uni"][0], gw=universities.grants_word(q["uni"][0])))
+    parts.append(t(lang, "q_in_country").format(min=mn, n=n, gw=universities.grants_word(n)))
+    line = t(lang, "q_line").format(what=what, v="; ".join(parts))
+    if best is not None:
+        target = q["uni"][1] if q["uni"] and q["uni"][1] is not None else mn
+        gap = target - best
+        line += t(lang, "q_ok").format(best=best) if gap <= 0 else t(lang, "q_gap").format(gap=gap, balls=balls_word(gap))
+    return line
 
 
 def uni_label(p: dict) -> str:
@@ -374,6 +482,12 @@ def page_text(p: dict, lang: str) -> str:
             gap = g["min"] - best
             lines.append(t(lang, "grant_gap").format(uni=g["uni"], gop=g["gop"], min=g["min"], gap=gap, best=best,
                                                      balls=balls_word(gap)))
+        if g.get("min_2025") is not None:
+            lines.append(t(lang, "grant_2025").format(uni=g["uni"], min=g["min_2025"]))
+        for q in g.get("quota") or []:
+            lines.append(quota_text(q, g["uni"], best, lang))
+    if grants.parse(p.get("quota")):
+        lines.append(t(lang, "quota").format(v=esc(quotas_label(p, lang))))
     for sk in profiles.user_sessions(p):
         st = profiles.stage(sk)
         status = t(lang, f"st_{st['stage']}").format(d=days_word(st["days"], lang), date=st["date"].strftime("%d.%m"))
@@ -427,6 +541,16 @@ def card_info(p: dict, lang: str) -> dict:
             info["rows"].append((label, t(lang, "c_grant_ok").format(min=g["min"]), "green"))
         else:
             info["rows"].append((label, t(lang, "c_grant_gap").format(min=g["min"], gap=g["min"] - best), "amber"))
+        scored = [q for q in g.get("quota") or [] if q["country"] and q["country"][1] is not None]
+        q = min(scored, key=lambda q: (q["uni"] if q["uni"] and q["uni"][1] is not None else q["country"])[1]) if scored else None
+        if q:
+            here = q["uni"] if q["uni"] and q["uni"][1] is not None else None
+            mn = here[1] if here else q["country"][1]
+            where = g["uni"] if here else ("ел бойынша" if lang == "kz" else "по стране")
+            v = f"{q['what_kz' if lang == 'kz' else 'what']}, {where}: " + t(lang, "c_grant_only").format(min=mn)
+            if best is not None:
+                v += " ✓" if best >= mn else f" (−{mn - best})"
+            info["rows"].append((t(lang, "c_quota"), v, "green" if best is not None and best >= mn else None))
     if rows_db:
         first, last = rows_db[0]["total"], rows_db[-1]["total"]
         v = t(lang, "c_best_v").format(best=best, last=last)
@@ -496,6 +620,9 @@ async def ask(context: ContextTypes.DEFAULT_TYPE, chat_id: int, lang: str, field
     elif field == "target_uni":
         home = universities.region_of((profiles.get(chat_id) or {}).get("city"))
         await context.bot.send_message(chat_id, t(lang, "q_target_uni"), reply_markup=unis_keyboard(lang, home))
+    elif field == "quota":
+        selected = grants.parse((profiles.get(chat_id) or {}).get("quota"))
+        await context.bot.send_message(chat_id, t(lang, "q_quota"), reply_markup=quotas_keyboard(lang, selected))
     elif field == "session":
         selected = profiles.user_sessions(profiles.get(chat_id) or {})
         await context.bot.send_message(chat_id, t(lang, "q_session"), reply_markup=sessions_keyboard(lang, selected))
@@ -683,6 +810,22 @@ async def on_callback(update, context: ContextTypes.DEFAULT_TYPE, lang: str, sen
         p = profiles.get(chat_id)
         await query.edit_message_text(f"{t(lang, 'q_session').split('?')[0]}?\n{b(sessions_label(p, lang))}")
         await next_step(context, chat_id, lang, "session")
+    elif data.startswith("pf:q:"):
+        choice = data[5:]
+        selected = grants.parse(p.get("quota"))
+        if choice in grants.SHORT:                 # отметить / снять
+            selected = [q for q in selected if q != choice] if choice in selected else selected + [choice]
+            profiles.update(chat_id, quota=",".join(selected) or None)
+            await query.edit_message_reply_markup(reply_markup=quotas_keyboard(lang, grants.parse(profiles.get(chat_id).get("quota"))))
+            return
+        if choice == "none":
+            profiles.update(chat_id, quota=None)
+        p = profiles.get(chat_id)
+        await query.edit_message_text(f"{t(lang, 'q_quota').split('</b>')[0]}</b>\n{b(quotas_label(p, lang))}")
+        await next_step(context, chat_id, lang, "quota")
+    elif data == "pf:qinfo":
+        await context.bot.send_message(chat_id, t(lang, "quota_info"), reply_markup=Kb([
+            [Btn(t(lang, "b_quota"), callback_data="pf:e:quota")], [Btn(t(lang, "b_back"), callback_data="pf:show")]]))
     elif data == "pf:addmock":
         await ask(context, chat_id, lang, "mock")
     elif data == "pf:addent":
@@ -762,6 +905,11 @@ def ai_context(chat_id: int) -> str | None:
         facts.append(f"хочет поступить в: {uni_label(p)}")
     if p.get("target_program"):
         facts.append(f"специальность: {p['target_program']}")
+    quotas = grants.parse(p.get("quota"))
+    if quotas:
+        facts.append("квоты на грант (указал сам): " + ", ".join(grants.label(q) for q in quotas))
+    if grants.west_of(p.get("city")):
+        facts.append("может участвовать в конкурсе: " + grants.label(grants.west_of(p["city"])))
     chosen = profiles.user_sessions(p)
     if chosen:
         facts.append("сдаёт ЕНТ: " + ", ".join(profiles.schedule()["sessions"][k]["name_ru"] for k in chosen))

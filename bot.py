@@ -36,6 +36,7 @@ from telegram.ext import (
 import catalog
 import config
 import formatting
+import grants
 import knowledge
 import photos
 import prefs
@@ -673,7 +674,9 @@ async def send_chances(context: ContextTypes.DEFAULT_TYPE, chat_id: int, lang: s
     more = [[InlineKeyboardButton(t(lang, "chance_again"), callback_data=f"gc:{group}")],
             [InlineKeyboardButton(t(lang, "chance_programs"), callback_data=f"ent:{group}")],
             [InlineKeyboardButton(t(lang, "act_mocks"), callback_data="act:mocks")]]
-    await send_long(context, chat_id, universities.grant_chances(group, score, lang, home_region(chat_id)), lang,
+    p = profiles.get(chat_id) or {}
+    text = universities.grant_chances(group, score, lang, home_region(chat_id), grants.parse(p.get("quota")), p.get("city"))
+    await send_long(context, chat_id, text, lang,
                     last_markup=share_keyboard(context, lang, chat_id, more))
 
 

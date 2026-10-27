@@ -4,6 +4,7 @@
 import re
 from pathlib import Path
 
+import grants
 from universities import compact_catalog
 
 KNOWLEDGE_DIR = Path(__file__).parent / "knowledge"
@@ -26,7 +27,8 @@ def build_knowledge_text() -> str:
     return (
         "<universities>\nВсе вузы в базе (программы и подробности — в <program_details> к каждому вопросу):\n\n"
         + compact_catalog() + "\n</universities>\n\n"
-        "<grants_2026>\n" + load_markdown("grants_2026.md") + "\n</grants_2026>\n\n"
+        "<grants>\n" + grants.RULES_RU + "\n\nПо всей стране, по группам программ (ГОП):\n" + grants.overview()
+        + "\n</grants>\n\n"
         "<admission_basics>\nОбщее для всех вузов: документы и сроки поступления\n\n"
         + load_markdown("static/documents_ru.md") + "\n\n" + load_markdown("static/dates_ru.md") + "\n</admission_basics>"
     )

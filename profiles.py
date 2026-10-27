@@ -12,7 +12,7 @@ DB_PATH = Path(config.DATA_DIR) / "profiles.db"
 SCHEDULE_PATH = Path(__file__).parent / "knowledge" / "ent_schedule.json"
 ALMATY_TZ = timezone(timedelta(hours=5))
 
-FIELDS = ("name", "age", "city", "ent_group", "target_uni", "target_program", "session", "exam_date")
+FIELDS = ("name", "age", "city", "ent_group", "target_uni", "target_program", "quota", "session", "exam_date")
 # Баллы ЕНТ по частям: (поле, максимум). Сумма — 140.
 PARTS = (("math_lit", 10), ("reading", 10), ("history", 20), ("prof1", 50), ("prof2", 50))
 
@@ -35,6 +35,8 @@ def _connect() -> sqlite3.Connection:
     """)
     if "session" not in {r[1] for r in conn.execute("PRAGMA table_info(scores)")}:  # какое это было ЕНТ
         conn.execute("ALTER TABLE scores ADD COLUMN session TEXT")
+    if "quota" not in {r[1] for r in conn.execute("PRAGMA table_info(profiles)")}:  # квоты: «r,large_family»
+        conn.execute("ALTER TABLE profiles ADD COLUMN quota TEXT")
     return conn
 
 
