@@ -111,6 +111,7 @@ T = {
         "q_line": "🎟 {what}, 2026: {v}", "q_in_uni": "в {uni} — от {min} ({n} {gw})",
         "q_in_country": "по стране — от {min} ({n} {gw})",
         "q_noscore": "🎟 {what}, 2026: {n} {gw} по стране — балл в списке не указан",
+        "q_pct": "🎟 {what}, 2026: {n} {gw} по стране, {pct} (в этом списке процент, а не балл)",
         "q_ok": " — твоего балла <b>{best}</b> хватило бы ✅", "q_gap": " — до него <b>{gap}</b> {balls}",
         "q_nodata": "🎟 {what}: в 2026 году грантов по этой группе не было",
         "c_quota": "Грант по квоте",
@@ -250,6 +251,7 @@ T = {
         "q_line": "🎟 {what}, 2026: {v}", "q_in_uni": "{uni} — {min} бастап ({n} грант)",
         "q_in_country": "ел бойынша — {min} бастап ({n} грант)",
         "q_noscore": "🎟 {what}, 2026: ел бойынша {n} грант — балл тізімде көрсетілмеген",
+        "q_pct": "🎟 {what}, 2026: ел бойынша {n} грант, {pct} (бұл тізімде балл емес, пайыз)",
         "q_ok": " — баллың <b>{best}</b> жеткілікті болар еді ✅", "q_gap": " — тағы <b>{gap}</b> балл керек",
         "q_nodata": "🎟 {what}: 2026 жылы бұл топ бойынша грант берілмеді",
         "c_quota": "Квота бойынша грант",
@@ -435,7 +437,9 @@ def quota_text(q: dict, uni: str, best: int | None, lang: str) -> str:
     what = esc(q["what_kz" if lang == "kz" else "what"])
     if not q["country"]:
         return t(lang, "q_nodata").format(what=what)
-    n, mn = q["country"]
+    n, mn = q["country"][:2]
+    if mn is None and len(q["country"]) > 2:  # кандасы: в списке процент от максимального балла
+        return t(lang, "q_pct").format(what=what, n=n, gw=universities.grants_word(n), pct=grants.pct_text(q["country"][2], lang))
     if mn is None:
         return t(lang, "q_noscore").format(what=what, n=n, gw=universities.grants_word(n))
     parts = []

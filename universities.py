@@ -1166,7 +1166,10 @@ def quota_chances(group: str, score: int, lang: str, quotas: list[str], city: st
             what = grants.label(cat, lang).replace("квота: ", "")
             first = first or cat
             if mn is None:
-                rows.append(f"{year}: {what} — {n} " + ("грант (балл көрсетілмеген)" if kz else f"{grants_word(n)} (балл в списке не указан)"))
+                v = grants.get(None, code, year, cat)
+                rows.append(f"{year}: " + (f"{what} — " if cat != first or year == "2026" else "") + f"{n} " + ("грант" if kz else grants_word(n))
+                            + (f", {grants.pct_text(v[2], lang)}" if len(v) > 2 else
+                               (" (балл көрсетілмеген)" if kz else " (балл в списке не указан)")))
             elif year == "2026":
                 mark = "✅" if score >= mn else "🟡"
                 rows.append(f"{mark} {year}: {what} — " + (f"{mn} бастап" if kz else f"от {mn}")

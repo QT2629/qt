@@ -3,10 +3,12 @@
 # Боту эта программа не нужна — он читает готовый файл. Запускать, когда выйдет новый список грантов.
 #
 #   python tools/build_grants.py pro4u_grants_by_vuz_group.json
+#   python tools/build_grants.py pro4u_grants_2025_general_rural.json pro4u_grants_quotas_2025_2026.json [общий 2026.json]
 #
-# Вход — таблица «вуз × группа программ» без ФИО (строки: year, list, competition, study_form, note, region,
-# group_code, group_name, university_id, grants, score_min …). Результат: knowledge/catalog/grants.json.gz
-#   unis[вуз][группа][год][категория] = [грантов, мин. балл или null]
+# Вход — одна или несколько таблиц «вуз × группа программ» без ФИО (строки: year, list, competition, study_form, note,
+# region, group_code, group_name, university_id, grants, score_min, pct_min …); одинаковые строки из разных файлов
+# считаются один раз. Результат: knowledge/catalog/grants.json.gz
+#   unis[вуз][группа][год][категория] = [грантов, мин. балл или null] (+ мин. процент, если в списке процент, а не балл)
 #   country[группа][год][категория]   = то же по всей стране; country[группа]["name"] — название группы.
 import collections
 import gzip
@@ -21,6 +23,14 @@ CATALOG = ROOT / "knowledge" / "catalog" / "kz_bachelor.json.gz"
 # Списки, где вместо балла ЕНТ стоит процент или балла нет совсем, — показываем только число грантов.
 NO_SCORE = {"oralman", "military_service", "children_of_security_staff", "olympiad"}
 WEST = {"МАНГИСТАУСКАЯ": "west_mangystau", "АТЫРАУСКАЯ": "west_atyrau"}
+
+
+def num(x):
+    """Число из таблицы: в JSON-файлах числа бывают строками («98», «94.5»), пустое — None."""
+    if x in (None, ""):
+        return None
+    f = float(x)
+    return int(f) if f.is_integer() else f
 
 
 def category(r: dict) -> str:
@@ -48,36 +58,48 @@ def category(r: dict) -> str:
 
 
 def main() -> None:
-    rows = json.load(open(sys.argv[1], encoding="utf-8"))
+    rows, seen = [], set()
+    for path in sys.argv[1:]:
+        for r in json.load(open(path, encoding="utf-8")):
+            key = tuple(str(r.get(k) or "") for k in ("year", "list", "competition", "study_form", "note", "region",
+                                                          "group_code", "vuz_code", "university_id"))
+            if key not in seen:
+                seen.add(key)
+                rows.append(r)
     with gzip.open(CATALOG, "rt", encoding="utf-8") as f:
         slug_of = {u["id"]: u.get("existing") or f"u{u['id']}" for u in json.load(f)["universities"]}
-    acc = collections.defaultdict(lambda: [0, None])
+    acc = collections.defaultdict(lambda: [0, None, None])
     names, skipped = {}, collections.Counter()
     for r in rows:
         gop, year, cat = r["group_code"], str(r["year"]), category(r)
         if not gop:  # строки без группы программ (в исходном PDF не распознана) — пропускаем
-            skipped["без группы"] += r["grants"]
+            skipped["без группы"] += num(r["grants"]) or 0
             continue
         names.setdefault(gop, r["group_name"])
-        score = None if r["list"] in NO_SCORE else r.get("score_min")
+        score = None if r["list"] in NO_SCORE else num(r.get("score_min"))
+        # В списке кандасов вместо балла — процент от максимального балла ЕНТ.
+        pct = num(r.get("pct_min")) if r["list"] in NO_SCORE else None
         keys = [("country", gop, year, cat)]
-        slug = slug_of.get(r.get("university_id"))
+        slug = slug_of.get(num(r.get("university_id")))
         if slug:
             keys.append((slug, gop, year, cat))
         else:
-            skipped[r.get("vuz_name") or r.get("vuz_code")] += r["grants"]
+            skipped[r.get("vuz_name") or r.get("vuz_code")] += num(r["grants"]) or 0
         for k in keys:
             a = acc[k]
-            a[0] += r["grants"]
+            a[0] += num(r["grants"]) or 0
             if score is not None:
                 a[1] = score if a[1] is None else min(a[1], score)
+            if pct is not None:
+                a[2] = pct if a[2] is None else min(a[2], pct)
     unis, country = {}, {}
     for (who, gop, year, cat), v in sorted(acc.items()):
+        v = v if v[2] is not None else v[:2]
         if who == "country":
             country.setdefault(gop, {"name": names[gop]}).setdefault(year, {})[cat] = v
         else:
             unis.setdefault(who, {}).setdefault(gop, {}).setdefault(year, {})[cat] = v
-    data = {"meta": {"years": [2025, 2026], "built_from": Path(sys.argv[1]).name,
+    data = {"meta": {"years": [2025, 2026], "built_from": [Path(p).name for p in sys.argv[1:]],
                      "note": "Гранты дают на группу программ (ГОП). Мин. балл — самый низкий балл среди получивших "
                              "грант (не официальный порог). ФИО и ИИН не хранятся."},
             "unis": unis, "country": country}
