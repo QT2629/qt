@@ -156,13 +156,56 @@ def retention() -> str:
         f"• пришли снова в первые 7 дней: {share(7, lambda o: any(1 <= d <= 7 for d in o))}",
         f"• пришли снова позже недели: {share(14, lambda o: any(d > 7 for d in o))}",
     ]
-    by_source: dict[str, list[int]] = {}
-    for user, name in sources.items():
-        if user in people and people[user][0] >= 1:
-            by_source.setdefault(name, []).append(1 if people[user][1] else 0)
-    if by_source:
-        lines.append("\nПо ссылкам партнёров (вернулись / пришли):")
-        lines += [f"• {name}: {sum(v)} / {len(v)}" for name, v in sorted(by_source.items())]
+    return "\n".join(lines)
+
+
+def sources_report() -> str:
+    """Откуда пришли люди по партнёрским ссылкам (/link) и насколько они «качественные»:
+    что делали в боте и возвращались ли. Для сравнения — те, кто пришёл без ссылки."""
+    today = datetime.now(ALMATY_TZ).date()
+    with _connect() as conn:
+        rows = conn.execute("SELECT DISTINCT user, substr(ts, 1, 10), kind FROM events").fetchall()
+        source_of = dict(conn.execute("SELECT user, detail FROM events WHERE kind = 'src_join'").fetchall())
+    if not source_of:
+        return "🔗 По партнёрским ссылкам пока никто не пришёл. Ссылку для партнёра делает команда /link имя."
+
+    days: dict[str, set] = {}
+    did: dict[str, set] = {}
+    for user, day, kind in rows:
+        days.setdefault(user, set()).add(day)
+        did.setdefault(user, set()).add(kind)
+
+    groups: dict[str, list[str]] = {}
+    for user in days:
+        groups.setdefault(source_of.get(user, ""), []).append(user)
+
+    def pct(k: int, n: int) -> str:
+        return f"{k} ({k / n:.0%})"
+
+    def block(name: str, users: list[str]) -> list[str]:
+        n = len(users)
+        def with_kind(kind: str) -> int:
+            return sum(1 for u in users if kind in did[u])
+        old = [u for u in users if (today - datetime.strptime(min(days[u]), "%Y-%m-%d").date()).days >= 1]
+        back = sum(1 for u in old if len(days[u]) > 1)
+        head = f"• {name} — {n} чел." + ("  ⚠️ мало людей, цифры неточные" if n < 10 else "")
+        return [
+            head,
+            f"   анкета {pct(with_kind('quiz_done'), n)} · вопрос ИИ {pct(with_kind('ai'), n)} · "
+            f"шанс на грант {pct(with_kind('chance'), n)}",
+            f"   личная страница {pct(with_kind('profile_created'), n)} · внесли баллы {pct(with_kind('score_added'), n)} · "
+            f"вернулись {back} из {len(old)}" + (f" ({back / len(old):.0%})" if old else ""),
+        ]
+
+    partner = sorted(((name, users) for name, users in groups.items() if name), key=lambda x: -len(x[1]))
+    lines = ["🔗 Партнёрские ссылки: сколько людей пришло и что они делали в боте",
+             "(проценты — доля от пришедших по этой ссылке)"]
+    for name, users in partner[:12]:
+        lines += block(name, users)
+    if len(partner) > 12:
+        lines.append(f"…и ещё ссылок: {len(partner) - 12}")
+    if groups.get(""):
+        lines += ["\nДля сравнения:"] + block("без ссылки партнёра", groups[""])
     return "\n".join(lines)
 
 

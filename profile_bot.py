@@ -690,6 +690,7 @@ async def on_text(context: ContextTypes.DEFAULT_TYPE, chat_id: int, lang: str, t
             return True
         prev = profiles.scores(chat_id)
         profiles.add_score(chat_id, field, score, session=context.user_data.pop("pf_session", None) if field == "ent" else None)
+        stats.log_event(chat_id, "score_added", field)
         context.user_data.pop("pf_await", None)
         await send_score_saved(context, chat_id, lang, score["total"], prev[-1]["total"] if prev else None)
         return True
@@ -770,6 +771,7 @@ async def on_callback(update, context: ContextTypes.DEFAULT_TYPE, lang: str, sen
 
     if data == "pf:consent":
         profiles.create(chat_id, lang)
+        stats.log_event(chat_id, "profile_created")
         context.user_data["pf_wizard"] = True
         await query.edit_message_reply_markup(reply_markup=None)
         await ask(context, chat_id, lang, "name")
