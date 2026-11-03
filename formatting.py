@@ -14,9 +14,42 @@ def b(text) -> str:
     return f"<b>{esc(text)}</b>"
 
 
+_TABLE_SEP = re.compile(r"^\s*\|?\s*:?-{2,}:?\s*(\|\s*:?-{2,}:?\s*)*\|?\s*$")
+
+
+def _cells(line: str) -> list[str]:
+    return [c.replace("**", "").strip() for c in line.strip().strip("|").split("|")]
+
+
+def tables_to_lists(text: str) -> str:
+    """Telegram не умеет таблицы. Если ИИ всё же прислал «| вуз | цена |», превращаем её в список:
+    таблица «пункт × вуз» — блок на каждый вуз, любая другая — строки через « · »."""
+    lines, out, i = text.split("\n"), [], 0
+    while i < len(lines):
+        if lines[i].lstrip().startswith("|") and i + 1 < len(lines) and _TABLE_SEP.match(lines[i + 1]):
+            header, rows, j = _cells(lines[i]), [], i + 2
+            while j < len(lines) and lines[j].lstrip().startswith("|"):
+                rows.append(_cells(lines[j]))
+                j += 1
+            if len(header) >= 3 and all(len(r) == len(header) for r in rows):   # первый столбец — названия пунктов
+                for col in range(1, len(header)):
+                    out.append(f"**{header[col]}**")
+                    out += [f"• {r[0]}: {r[col]}" for r in rows if r[col]]
+                    out.append("")
+            else:
+                if any(header):
+                    out.append("**" + " · ".join(c for c in header if c) + "**")
+                out += [" · ".join(c for c in r if c) for r in rows]
+            i = j
+            continue
+        out.append(lines[i])
+        i += 1
+    return "\n".join(out)
+
+
 def from_ai(text: str) -> str:
     """Ответ ИИ → безопасный HTML: оставляем только <b> и <i>; **жирный** из Markdown тоже превращаем в <b>."""
-    out = esc(text)
+    out = esc(tables_to_lists(text))
     for tag in ALLOWED:
         out = re.sub(rf"&lt;(/?){tag}&gt;", rf"<\1{tag}>", out, flags=re.I)
     out = re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", out, flags=re.S)
