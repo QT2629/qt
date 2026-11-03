@@ -13,6 +13,7 @@ from telegram.ext import ContextTypes
 import card
 import grants
 import profiles
+import stats
 import universities
 from formatting import b, esc
 
@@ -763,6 +764,10 @@ async def on_callback(update, context: ContextTypes.DEFAULT_TYPE, lang: str, sen
     chat_id = update.effective_chat.id
     p = profiles.get(chat_id)
 
+    if data.endswith("_r"):  # кнопка из напоминания: считаем нажатие в /stats и дальше работаем как с обычной
+        data = data[:-2]
+        stats.log_event(chat_id, "reminder_click", data[3:])
+
     if data == "pf:consent":
         profiles.create(chat_id, lang)
         context.user_data["pf_wizard"] = True
@@ -939,13 +944,13 @@ def reminder_text(kind: str, data: dict, lang: str, confirmed: bool) -> tuple[st
         kb = None
     elif kind == "test_start":
         text = t(lang, "r_test_start").format(date=date_s, name=name) + approx
-        kb = Kb([[Btn(t(lang, "b_exam"), callback_data="pf:examdate")]])
+        kb = Kb([[Btn(t(lang, "b_exam"), callback_data="pf:examdate_r")]])
     elif kind == "exam":
         text = t(lang, "r_exam").format(d=days_word(data["days"], lang), date=fmt_date(d))
         kb = None
     else:  # ask_result
         text = t(lang, "r_result")
-        kb = Kb([[Btn(t(lang, "b_ent"), callback_data="pf:addent")]])
+        kb = Kb([[Btn(t(lang, "b_ent"), callback_data="pf:addent_r")]])
     return text + t(lang, "r_off_hint"), kb
 
 
@@ -958,17 +963,18 @@ async def daily_reminders(context: ContextTypes.DEFAULT_TYPE) -> None:
         messages = []
         for key, kind, data in profiles.due_reminders(p):
             if profiles.mark_sent(p["user_id"], key):
-                messages.append(reminder_text(kind, data, lang, confirmed))
+                messages.append((*reminder_text(kind, data, lang, confirmed), kind))
         chosen = profiles.user_sessions(p)
         all_done = bool(chosen) and all(profiles.stage(k)["stage"] == "done" for k in chosen)
         new = (profiles.today() - profiles._d(p["created_at"][:10])).days < 7
         if not messages and not new and not all_done and profiles.mock_nudge_due(p["user_id"]):
             messages.append((t(lang, "r_mock") + t(lang, "r_off_hint"),
-                             Kb([[Btn(t(lang, "b_mock"), callback_data="pf:addmock")]])))
-        for text, kb in messages:
+                             Kb([[Btn(t(lang, "b_mock"), callback_data="pf:addmock_r")]]), "mock"))
+        for text, kb, kind in messages:
             try:
                 await context.bot.send_message(p["user_id"], text, reply_markup=kb)
                 sent += 1
+                stats.log_reminder(p["user_id"], kind)
             except Forbidden:  # пользователь остановил бота — больше не пишем
                 profiles.update(p["user_id"], reminders=0)
                 break

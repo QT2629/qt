@@ -448,6 +448,7 @@ async def show_stats(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None
         stats.overview() + f"\n\n👤 Личные страницы: {c['profiles']} (внесли баллы: {c['with_scores']}, "
         f"всего результатов: {c['scores']}; напоминания включены у {c['reminders']})\n\n" + profiles.score_stats())
     await update.message.reply_text(stats.report(30))
+    await update.message.reply_text(stats.retention())
 
 
 async def partner_link(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:

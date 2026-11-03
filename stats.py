@@ -27,6 +27,8 @@ def _connect() -> sqlite3.Connection:
             ts TEXT, user TEXT, kind TEXT, detail TEXT, cost REAL DEFAULT 0
         )"""
     )
+    # Напоминания шлёт бот, а не человек, поэтому они отдельно: иначе каждый получатель считался бы активным.
+    conn.execute("CREATE TABLE IF NOT EXISTS reminders (ts TEXT, user TEXT, kind TEXT)")
     return conn
 
 
@@ -40,6 +42,15 @@ def log_event(user_id: int, kind: str, detail: str = "", cost: float = 0.0) -> N
         conn.execute(
             "INSERT INTO events VALUES (?, ?, ?, ?, ?)",
             (datetime.now(ALMATY_TZ).isoformat(), _user_hash(user_id), kind, detail, cost),
+        )
+
+
+def log_reminder(user_id: int, kind: str) -> None:
+    """Напоминание отправлено. kind: mock, а также виды сроков ЕНТ из profiles.due_reminders."""
+    with _connect() as conn:
+        conn.execute(
+            "INSERT INTO reminders VALUES (?, ?, ?)",
+            (datetime.now(ALMATY_TZ).isoformat(), _user_hash(user_id), kind),
         )
 
 
@@ -83,6 +94,10 @@ def report(days: int) -> str:
         quiz = one("SELECT COUNT(*) FROM events WHERE ts >= ? AND kind = 'quiz_done'")
         limit = one("SELECT COUNT(DISTINCT user) FROM events WHERE ts >= ? AND kind = 'limit'")
         errors = one("SELECT COUNT(*) FROM events WHERE ts >= ? AND kind = 'error'")
+        reminders = one("SELECT COUNT(*) FROM reminders WHERE ts >= ?")
+        mock_sent = one("SELECT COUNT(*) FROM reminders WHERE ts >= ? AND kind = 'mock'")
+        clicks = one("SELECT COUNT(*) FROM events WHERE ts >= ? AND kind = 'reminder_click'")
+        mock_clicks = one("SELECT COUNT(*) FROM events WHERE ts >= ? AND kind = 'reminder_click' AND detail = 'addmock'")
         buttons = conn.execute(
             "SELECT detail, COUNT(*) FROM events WHERE ts >= ? AND kind = 'button' "
             "GROUP BY detail ORDER BY 2 DESC", (since,)
@@ -91,7 +106,8 @@ def report(days: int) -> str:
     period = f"за {days} дней"
     lines = [
         f"📊 Статистика {period}",
-        f"Людей: {users:.0f} — новых {new:.0f}, вернулись {users - new:.0f} (задавали вопросы ИИ: {ai_users:.0f})",
+        f"Людей: {users:.0f} — впервые за период {new:.0f}, пришли ещё до него {users - new:.0f} "
+        f"(задавали вопросы ИИ: {ai_users:.0f}). Возвраты внутри периода — в блоке «Удержание».",
         f"Вопросов к ИИ: {ai:.0f}" + (f", в среднем {ai / ai_users:.1f} на человека" if ai_users else ""),
         f"Анкет пройдено: {quiz:.0f}",
         f"Расходы на Claude: ~${cost:.2f}" + (f" (~${cost / users:.3f} на человека)" if users else ""),
@@ -99,6 +115,8 @@ def report(days: int) -> str:
         f"Пришли по приглашению: {refs:.0f}" + (f" (больше всех привёл один человек: {top_ref[1]})" if top_ref else ""),
         f"Упёрлись в дневной лимит: {limit:.0f} чел.",
         f"Ошибки: {errors:.0f}",
+        f"Напоминаний отправлено: {reminders:.0f}, нажали кнопку под ними: {clicks:.0f}; "
+        f"про пробник — {mock_sent:.0f}, из них нажали «внести баллы»: {mock_clicks:.0f}",
     ]
     if sources:
         lines.append("\nПришли по ссылкам партнёров:")
@@ -106,6 +124,45 @@ def report(days: int) -> str:
     if buttons:
         lines.append("\nКнопки без ИИ:")
         lines += [f"• {name}: {count}" for name, count in buttons]
+    return "\n".join(lines)
+
+
+def retention() -> str:
+    """Удержание: вернулся ли человек в другой день после первого. Дни — по Алматы, от первого события человека."""
+    today = datetime.now(ALMATY_TZ).date()
+    with _connect() as conn:
+        rows = conn.execute("SELECT DISTINCT user, substr(ts, 1, 10) FROM events").fetchall()
+        sources = dict(conn.execute("SELECT user, detail FROM events WHERE kind = 'src_join'").fetchall())
+
+    active_days: dict[str, list] = {}
+    for user, day in rows:
+        active_days.setdefault(user, []).append(datetime.strptime(day, "%Y-%m-%d").date())
+    # user -> (сколько дней назад пришёл, на какие дни после первого заходил)
+    people = {}
+    for user, days in active_days.items():
+        first = min(days)
+        people[user] = ((today - first).days, sorted((d - first).days for d in days if d != first))
+
+    def share(min_age: int, came_back) -> str:
+        base = [offsets for age, offsets in people.values() if age >= min_age]
+        if not base:
+            return "пока мало данных"
+        n = sum(1 for offsets in base if came_back(offsets))
+        return f"{n} из {len(base)} ({n / len(base):.0%})"
+
+    lines = [
+        "🔁 Удержание (по людям, у кого прошло достаточно дней):",
+        f"• пришли снова в любой другой день: {share(1, lambda o: bool(o))}",
+        f"• пришли снова в первые 7 дней: {share(7, lambda o: any(1 <= d <= 7 for d in o))}",
+        f"• пришли снова позже недели: {share(14, lambda o: any(d > 7 for d in o))}",
+    ]
+    by_source: dict[str, list[int]] = {}
+    for user, name in sources.items():
+        if user in people and people[user][0] >= 1:
+            by_source.setdefault(name, []).append(1 if people[user][1] else 0)
+    if by_source:
+        lines.append("\nПо ссылкам партнёров (вернулись / пришли):")
+        lines += [f"• {name}: {sum(v)} / {len(v)}" for name, v in sorted(by_source.items())]
     return "\n".join(lines)
 
 
