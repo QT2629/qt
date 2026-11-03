@@ -13,6 +13,7 @@ import runpy
 from pathlib import Path
 
 import catalog
+import config
 import grants
 from formatting import b, esc
 from catalog import INTERESTS, _contains, find_groups, money
@@ -971,6 +972,16 @@ def ordered(slugs: list[str], home: str | None = None) -> list[str]:
 PAGE = 10
 
 
+def balls_word(n: int) -> str:
+    """1 балл, 2–4 балла, 5+ баллов."""
+    n = abs(n)
+    if n % 10 == 1 and n % 100 != 11:
+        return "балл"
+    if 2 <= n % 10 <= 4 and not 12 <= n % 100 <= 14:
+        return "балла"
+    return "баллов"
+
+
 def unis_word(n: int) -> str:
     if n % 10 == 1 and n % 100 != 11:
         return "вуз"
@@ -1111,6 +1122,9 @@ def program_card(key: str, lang: str) -> str:
     else:
         lines.append("\nℹ️ " + ("Деректер бағдар ретінде берілген — ЖОО қабылдау комиссиясынан нақтыла." if kz
                                else "Данные ориентировочные — уточняй в приёмной комиссии вуза."))
+    if UNIS[slug].get("dorm"):   # общежитие: поле dorm в university.json (текст: есть ли, сколько стоит)
+        lines.append("\n🏠 " + b("Жатақхана:" if kz else "Общежитие:") + " " + esc(str(UNIS[slug]["dorm"])))
+    lines.append("🗓 " + (f"Деректер: {config.DATA_AS_OF_KZ}" if kz else f"Данные на {config.DATA_AS_OF}"))
     lines.append(esc(link_line(key, lang)))
     return "\n".join(lines)
 
@@ -1184,6 +1198,9 @@ def quota_chances(group: str, score: int, lang: str, quotas: list[str], city: st
     return lines if len(lines) > 1 else []
 
 
+GRANT_MARGIN = 10  # запас в баллах над порогом прошлого года, с которого ставим уверенное ✅
+
+
 def grant_chances(group: str, score: int, lang: str, home: str | None = None, quotas: list[str] | None = None,
                   city: str | None = None) -> str:
     """Ответ калькулятора «Шанс на грант» (по данным 2026 года, общий конкурс; если указаны квоты — и по ним)."""
@@ -1193,6 +1210,7 @@ def grant_chances(group: str, score: int, lang: str, home: str | None = None, qu
              "2026 жылғы грант нәтижелері бойынша (жалпы конкурс, квотасыз):\n" if kz
              else "По итогам грантов 2026 года (общий конкурс, без квот):\n"]
     yes, no = [], []
+    thin = False
     for gop, st in stats:
         (yes if score >= st["kz_min"] else no).append((gop, st))
     if yes:
@@ -1204,7 +1222,13 @@ def grant_chances(group: str, score: int, lang: str, home: str | None = None, qu
                 u = st["unis"].get(slug)
                 short = b(UNIS[slug]["short"])
                 if u and score >= u["min"]:
-                    ok.append(f"✅ {short}: " + (f"{u['min']} бастап ({u['count']} грант)" if kz else f"от {u['min']} (грантов: {u['count']})"))
+                    margin = score - u["min"]
+                    if margin < GRANT_MARGIN:   # на самой границе: порог — это минимум прошлого года, а не гарантия
+                        thin = True
+                        ok.append(f"🟠 {short}: " + (f"{u['min']} бастап ({u['count']} грант) — қоры тек {margin} балл" if kz
+                                                    else f"от {u['min']} (грантов: {u['count']}) — запас всего {margin}"))
+                    else:
+                        ok.append(f"✅ {short}: " + (f"{u['min']} бастап ({u['count']} грант)" if kz else f"от {u['min']} (грантов: {u['count']})"))
                 elif u:
                     gap = u["min"] - score
                     near.append(f"🟡 {short}: " + (f"{u['min']} бастап — {gap} балл жетпейді" if kz
@@ -1226,6 +1250,10 @@ def grant_chances(group: str, score: int, lang: str, home: str | None = None, qu
             gap = st["kz_min"] - score
             lines.append(f"• {b(gop)} — " + (f"{st['kz_min']} бастап ({gap} балл жетпейді)" if kz
                                           else f"от {st['kz_min']} (не хватает {gap})"))
+        goal_gop, goal_st = min(no, key=lambda x: x[1]["kz_min"])
+        goal = goal_st["kz_min"] - score
+        lines.append("\n🎯 " + (f"Жақын мақсат: {b(goal_gop)} — тағы +{goal} балл" if kz
+                                else f"Ближайшая цель: {b(goal_gop)} — ещё +{goal} {balls_word(goal)}. Добирай на профильных предметах: там больше всего баллов."))
     if not stats:
         lines.append("Бұл пәндер бойынша грант деректері жоқ." if kz else "По этим предметам данных о грантах нет.")
     lines += quota_chances(group, score, lang, quotas or [], city)
@@ -1240,7 +1268,12 @@ def grant_chances(group: str, score: int, lang: str, home: str | None = None, qu
            "С сельской квотой или другой квотой шансы выше — отметь свою квоту в «👤 Мой профиль».")))
     if home:
         lines.append("📍 " + ("Алдымен — сенің қалаңның ЖОО-лары." if kz else "Сначала — вузы твоего города."))
-    lines.append("✅ — " + ("ЖОО-ға осындай баллмен грант берілген" if kz else "в этот вуз с таким баллом брали") + " · 🟡 — "
+    if thin:
+        lines.append("\n🟠 " + ("Баллың өткен жылғы шекке өте жақын — қосалқы ЖОО-лар мен ақылы бөлімді де ұмытпа." if kz
+                              else "Твой балл почти на границе прошлого года — подай заявления и в запасные вузы, и на платное."))
+    lines.append("🗓 " + (f"Деректер: {config.DATA_AS_OF_KZ}" if kz else f"Данные на {config.DATA_AS_OF}"))
+    lines.append("✅ — " + ("ЖОО-ға осындай баллмен грант берілген (қормен)" if kz else "в этот вуз с таким баллом брали (с запасом)") + " · 🟠 — "
+                 + ("шекте, қоры аз" if kz else "на границе") + " · 🟡 — "
                  + ("сәл жетпейді" if kz else "чуть не хватает") + " · ⚪ — " + ("ЖОО-ға грант берілмеді" if kz else "грантов в вуз не было"))
     return "\n".join(lines)
 

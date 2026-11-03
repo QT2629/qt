@@ -672,6 +672,21 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         await answer_question(context, chat_id, lang, text)
 
 
+def ent_countdown(lang: str) -> str:
+    """Строка про ближайшую сессию ЕНТ («📅 Основное ЕНТ — регистрация откроется через …») — повод вернуться."""
+    for key in ("jan", "mar", "main"):
+        st = profiles.stage(key)
+        if st and st["stage"] != "done":
+            name = st["name_kz" if lang == "kz" else "name_ru"]
+            status = profile_bot.t(lang, "st_" + st["stage"]).format(
+                d=profile_bot.days_word(st["days"], lang), date=f"{st['date']:%d.%m}")
+            line = profile_bot.t(lang, "session_line").format(name=name, status=status)
+            if not profiles.schedule().get("confirmed"):
+                line += profile_bot.t(lang, "approx")
+            return line
+    return ""
+
+
 async def send_chances(context: ContextTypes.DEFAULT_TYPE, chat_id: int, lang: str, group: str, score: int) -> None:
     """Полный список: все группы и все вузы базы. Под ним — «Отправить другу», «Другой балл», «Программы»."""
     stats.log_event(chat_id, "chance", f"{group}:{score}")
@@ -680,6 +695,9 @@ async def send_chances(context: ContextTypes.DEFAULT_TYPE, chat_id: int, lang: s
             [InlineKeyboardButton(t(lang, "act_mocks"), callback_data="act:mocks")]]
     p = profiles.get(chat_id) or {}
     text = universities.grant_chances(group, score, lang, home_region(chat_id), grants.parse(p.get("quota")), p.get("city"))
+    countdown = ent_countdown(lang)
+    if countdown:
+        text += "\n\n" + countdown
     await send_long(context, chat_id, text, lang,
                     last_markup=share_keyboard(context, lang, chat_id, more))
 
@@ -823,6 +841,27 @@ async def send_long(context: ContextTypes.DEFAULT_TYPE, chat_id: int, text: str,
 # ---------------------------------------------------------------------------
 # Запуск
 # ---------------------------------------------------------------------------
+_last_alert = {"at": 0.0}
+
+
+async def on_error(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Любая необработанная ошибка: в лог и, если включено ERROR_ALERTS, (не чаще раза в 10 минут) короткое
+    оповещение администраторам. В оповещение идёт только тип ошибки: текст ошибки сети может содержать
+    адрес с токеном бота."""
+    logger.error("Необработанная ошибка", exc_info=context.error)
+    if not config.ERROR_ALERTS:
+        return
+    now = datetime.now().timestamp()
+    if now - _last_alert["at"] < 600:
+        return
+    _last_alert["at"] = now
+    for admin_id in config.ADMIN_IDS:
+        try:
+            await context.bot.send_message(admin_id, f"⚠️ Pro4U: ошибка {type(context.error).__name__}. Подробности — в логе бота.")
+        except TelegramError:
+            pass
+
+
 def main() -> None:
     if not config.TELEGRAM_BOT_TOKEN:
         raise SystemExit("Не найден TELEGRAM_BOT_TOKEN. Заполни его в файле .env.")
@@ -832,6 +871,7 @@ def main() -> None:
     app = (Application.builder().token(config.TELEGRAM_BOT_TOKEN).persistence(persistence)
            .defaults(Defaults(parse_mode=ParseMode.HTML)).post_init(set_commands).build())
 
+    app.add_error_handler(on_error)
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("lang", change_language))
     app.add_handler(CommandHandler("reset", reset))
