@@ -31,7 +31,7 @@ def build_knowledge_text() -> str:
         "<grants>\n" + grants.RULES_RU + "\n\nПо всей стране, по группам программ (ГОП):\n" + grants.overview()
         + "\n</grants>\n\n"
         "<admission_basics>\nОбщее для всех вузов: документы и сроки поступления\n\n"
-        + load_markdown("static/documents_ru.md") + "\n\n" + load_markdown("static/dates_ru.md") + "\n\n" + load_markdown("static/ent_format_ru.md") + "\n</admission_basics>\n\n"
+        + load_markdown("static/documents_ru.md") + "\n\n" + load_markdown("static/dates_ru.md") + "\n\n" + load_markdown("static/ent_format_ru.md") + "\n\n" + load_markdown("static/pedagogy_ru.md") + "\n</admission_basics>\n\n"
         "<creative_exams>\nОфициальные правила творческих экзаменов (проверено " + creative.CHECKED + "). Если человек спрашивает "
         "про творческие экзамены, отвечай по этому тексту и подскажи команду /creative. Чего здесь нет (даты и программа "
         "экзамена конкретного вуза, цены), не выдумывай: отправь на сайт этого вуза.\n\n"
