@@ -218,7 +218,7 @@ TEXTS = {
 
 
 def _lang(lang: str) -> str:
-    return "kk" if lang == "kk" else "ru"
+    return "kk" if lang in ("kz", "kk") else "ru"  # в боте казахский язык хранится как «kz»
 
 
 def home_keyboard(lang: str) -> Kb:
