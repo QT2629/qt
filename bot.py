@@ -453,18 +453,36 @@ async def show_stats(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None
 
 
 async def partner_link(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """/link имя — ссылка для партнёра (только для администраторов); в /stats видно, сколько людей по ней пришло."""
+    """/link имя — ссылки для партнёра (только для администраторов); в /stats видно, сколько людей
+    пришло, с какой площадки и что они делали. /link zhannur даёт сразу ссылки на все площадки."""
     if update.effective_user.id not in config.ADMIN_IDS:
         return
-    name = re.sub(r"[^A-Za-z0-9_]", "", "_".join(context.args or [])).lower()[:36]
+    name = re.sub(r"[^A-Za-z0-9_]", "", "_".join(context.args or [])).lower()[:30]
     if not name:
         await update.message.reply_text(
-            "Напиши имя латиницей: /link kurator_dana\n"
-            "Лучше делать отдельную ссылку на каждого человека и каждую площадку, например kurator_dana_insta.")
+            "Напиши имя латиницей: /link zhannur — пришлю ссылки на все площадки сразу.\n"
+            "Или одну: /link zhannur_threads (площадки: " + ", ".join(stats.PLATFORMS) + ").")
         return
+    person, platform = stats.split_source(name)
+    names = [name] if platform else [f"{person}_{p}" for p in stats.PLATFORMS]
+    links = "\n".join(f"{n.rpartition('_')[2]}: https://t.me/{context.bot.username}?start=src_{n}"
+                      for n in names)
     await update.message.reply_text(
-        f"Ссылка для партнёра «{name}»:\nhttps://t.me/{context.bot.username}?start=src_{name}\n\n"
-        "Сколько людей пришло по ней и что они делали в боте — смотри в /stats, блок «🔗 Партнёрские ссылки».")
+        f"Ссылки для «{person}»:\n{links}\n\n"
+        "Каждую ссылку ставь только на свою площадку. Сколько людей пришло по каждой и что они делали в боте — "
+        "в /stats, блок «🔗 Кто сколько привёл».", disable_web_page_preview=True)
+
+
+async def weekly_report(context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Каждый понедельник в 10:00 по Алматы — отчёт администраторам: новые люди, ссылки команды, возвраты."""
+    since = (datetime.now(stats.ALMATY_TZ) - timedelta(days=7)).strftime("%Y-%m-%d")
+    text = ("📊 Итоги недели Pro4U\n\nПо ссылкам за 7 дней:\n" + stats.people_summary(since)
+            + "\n\nЗа всё время:\n" + stats.people_summary() + "\n\n" + stats.retention())
+    for admin_id in config.ADMIN_IDS:
+        try:
+            await context.bot.send_message(admin_id, text)
+        except TelegramError:
+            pass
 
 
 # ---------------------------------------------------------------------------
@@ -898,6 +916,8 @@ def main() -> None:
                 config.CLAUDE_MODEL, config.DAILY_AI_LIMIT)
     # Напоминания о сроках ЕНТ и просьбы внести баллы — каждый день в 10:00 по Алматы.
     app.job_queue.run_daily(profile_bot.daily_reminders, time=time(10, 0, tzinfo=timezone(timedelta(hours=5))))
+    # Каждый понедельник в 10:00 по Алматы — итоги недели администраторам.
+    app.job_queue.run_daily(weekly_report, time=time(10, 0, tzinfo=timezone(timedelta(hours=5))), days=(0,))
     # Через минуту после запуска — новое меню всем, у кого оно устарело.
     app.job_queue.run_once(announce_update, 60)
     app.run_polling(allowed_updates=Update.ALL_TYPES)

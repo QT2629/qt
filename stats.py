@@ -159,6 +159,43 @@ def retention() -> str:
     return "\n".join(lines)
 
 
+PLATFORMS = ("tiktok", "insta", "telegram", "whatsapp", "threads")
+
+
+def split_source(name: str) -> tuple[str, str]:
+    """«zhannur_threads» → («zhannur», «threads»). Если площадка в имени не распознана — («имя», «»)."""
+    person, _, last = name.rpartition("_")
+    if person and last in PLATFORMS:
+        return person, last
+    return name, ""
+
+
+def people_summary(since_day: str | None = None) -> str:
+    """Сколько людей привёл каждый человек из команды и с каких площадок.
+    since_day («ГГГГ-ММ-ДД») — считать только тех, кто впервые пришёл с этого дня."""
+    with _connect() as conn:
+        joined = conn.execute("SELECT user, detail, MIN(substr(ts, 1, 10)) FROM events WHERE kind = 'src_join' "
+                              "GROUP BY user").fetchall()
+        did = {}
+        for user, kind in conn.execute("SELECT DISTINCT user, kind FROM events WHERE kind IN ('quiz_done','ai','chance')"):
+            did.setdefault(user, set()).add(kind)
+    by_person: dict[str, dict[str, list[str]]] = {}
+    for user, name, day in joined:
+        if since_day and day < since_day:
+            continue
+        person, platform = split_source(name)
+        by_person.setdefault(person, {}).setdefault(platform or "другая ссылка", []).append(user)
+    if not by_person:
+        return "Пока никто не пришёл по ссылкам."
+    lines = []
+    for person, plats in sorted(by_person.items(), key=lambda x: -sum(len(u) for u in x[1].values())):
+        users = [u for us in plats.values() for u in us]
+        quiz = sum(1 for u in users if "quiz_done" in did.get(u, ()))
+        parts = " · ".join(f"{pl} — {len(us)}" for pl, us in sorted(plats.items(), key=lambda x: -len(x[1])))
+        lines.append(f"👤 {person.capitalize()}: {len(users)} чел. (прошли анкету: {quiz})\n   {parts}")
+    return "\n".join(lines)
+
+
 def sources_report() -> str:
     """Откуда пришли люди по партнёрским ссылкам (/link) и насколько они «качественные»:
     что делали в боте и возвращались ли. Для сравнения — те, кто пришёл без ссылки."""
@@ -198,8 +235,8 @@ def sources_report() -> str:
         ]
 
     partner = sorted(((name, users) for name, users in groups.items() if name), key=lambda x: -len(x[1]))
-    lines = ["🔗 Партнёрские ссылки: сколько людей пришло и что они делали в боте",
-             "(проценты — доля от пришедших по этой ссылке)"]
+    lines = ["🔗 Кто сколько привёл (по людям и площадкам)", people_summary(), "",
+             "Подробно по каждой ссылке — что делали в боте (проценты — доля от пришедших по ссылке):"]
     for name, users in partner[:12]:
         lines += block(name, users)
     if len(partner) > 12:
