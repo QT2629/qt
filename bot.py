@@ -35,6 +35,7 @@ from telegram.ext import (
 
 import catalog
 import config
+import creative
 import formatting
 import grants
 import knowledge
@@ -387,6 +388,11 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     await update.message.reply_text(t(lang, "about"), reply_markup=start_keyboard(lang))
 
 
+async def creative_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """/creative — творческие экзамены: что сдавать, баллы, сроки, документы."""
+    await creative.command(update, context, await ensure_fresh(update, context))
+
+
 async def progress_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """/progress — статистика пробных тестов."""
     await profile_bot.show_mocks(context, update.effective_chat.id, get_lang(context))
@@ -402,6 +408,7 @@ async def set_commands(app: Application) -> None:
         BotCommand("help", "Что умеет бот"),
         BotCommand("profile", "Моя страница: цель, сроки ЕНТ, напоминания"),
         BotCommand("progress", "Мои пробники: баллы и график роста"),
+        BotCommand("creative", "Творческие экзамены: что сдавать, сроки, баллы"),
         BotCommand("lang", "Сменить язык"),
         BotCommand("reset", "Начать разговор заново"),
         BotCommand("delete_me", "Удалить мои данные"),
@@ -510,6 +517,10 @@ async def _on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 
     if data in ("fb:up", "fb:down"):  # 👍/👎 под старыми ответами — оценки больше не собираем
         await query.edit_message_reply_markup(reply_markup=None)
+        return
+
+    if data.startswith("cr:"):  # творческие экзамены
+        await creative.on_callback(update, context, lang)
         return
 
     if data.startswith("pf:"):  # личная страница
@@ -899,6 +910,7 @@ def main() -> None:
     app.add_handler(CommandHandler("profile", profile_command))
     app.add_handler(CommandHandler("delete_me", delete_me_command))
     app.add_handler(CommandHandler("progress", progress_command))
+    app.add_handler(CommandHandler("creative", creative_command))
     app.add_handler(CommandHandler("help", help_command))
     app.add_handler(CommandHandler("credits", credits_command))
     app.add_handler(CommandHandler("photos", photos_command))
