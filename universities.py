@@ -460,12 +460,19 @@ ABBR = {
 EXTRA_ALIASES = {
     "u25": ["национальный университет спорта", "национальная академия спорта", "university of sports"],
     "u24": ["тынышбаев", "alt university"], "u108": ["маргулан"], "u114": ["муртаз", "шерхан", "международный таразский"],
-    "u119": ["ташенов"], "u129": ["евразийская юридическая академия"], "u140": ["жанибеков"], "u70": ["байсеитов"],
+    "u119": ["ташенов", "ташенев"], "u129": ["евразийская юридическая академия"], "u140": ["жанибеков"], "u70": ["байсеитов"],
     "u88": ["yessenov"], "u85": ["карагандинский национальный исследовательский"],
 }
 for _slug, _extra in EXTRA_ALIASES.items():
     if _slug in UNIS:
         UNIS[_slug]["aliases"] = list(dict.fromkeys(UNIS[_slug]["aliases"] + _extra))
+# Вузы с подтверждённым переименованием: показываем новое название, старое остаётся для поиска.
+# Университет «Сырдария» с 2022–2023 учебного года — Университет имени Ж.А. Ташенева (по сайту вуза tashenev.edu.kz).
+NEW_NAMES = {"u119": ("Университет имени Ж. Ташенева", "Университет имени Жумабека Ахметулы Ташенева", ["сырдария", "syrdariya"])}
+for _slug, (_short, _full, _old) in NEW_NAMES.items():
+    if _slug in UNIS:
+        UNIS[_slug].update(short=_short, name_ru=_full, name_kz=_full)
+        UNIS[_slug]["aliases"] = list(dict.fromkeys(UNIS[_slug]["aliases"] + [_short.lower(), _full.lower()] + _old))
 # Сокращения, похожие на обычные слова («карту», «тару», «ага»), засчитываем, только если написаны заглавными.
 _ABBR_WORDS = {"карту", "кару", "тару", "ару", "ага", "касу", "кату", "мок", "мус", "алт", "ату", "ету", "жу", "кну", "умб",
                "ппу", "пгу", "кру", "цка", "гта", "коу", "рии", "риу", "ску", "вку", "зку", "удн", "муа", "аму", "ену", "сду",
@@ -1201,6 +1208,25 @@ def quota_chances(group: str, score: int, lang: str, quotas: list[str], city: st
 GRANT_MARGIN = 10  # запас в баллах над порогом прошлого года, с которого ставим уверенное ✅
 
 
+PED_GROUPS = {f"B{n:03d}" for n in range(1, 21)}  # педагогические группы B001–B020
+
+
+def ped_line(gop: str, score: int, lang: str) -> str:
+    """Для педагогической группы — строка про целевой госзаказ на педагогов (у него проходной балл ниже общего конкурса)."""
+    code = gop.split()[0]
+    if code not in PED_GROUPS:
+        return ""
+    ped = grants.country(code).get("2026", {}).get("ped")
+    if not ped or ped[1] is None:
+        return ""
+    n, low = ped[0], ped[1]
+    if lang == "kz":
+        tail = "сенің балың жетеді" if score >= low else f"{low - score} балл жетпейді"
+        return f"   🎓 бірақ педагогтерге арналған мақсатты мемлекеттік тапсырыс бар: {low} бастап ({n} грант) — {tail}"
+    tail = "по цифрам 2026 твой балл подходит" if score >= low else f"не хватает {low - score}"
+    return f"   🎓 но есть целевой госзаказ на педагогов: от {low} ({n} {grants.word(n)}) — {tail}"
+
+
 def grant_chances(group: str, score: int, lang: str, home: str | None = None, quotas: list[str] | None = None,
                   city: str | None = None) -> str:
     """Ответ калькулятора «Шанс на грант» (по данным 2026 года, общий конкурс; если указаны квоты — и по ним)."""
@@ -1211,6 +1237,7 @@ def grant_chances(group: str, score: int, lang: str, home: str | None = None, qu
              else "По итогам грантов 2026 года (общий конкурс, без квот):\n"]
     yes, no = [], []
     thin = False
+    ped_shown = False
     for gop, st in stats:
         (yes if score >= st["kz_min"] else no).append((gop, st))
     if yes:
@@ -1250,10 +1277,20 @@ def grant_chances(group: str, score: int, lang: str, home: str | None = None, qu
             gap = st["kz_min"] - score
             lines.append(f"• {b(gop)} — " + (f"{st['kz_min']} бастап ({gap} балл жетпейді)" if kz
                                           else f"от {st['kz_min']} (не хватает {gap})"))
+            if hint := ped_line(gop, score, lang):
+                lines.append(hint)
+                ped_shown = True
         goal_gop, goal_st = min(no, key=lambda x: x[1]["kz_min"])
         goal = goal_st["kz_min"] - score
         lines.append("\n🎯 " + (f"Жақын мақсат: {b(goal_gop)} — тағы +{goal} балл" if kz
                                 else f"Ближайшая цель: {b(goal_gop)} — ещё +{goal} {balls_word(goal)}. Добирай на профильных предметах: там больше всего баллов."))
+    if ped_shown:
+        lines.append("\n🎓 " + ("Педагогтерге арналған мақсатты тапсырыс — бөлек конкурс. Шарттарын қабылдау комиссиясынан нақтыла: "
+                                "педагогикалық мамандықтарға ҰБТ-дан кемінде 75 балл, арнайы емтихан («рұқсат» немесе «рұқсат етілмейді») "
+                                "және мемлекеттік грант бойынша кемінде 3 жыл жұмыс өтеу керек." if kz
+                                else "Целевой госзаказ на педагогов — отдельный конкурс. Условия уточни в приёмной комиссии: "
+                                     "на педагогические специальности нужно не меньше 75 баллов на ЕНТ, специальный экзамен "
+                                     "(«допуск» или «недопуск») и отработка не меньше 3 лет по госгранту."))
     if not stats:
         lines.append("Бұл пәндер бойынша грант деректері жоқ." if kz else "По этим предметам данных о грантах нет.")
     lines += quota_chances(group, score, lang, quotas or [], city)
