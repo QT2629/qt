@@ -315,6 +315,8 @@ def price_text(p: dict, lang: str) -> str:
         return money(p["price_kzt"]) + (" жылына" if lang == "kz" else " в год")
     if p.get("price_other"):
         return p["price_other"] + (" (шамамен, ЖОО сайтынан нақтыла)" if lang == "kz" else " (ориентировочно, уточни на сайте вуза)")
+    if p.get("price_hidden"):
+        return "бағасын ЖОО сайтынан нақтыла" if lang == "kz" else "стоимость уточни на сайте вуза"
     return "бағасы нақтыланады" if lang == "kz" else "цена уточняется"
 
 
@@ -480,6 +482,46 @@ for _slug, _url in WEBSITE_FIXES.items():
         UNIS[_slug]["website"] = _url
         if isinstance(UNIS[_slug].get("admissions"), dict):
             UNIS[_slug]["admissions"]["url"] = _url
+
+# Проверенные официальные ссылки и цены с сайтов вузов (knowledge/catalog/official_links.json, собирается проверкой
+# каждого вуза по его официальному сайту). Цены берём только с сайта вуза: если для проверенного вуза цену
+# подтвердить не удалось, цифру не показываем — бот пишет «уточни на сайте вуза».
+OFFICIAL_LINKS_PATH = Path(__file__).parent / "knowledge" / "catalog" / "official_links.json"
+
+
+def _apply_official_links() -> None:
+    if not OFFICIAL_LINKS_PATH.exists():
+        return
+    data = json.loads(OFFICIAL_LINKS_PATH.read_text(encoding="utf-8"))
+    for slug, v in data.get("vuz", {}).items():
+        u = UNIS.get(slug)
+        if not u:
+            continue
+        if v.get("site"):
+            u["website"] = v["site"]
+        adm = u.setdefault("admissions", {})
+        if v.get("admissions") or v.get("site"):
+            adm["url"] = v.get("admissions") or v["site"]
+        if v.get("programs_list"):
+            u["programs_url"] = v["programs_list"]
+        if v.get("prices"):
+            u["prices_url"] = v["prices"]
+        if v.get("phones"):
+            adm["phones"] = v["phones"]
+        if v.get("email"):
+            adm["email"] = v["email"]
+        hide_prices = bool(v.get("price_audited")) and bool(u.get("catalog"))
+        for code, prog in u["programs"].items():
+            o = data.get("programs", {}).get(f"{slug}:{code}") or {}
+            if o.get("url"):
+                prog["url"] = o["url"]
+            if hide_prices:
+                prog["price_kzt"] = o.get("price_kzt")
+                prog.pop("price_other", None)
+                prog["price_hidden"] = not o.get("price_kzt")
+
+
+_apply_official_links()
 
 # Вузы с подтверждённым переименованием: показываем новое название, старое остаётся для поиска.
 # Университет «Сырдария» с 2022–2023 учебного года — Университет имени Ж.А. Ташенева (по сайту вуза tashenev.edu.kz).
