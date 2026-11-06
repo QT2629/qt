@@ -1,6 +1,19 @@
 {
  "checked_on": "2026-11-06",
  "vuz": {
+  "u100": {
+   "site": "https://metu.edu.kz",
+   "admissions": "https://metu.edu.kz/?page=postupaiushim",
+   "programs_list": "https://metu.edu.kz/?page=undergraduate",
+   "prices": "https://metu.edu.kz/?page=stoimoist_obuchenia",
+   "phones": [
+    "+7 775 007 50 55",
+    "+7 727 3000 707",
+    "+7 727 3000 777"
+   ],
+   "email": "info@metu.kz",
+   "price_audited": true
+  },
   "u101": {
    "site": "https://ayu.edu.kz",
    "admissions": "https://talapker.ayu.edu.kz/",
@@ -12,11 +25,70 @@
    ],
    "price_audited": true
   },
+  "u102": {
+   "site": "https://mtgu.edu.kz",
+   "admissions": "https://mtgu.edu.kz/ru/subdivision/priemnaia-komissiya",
+   "programs_list": "https://mtgu.edu.kz/ru/applicants/bakalavriat",
+   "prices": null,
+   "phones": [
+    "8-727-376-74-78",
+    "8(727) 381-43-34",
+    "+7-705-100-0966"
+   ],
+   "price_audited": true
+  },
   "u104": {
    "site": "https://aiu.kz",
    "admissions": "https://aiu.kz/programs/bachelor",
    "programs_list": "https://aiu.kz/programs/bachelor",
    "prices": "https://aiu.kz/programs/bachelor",
+   "price_audited": true
+  },
+  "u105": {
+   "site": "https://iitu.edu.kz",
+   "admissions": "https://iitu.edu.kz/ru/applicants/admissions/",
+   "programs_list": "https://iitu.edu.kz/ru/programs/",
+   "prices": "https://iitu.edu.kz/ru/applicants/bachelor/",
+   "phones": [
+    "+7 (727) 320-00-00",
+    "+7 (707) 343-35-35",
+    "+7 (727) 330-85-61"
+   ],
+   "price_audited": true
+  },
+  "u108": {
+   "site": "https://ppu.edu.kz",
+   "admissions": "https://ppu.edu.kz/ru/priemnaya-komissiya/",
+   "programs_list": "https://ppu.edu.kz/ru/bakalavriatnewru",
+   "prices": "https://ppu.edu.kz/ru/stoimost-obuceniya",
+   "phones": [
+    "8 (7182) 65-16-12",
+    "8 (7182) 55-27-98",
+    "8 (7182) 65-16-02"
+   ],
+   "email": "kense@ppu.edu.kz",
+   "price_audited": true
+  },
+  "u11": {
+   "site": "https://innotech.edu.kz",
+   "admissions": "https://innotech.edu.kz/admissions/how-to-apply",
+   "programs_list": "https://innotech.edu.kz/programs",
+   "prices": "https://innotech.edu.kz/admissions/tuition",
+   "phones": [
+    "+7 (777) 509-55-39"
+   ],
+   "email": "admissions@innotech.edu.kz",
+   "price_audited": true
+  },
+  "u111": {
+   "site": "https://rudny.edu.kz",
+   "admissions": "https://rudny.edu.kz/admission-committee/",
+   "programs_list": "https://rudny.edu.kz/programs/",
+   "prices": "https://rudny.edu.kz/stoimost-obucheniya/",
+   "phones": [
+    "+7 (71431) 50703",
+    "+7 (71431) 92568"
+   ],
    "price_audited": true
   },
   "u114": {
@@ -39,12 +111,55 @@
    "prices": null,
    "price_audited": true
   },
+  "u116": {
+   "site": "https://psu.kz",
+   "admissions": "https://psu.kz/index.php?option=com_content&view=article&id=4700&Itemid=621&lang=kaz",
+   "programs_list": "https://psu.kz/index.php?option=com_katkurs&lang=kaz",
+   "prices": null,
+   "phones": [
+    "8-705-451-0111"
+   ],
+   "price_audited": true
+  },
   "u119": {
    "site": "https://tashenev.edu.kz",
    "admissions": "https://tashenev.edu.kz/ru/enrolle",
    "programs_list": "https://tashenev.edu.kz/ru/bachelor",
    "prices": "https://tashenev.edu.kz/ru/media/item/1226",
    "email": "info@tashenev.edu.kz",
+   "price_audited": true
+  },
+  "u120": {
+   "site": "https://turan.edu.kz",
+   "admissions": "https://turan.edu.kz/ru/how-to-enroll-in-turan",
+   "programs_list": "https://turan.edu.kz/ru/academic-degree/baccalaureate",
+   "prices": "https://turan.edu.kz/ru/tuition-fee",
+   "phones": [
+    "+7 727 260 40 00"
+   ],
+   "price_audited": true
+  },
+  "u121": {
+   "site": "https://miras.app",
+   "admissions": "https://miras.app/ru/pages/priemnaia-komissiia",
+   "programs_list": "https://miras.app/ru/pages/programmy-obuceniia",
+   "prices": "https://miras.app/ru/pages/stoimost-obuceniia",
+   "phones": [
+    "+7 (775) 007-30-00"
+   ],
+   "email": "info@miras.edu.kz",
+   "price_audited": true
+  },
+  "u122": {
+   "site": "https://tau-edu.kz",
+   "admissions": "https://tau-edu.kz/content/kontakty-priemnoj-komissii",
+   "programs_list": "https://tau-edu.kz/programs",
+   "prices": "https://tau-edu.kz/content/stoimost-obucenia",
+   "phones": [
+    "+7 702 912 39 97",
+    "+7 700 139 5110"
+   ],
+   "email": "info@tau-edu.kz",
    "price_audited": true
   },
   "u123": {
@@ -69,6 +184,19 @@
    "email": "info@sdu.edu.kz",
    "price_audited": true
   },
+  "u125": {
+   "site": "https://shakarim.university",
+   "admissions": "https://shakarim.university/ru/page/qabyldau-komissiiasymen-bailanystary",
+   "programs_list": "https://shakarim.university/ru/page/bakalavriat",
+   "prices": "https://shakarim.university/ru/page/preiskurant",
+   "phones": [
+    "+7 (705) 552-53-98",
+    "+7 747 941 5211",
+    "+7 (7222) 31-31-75"
+   ],
+   "email": "kense@shakarim.edu.kz",
+   "price_audited": true
+  },
   "mnu": {
    "site": "https://mnu.kz",
    "admissions": "https://admission.mnu.kz/programs/bachelor",
@@ -78,6 +206,29 @@
     "+7 (7172) 70 30 30",
     "+7 (700) 170 30 30"
    ],
+   "price_audited": true
+  },
+  "u13": {
+   "site": "https://ku.edu.kz",
+   "admissions": "https://ku.edu.kz/page/view?id=1588",
+   "programs_list": "https://ku.edu.kz/page/view?id=39",
+   "prices": "https://ku.edu.kz/page/view?id=1588",
+   "phones": [
+    "+7(7152)49-33-42"
+   ],
+   "email": "mail@ku.edu.kz",
+   "price_audited": true
+  },
+  "u130": {
+   "site": "https://uib.edu.kz",
+   "admissions": "https://uib.edu.kz/bachelor/",
+   "programs_list": "https://uib.edu.kz/bachelor/",
+   "prices": "https://uib.edu.kz/oplata/",
+   "phones": [
+    "+7 (727) 259-80-00",
+    "+7 (771) 949-99-11"
+   ],
+   "email": "uib@uib.kz",
    "price_audited": true
   },
   "narxoz": {
@@ -103,6 +254,17 @@
    "email": "info@caiu.edu.kz",
    "price_audited": true
   },
+  "u137": {
+   "site": "https://c-k-a.kz",
+   "admissions": "https://c-k-a.kz/applicant-2021/",
+   "programs_list": "https://c-k-a.kz/applicant-2021/bakalavriat1.php",
+   "prices": null,
+   "phones": [
+    "+7 (7212) 47-80-07"
+   ],
+   "email": "cka_kz@mail.ru",
+   "price_audited": true
+  },
   "u138": {
    "site": "https://univershu.edu.kz",
    "admissions": "https://univershu.edu.kz/ru/pages/2017-10-30-13-32-47",
@@ -112,6 +274,25 @@
     "8(7252) 55-58-61"
    ],
    "email": "shu2050@mail.ru",
+   "price_audited": true
+  },
+  "u139": {
+   "site": "https://skma.edu.kz",
+   "admissions": "https://skma.edu.kz/ru/pages/dlya-postupayuschih-bakalavriat",
+   "programs_list": "https://skma.edu.kz/ru/pages/dlya-postupayuschih-bakalavriat",
+   "prices": null,
+   "phones": [
+    "8 7252 57 35 35",
+    "8 7252 39-57-57"
+   ],
+   "email": "info@skma.kz",
+   "price_audited": true
+  },
+  "u14": {
+   "site": "https://farabi.university",
+   "admissions": "https://welcome.kaznu.kz/en/",
+   "programs_list": null,
+   "prices": "https://welcome.kaznu.kz/en/27233/page",
    "price_audited": true
   },
   "u140": {
@@ -133,6 +314,99 @@
    "programs_list": "https://auezov.edu.kz/index.php/rus/академический-процесс/образовательные-программы/перечень/бакалавриат",
    "prices": null,
    "email": "canselyarya@auezov.edu.kz",
+   "price_audited": true
+  },
+  "u15": {
+   "site": "https://qairu.edu.kz",
+   "admissions": "https://qairu.edu.kz/ru/admissions/bachelor",
+   "programs_list": "https://qairu.edu.kz/ru/admissions/bachelor",
+   "prices": "https://qairu.edu.kz/ru/admissions/bachelor",
+   "phones": [
+    "8 (700) 300 33 17"
+   ],
+   "email": "info@qairu.edu.kz",
+   "price_audited": true
+  },
+  "u16": {
+   "site": "https://narxoz.kz",
+   "admissions": null,
+   "programs_list": "https://narxoz.kz/dual-diploma/queens-university-belfast",
+   "prices": "https://narxoz.kz/dual-diploma/queens-university-belfast",
+   "phones": [
+    "+7 747 364 88 99",
+    "+7 (727) 377 11 11"
+   ],
+   "email": "admission@narxoz.kz",
+   "price_audited": true
+  },
+  "u17": {
+   "site": "https://kaznaru.edu.kz",
+   "admissions": null,
+   "programs_list": "https://www.kaznaru.edu.kz/en/tiiimsh",
+   "prices": null,
+   "phones": [
+    "+7(727) 262 11 08",
+    "+7(747) 264-08-54",
+    "+7(727) 264-06-13"
+   ],
+   "email": "info@kaznaru.edu.kz",
+   "price_audited": true
+  },
+  "u18": {
+   "site": "https://astanait.edu.kz",
+   "admissions": "https://astanait.edu.kz/en/bachelor",
+   "programs_list": "https://astanait.edu.kz/en/bachelor",
+   "prices": "https://astanait.edu.kz/en/bachelor",
+   "phones": [
+    "+7 (7172) 645-728",
+    "+7 (7172) 64-57-10"
+   ],
+   "price_audited": true
+  },
+  "u19": {
+   "site": "https://abaiuniversity.edu.kz",
+   "admissions": null,
+   "programs_list": "https://abai.university/bakalavriat",
+   "prices": "https://abai.university/ru/faculties/filial-universiteta-lotaringii",
+   "phones": [
+    "8 (727) 390 60 05"
+   ],
+   "price_audited": true
+  },
+  "u20": {
+   "site": "https://bolashaq.edu.kz",
+   "admissions": "https://bolashaq.edu.kz/abiturient2/",
+   "programs_list": "https://bolashaq.edu.kz/abiturient2/specialnosti-akademii/",
+   "prices": null,
+   "price_audited": true
+  },
+  "u21": {
+   "site": "https://q-university.edu.kz",
+   "admissions": "https://q-university.edu.kz/ru/admissions",
+   "programs_list": "https://q-university.edu.kz/ru/schools/bachelor",
+   "prices": "https://q-university.edu.kz/uploads/tuition-2026-2027.pdf",
+   "phones": [
+    "+7 727 338 3815"
+   ],
+   "price_audited": true
+  },
+  "u23": {
+   "site": "https://caa.edu.kz",
+   "admissions": "https://caa.edu.kz/virtualnaya-priemnaya-komissiya-174",
+   "programs_list": "https://caa.edu.kz/obrazovatelnye-programmy-na-bakalavriat",
+   "prices": "https://caa.edu.kz/stoimost-obucheniya-191",
+   "email": "admissions@agakaz.kz",
+   "price_audited": true
+  },
+  "u24": {
+   "site": "https://alt.edu.kz",
+   "admissions": "https://alt.edu.kz/ru/postupayushhim/",
+   "programs_list": "https://alt.edu.kz/oqugha-tuesushilerge/bakalavriat/",
+   "prices": "https://alt.edu.kz/oqugha-tuesushilerge/bakalavriat/",
+   "phones": [
+    "+7 707 888 1931"
+   ],
+   "email": "info@alt.edu.kz",
    "price_audited": true
   },
   "u28": {
@@ -171,11 +445,44 @@
    "email": "info@atu.edu.kz",
    "price_audited": true
   },
+  "u31": {
+   "site": "https://energo.university",
+   "admissions": "https://energo.university/admission-committee/",
+   "programs_list": "https://energo.university/ru/education_programs/?degree_type=bachelor",
+   "prices": "https://energo.university/share-pages/9",
+   "phones": [
+    "+7 (727) 323-11-75"
+   ],
+   "price_audited": true
+  },
+  "u32": {
+   "site": "https://almaty.mephi.ru",
+   "admissions": "https://almaty.mephi.ru/node/18434",
+   "programs_list": "https://almaty.mephi.ru/node/18439",
+   "prices": "https://almaty.mephi.ru/sveden/paid_edu",
+   "phones": [
+    "+7 495 788-56-99",
+    "+7 495 785-55-25"
+   ],
+   "email": "afinfo@mephi.ru",
+   "price_audited": true
+  },
   "almau": {
    "site": "https://almau.edu.kz",
    "admissions": "https://almau.edu.kz/ru/postupajushhim/",
    "programs_list": "https://almau.edu.kz/podborshhik-programm/",
    "prices": "https://almau.edu.kz/wp-content/uploads/2025/07/Tuition-fee-2025-2026.pdf",
+   "price_audited": true
+  },
+  "u34": {
+   "site": "https://au.edu.kz",
+   "admissions": null,
+   "programs_list": "https://au.edu.kz/index.php/kk/talapkerge/b-l-vri-t/bilim-beru-bagdarlamalary",
+   "prices": "https://au.edu.kz/index.php/kk/talapkerge/ku-kysy",
+   "phones": [
+    "8-71430-7-24-88"
+   ],
+   "email": "info@au.edu.kz",
    "price_audited": true
   },
   "u36": {
@@ -185,11 +492,81 @@
    "prices": "https://atyrau.edu.kz/ru/Information/Info/702?name=University",
    "price_audited": true
   },
+  "u37": {
+   "site": "https://aogu.edu.kz",
+   "admissions": "https://aogu.edu.kz/coming/sc/",
+   "programs_list": "https://aogu.edu.kz/faculties/coming/bakalavriat/",
+   "prices": "https://aogu.edu.kz/coming/sc/2025-2026.pdf",
+   "phones": [
+    "8 701 344 35 47",
+    "8 (7122) 76 60 30",
+    "8 (7122) 76 60 33"
+   ],
+   "email": "aogu_priem@aogu.edu.kz",
+   "price_audited": true
+  },
+  "u38": {
+   "site": "https://bu.edu.kz",
+   "admissions": "https://bu.edu.kz/study-here",
+   "programs_list": "https://bu.edu.kz/study-here#bachelor-programs",
+   "prices": null,
+   "phones": [
+    "+7 (7132) 97-40-81",
+    "+7 (707) 462-38-29"
+   ],
+   "email": "info@bu.edu.kz",
+   "price_audited": true
+  },
+  "u39": {
+   "site": "https://ektu.kz",
+   "admissions": "https://ektu.kz/matriculant.aspx?lang=ru",
+   "programs_list": "https://ektu.kz/educationalprograms.aspx?lang=ru",
+   "prices": "https://ektu.kz/enrollee/price.aspx?lang=ru",
+   "phones": [
+    "8 (7232) 540-889",
+    "8 (7232) 40-13-38"
+   ],
+   "price_audited": true
+  },
+  "u4": {
+   "site": "https://satbayev.university",
+   "admissions": "https://satbayev.university/en/undergraduate",
+   "programs_list": "https://satbayev.university/en/undergraduate",
+   "prices": "https://official.satbayev.university/en/dlya-studentov/stoimost-obucheniya",
+   "phones": [
+    "+7 (700) 219 47 29",
+    "+7 (727) 320 41 12",
+    "+7 (727) 292 77 79"
+   ],
+   "email": "priem@satbayev.111",
+   "price_audited": true
+  },
   "u40": {
    "site": "https://vku.edu.kz",
    "admissions": "https://vku.edu.kz/bachelor-ru/",
    "programs_list": "https://vku.edu.kz/educational-activity/op-bachelor-ru/",
    "prices": "https://vku.edu.kz/wp-content/uploads/2026/06/%D0%BF%D1%80%D0%B5%D0%B9%D1%81%D0%BA%D1%83%D1%80%D0%B0%D0%BD%D1%82-2026-2027-%D0%A0%D0%A3%D0%A1.pdf",
+   "price_audited": true
+  },
+  "u41": {
+   "site": "https://gta.edu.kz",
+   "admissions": null,
+   "programs_list": "http://gta.edu.kz/entrant/bakalavr.php",
+   "prices": null,
+   "phones": [
+    "8 (7162) 26-49-49",
+    "8 (7162) 26-46-36",
+    "8 (705) 745-27-72"
+   ],
+   "email": "info@gta.kz",
+   "price_audited": true
+  },
+  "u43": {
+   "site": "https://egi.edu.kz",
+   "admissions": "https://egi.edu.kz/ru_ru/abit-call-center-2/",
+   "programs_list": "https://egi.edu.kz/ru_ru/education/",
+   "prices": "https://egi.edu.kz/students/students-credits-2/",
+   "email": "eagi@list.ru",
    "price_audited": true
   },
   "enu": {
@@ -198,6 +575,44 @@
    "programs_list": "https://enu.kz/kz/page/applicants/bachelor",
    "prices": "https://enu.kz/kz/page/applicants/tuition-fees",
    "email": "enu@enu.kz",
+   "price_audited": true
+  },
+  "u47": {
+   "site": "https://eiti.edu.kz",
+   "admissions": "https://eiti.edu.kz/абитуриентам",
+   "programs_list": "https://eiti.edu.kz/абитуриентам",
+   "prices": "https://eiti.edu.kz/студентам/оплата-за-обучение",
+   "phones": [
+    "+7 771 296 18 32",
+    "+7 702 995 72 61",
+    "8 (7187) 76-12-86"
+   ],
+   "email": "eitiekb@eiti.edu.kz",
+   "price_audited": true
+  },
+  "u48": {
+   "site": "https://zhezu.edu.kz",
+   "admissions": "https://zhezu.edu.kz/ru/admission",
+   "programs_list": "https://zhezu.edu.kz/ru/academics",
+   "prices": null,
+   "price_audited": true
+  },
+  "u49": {
+   "site": "https://zhetysu.edu.kz",
+   "admissions": "https://zhetysu.edu.kz/reception-and-enrollment/",
+   "programs_list": "https://zhetysu.edu.kz/%d0%b1%d1%96%d0%bb%d1%96%d0%bc-%d0%b1%d0%b5%d1%80%d1%83-%d0%b1%d0%b0%d2%93%d0%b4%d0%b0%d1%80%d0%bb%d0%b0%d0%bc%d0%b0%d0%bb%d0%b0%d1%80%d1%8b-2026/",
+   "prices": "https://zhetysu.edu.kz/tuition-fees/",
+   "phones": [
+    "+7 (728) 222 25 42"
+   ],
+   "email": "info@zhetysu.edu.kz",
+   "price_audited": true
+  },
+  "u50": {
+   "site": "https://wkatu.edu.kz",
+   "admissions": "https://wkatu.edu.kz/kabyldau-komissiyasy/",
+   "programs_list": "https://wkatu.edu.kz/ru/obrazovatelnye-programmy-novyj/",
+   "prices": null,
    "price_audited": true
   },
   "u51": {
@@ -222,6 +637,77 @@
     "+7 (7132) 54-48-15",
     "+7 (701) 765-75-18"
    ],
+   "price_audited": true
+  },
+  "u53": {
+   "site": "https://wku.edu.kz",
+   "admissions": "https://a.wku.edu.kz/ru/",
+   "programs_list": "https://wku.edu.kz/ru/oku/bakalavr2/prakt-k-2",
+   "prices": null,
+   "phones": [
+    "+7 (7112) 50-47-03",
+    "+7 (7112) 51-27-39",
+    "+7 (7112) 51-26-32"
+   ],
+   "email": "priem_zku@mail.ru",
+   "price_audited": true
+  },
+  "u54": {
+   "site": "https://ineu.edu.kz",
+   "admissions": "https://ineu.edu.kz/kz/priemnaya-komissiya/2109-kontakty.html",
+   "programs_list": "https://ineu.edu.kz/ru/ob-universitete/2290-obrazovatelnye-programmy.html",
+   "prices": "https://ineu.edu.kz/kz/bakalavriat/1518-bakalavriat.html",
+   "phones": [
+    "8 (7182) 67-37-37",
+    "8 (700) 956-98-91"
+   ],
+   "email": "ineuadmission@ineu.edu.kz",
+   "price_audited": true
+  },
+  "u55": {
+   "site": "https://kazadi.edu.kz",
+   "admissions": "https://kazadi.edu.kz/ru/postupayushchim/priemnaya-komissiya",
+   "programs_list": "https://kazadi.edu.kz/ru/postupayushchim/bakalavriat",
+   "prices": "https://kazadi.edu.kz/ru/postupayushchim/bakalavriat",
+   "phones": [
+    "+7 (727) 276-83-19",
+    "+7 702 970 33 22"
+   ],
+   "email": "kazadi@kazadi.kz",
+   "price_audited": true
+  },
+  "u58": {
+   "site": "https://kaznai.kz",
+   "admissions": "https://kaznai.kz/ru/talapkerlerge/",
+   "programs_list": "https://kaznai.kz/ru/bilim-beru-bagdarlamalary-2/",
+   "prices": "https://kaznai.kz/ru/o-u-o-ysy-bojynsha-a-parat-2026-2/",
+   "email": "kaznai@art-oner.kz",
+   "price_audited": true
+  },
+  "u59": {
+   "site": "https://balletacademy.edu.kz",
+   "admissions": "https://balletacademy.edu.kz/priem",
+   "programs_list": "https://balletacademy.edu.kz/degree/bakalavriat",
+   "prices": null,
+   "email": "info@balletacademy.kz",
+   "price_audited": true
+  },
+  "u6": {
+   "site": "https://dmuk.edu.kz",
+   "admissions": "https://dmuk.edu.kz/prospectiveStudents/apply",
+   "programs_list": "https://dmuk.edu.kz/study/undergraduateStudies",
+   "prices": "https://dmuk.edu.kz/prospectiveStudents/tuition",
+   "price_audited": true
+  },
+  "u60": {
+   "site": "https://conservatoire.edu.kz",
+   "admissions": "https://conservatoire.edu.kz/bachelor.html",
+   "programs_list": "https://conservatoire.edu.kz/educational-programs.html",
+   "prices": null,
+   "phones": [
+    "+7 (727) 261-76-40"
+   ],
+   "email": "info@conservatoire.kz",
    "price_audited": true
   },
   "kazatu": {
@@ -271,12 +757,115 @@
    "prices": null,
    "price_audited": true
   },
+  "u68": {
+   "site": "https://kaznuvhi.edu.kz",
+   "admissions": "https://kaznuvhi.edu.kz/ru/admission",
+   "programs_list": "https://kaznuvhi.edu.kz/ru/programs",
+   "prices": null,
+   "phones": [
+    "+7 (726) 250 5017",
+    "+7 747 722 03 87"
+   ],
+   "email": "info@kaznuvhi.edu.kz",
+   "price_audited": true
+  },
   "u69": {
    "site": "https://farabi.university",
    "admissions": "https://farabi.university/postupayushchim/bakalavriat?lang=ru",
    "programs_list": "https://farabi.university/programs?lang=ru&stage_id=2",
    "prices": "https://farabi.university/storage/files/1928286469685e483172122164370477_%D1%81%D1%82%D0%BE%D0%B8%D0%BC%D0%BE%D1%81%D1%82%D1%8C%20%D0%B1%D0%B0%D0%BA%D0%B0%D0%BB%D0%B0%D0%B2%D1%80%D0%B8%D0%B0%D1%82.pdf",
    "email": "info@kaznu.edu.kz",
+   "price_audited": true
+  },
+  "u7": {
+   "site": "https://dmuk.edu.kz",
+   "admissions": null,
+   "programs_list": null,
+   "prices": null,
+   "price_audited": true
+  },
+  "u70": {
+   "site": "https://kaznui.edu.kz",
+   "admissions": "https://kaznui.edu.kz/about/educational_programs",
+   "programs_list": "https://kaznui.edu.kz/about/educational_programs",
+   "prices": "https://kaznui.edu.kz/content/64/%D0%9F%D1%80%D0%B8%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%BA%20%D0%BF%D1%80%D0%B8%D0%BA%D0%B0%D0%B7%D1%83%20%E2%84%96228-%D0%9D%D2%9A%20%D0%BA%D0%B0%D0%B7%20%D1%8F%D0%B7.pdf",
+   "phones": [
+    "+7 (707) 560-16-58"
+   ],
+   "email": "kense@kaznui.kz",
+   "price_audited": true
+  },
+  "u71": {
+   "site": "https://www.ablaikhan.kz",
+   "admissions": null,
+   "programs_list": "https://www.ablaikhan.kz/ru/for-applicants/for-applicants/our-faculties/бакалавриат.html",
+   "prices": "https://www.ablaikhan.kz/ru/for-applicants/for-applicants/stoimost.html",
+   "phones": [
+    "+7 (727) 292-23-73",
+    "+7 (727) 292-08-00",
+    "+7 (727) 292-08-05"
+   ],
+   "price_audited": true
+  },
+  "u73": {
+   "site": "https://www.kaztbu.edu.kz",
+   "admissions": "https://www.kaztbu.edu.kz/pravila-priema?locale=ru",
+   "programs_list": "https://www.kaztbu.edu.kz/obrazovatelnye-programmy?locale=ru",
+   "prices": "https://www.kaztbu.edu.kz/stoimost-obucheniya?locale=ru",
+   "phones": [
+    "+7 (7172) 69-70-60",
+    "+7 (7172) 69-70-61",
+    "+7 775 232-22-66"
+   ],
+   "email": "info@kaztbu.edu.kz",
+   "price_audited": true
+  },
+  "u76": {
+   "site": "https://ksph.edu.kz",
+   "admissions": "https://ksph.edu.kz/admission/",
+   "programs_list": "https://ksph.edu.kz/master/",
+   "prices": null,
+   "phones": [
+    "+7(727) 337 80 28",
+    "+7 (771) 780 76 67"
+   ],
+   "email": "ksph@ksph.kz",
+   "price_audited": true
+  },
+  "u78": {
+   "site": "https://kafu.edu.kz",
+   "admissions": "https://kafu.edu.kz/ru/admission/",
+   "programs_list": "https://kafu.edu.kz/ru/programs/",
+   "prices": null,
+   "phones": [
+    "+7 (7232) 500-300",
+    "+7 (7232) 50-50-10",
+    "+7 (7232) 505-030"
+   ],
+   "email": "kense@kafu.edu.kz",
+   "price_audited": true
+  },
+  "u8": {
+   "site": "https://esil.edu.kz",
+   "admissions": "https://esil.edu.kz/applicants/bachelor",
+   "programs_list": "https://esil.edu.kz/mop",
+   "prices": "https://esil.edu.kz/tuition-cost-per-academic-year",
+   "phones": [
+    "+7 (7172) 72 57 77"
+   ],
+   "email": "info@esil.edu.kz",
+   "price_audited": true
+  },
+  "u80": {
+   "site": "https://dku.kz",
+   "admissions": "https://dku.kz/ru/usloviya-postupleniya",
+   "programs_list": "https://dku.kz/ru/programmy-bakalavriata",
+   "prices": "https://dku.kz/ru/stoimost-obucheniya-i-stipendii",
+   "phones": [
+    "+7 727 355 05 51",
+    "+7 700 355-05-51"
+   ],
+   "email": "admission@dku.kz",
    "price_audited": true
   },
   "u81": {
@@ -325,6 +914,20 @@
    ],
    "price_audited": true
   },
+  "u86": {
+   "site": "https://www.keu.kz",
+   "admissions": "https://www.keu.kz/ru/abiturient/priem-v-b-l-vri-t.html",
+   "programs_list": "https://www.keu.kz/ru/edu/ep-ru/mnu-bkl-ru.html",
+   "prices": "https://www.keu.kz/images/stories/Abiturientu/2026/stoimost2026ru.jpeg",
+   "price_audited": true
+  },
+  "u87": {
+   "site": "https://cu.edu.kz",
+   "admissions": "https://cu.edu.kz/priemnaya-komissiya/",
+   "programs_list": "https://cu.edu.kz/obrazovatelnye-programmy/",
+   "prices": "https://cu.edu.kz/stoimost-obucheniya/",
+   "price_audited": true
+  },
   "u88": {
    "site": "https://yu.edu.kz",
    "admissions": "https://admission.yu.edu.kz/ru/bakalavriat-2/",
@@ -338,6 +941,17 @@
    "email": "info@yu.edu.kz",
    "price_audited": true
   },
+  "u89": {
+   "site": "https://kuam.edu.kz",
+   "admissions": "https://kuam.edu.kz/page/new/educational-programs/",
+   "programs_list": "https://kuam.edu.kz/bakalavr/",
+   "prices": null,
+   "phones": [
+    "8 (7162) 25-42-59"
+   ],
+   "email": "kuam-kokchetau@mail.ru",
+   "price_audited": true
+  },
   "u90": {
    "site": "https://shokan.edu.kz",
    "admissions": "https://shokan.edu.kz/ru/undergraduate/",
@@ -346,12 +960,51 @@
    "email": "university@shokan.edu.kz",
    "price_audited": true
   },
+  "u91": {
+   "site": "https://kineu.edu.kz",
+   "admissions": "https://kineu.edu.kz/ru/abiturientu/raz-04/priem-dokumentov",
+   "programs_list": "https://kineu.edu.kz/ru/obuchenie/raz-09/bakalavriat",
+   "prices": "https://kineu.edu.kz/ru/studentu/raz-07/stoimost-obucheniya-2",
+   "price_audited": true
+  },
   "u92": {
    "site": "https://ksu.edu.kz",
    "admissions": "https://ksu.edu.kz/enrollee/",
    "programs_list": "https://ksu.edu.kz/educational-activity/obrazovatelnye-programmy/bakalavriat/",
    "prices": "https://ksu.edu.kz/about/prejskurant-kru/",
    "email": "talapker@ksu.edu.kz",
+   "price_audited": true
+  },
+  "u93": {
+   "site": "http://kosstu.kz",
+   "admissions": null,
+   "programs_list": null,
+   "prices": null,
+   "price_audited": true
+  },
+  "u95": {
+   "site": "https://bolashak-edu.kz",
+   "admissions": "https://bolashak-edu.kz/index.php?select=data&mtype=data&menu_id=256&lang=ru",
+   "programs_list": "https://bolashak-edu.kz/index.php?select=data&mtype=data&menu_id=231&lang=ru",
+   "prices": "https://bolashak-edu.kz/upload/files/oplata2026.pdf",
+   "phones": [
+    "8-7242-234515",
+    "8 (7242) 30-01-65",
+    "8 705 421 7781"
+   ],
+   "email": "bolashak_5@mail.ru",
+   "price_audited": true
+  },
+  "u96": {
+   "site": "https://korkyt.edu.kz",
+   "admissions": "https://korkyt.edu.kz/ru/staticpages/132",
+   "programs_list": "https://korkyt.edu.kz/ru/page/73",
+   "prices": null,
+   "phones": [
+    "+7 242 26-27-14",
+    "+7 242 71-07-45"
+   ],
+   "email": "ksu@korkyt.kz",
    "price_audited": true
   },
   "u97": {
@@ -363,6 +1016,17 @@
     "+7 (7172) 53 94 47",
     "+7 700 153 94 47"
    ],
+   "price_audited": true
+  },
+  "u98": {
+   "site": "https://smu.edu.kz",
+   "admissions": "https://smu.edu.kz/tusu/bakalavriat/",
+   "programs_list": "https://smu.edu.kz/en/education-level/bachelor-s-degree/",
+   "prices": "https://smu.edu.kz/en/student-life/price-list/",
+   "phones": [
+    "8(7222) 56-42-09"
+   ],
+   "email": "smu@smu.edu.kz",
    "price_audited": true
   },
   "u99": {
@@ -378,6 +1042,57 @@
   }
  },
  "programs": {
+  "u100:6B07203": {
+   "price_kzt": 950000
+  },
+  "u100:6B04106": {
+   "price_kzt": 950000
+  },
+  "u100:6B04102": {
+   "price_kzt": 1050000
+  },
+  "u100:6B04103": {
+   "price_kzt": 1050000
+  },
+  "u100:6B04105": {
+   "price_kzt": 950000
+  },
+  "u100:6B07102": {
+   "price_kzt": 950000
+  },
+  "u100:6B08103": {
+   "price_kzt": 950000
+  },
+  "u100:6B11101": {
+   "price_kzt": 950000
+  },
+  "u100:6B07105": {
+   "price_kzt": 950000
+  },
+  "u100:6B06201": {
+   "price_kzt": 950000
+  },
+  "u100:6B06103": {
+   "price_kzt": 1050000
+  },
+  "u100:6B11201": {
+   "price_kzt": 950000
+  },
+  "u100:6B05102": {
+   "price_kzt": 1050000
+  },
+  "u100:6B05101": {
+   "price_kzt": 950000
+  },
+  "u100:6B07103": {
+   "price_kzt": 950000
+  },
+  "u100:6B07501": {
+   "price_kzt": 950000
+  },
+  "u100:6B07101": {
+   "price_kzt": 950000
+  },
   "u101:6B10156": {
    "url": "https://ayu.edu.kz/birimler/ru/4-lisansustu-tip-egitimi-fakultesi/programlar/6B10156"
   },
@@ -711,6 +1426,315 @@
   "u104:6B02303": {
    "url": "https://aiu.kz/programs/bachelor/112"
   },
+  "u105:6B06104": {
+   "url": "https://iitu.edu.kz/ru/programs/6b06104/"
+  },
+  "u105:6B04104": {
+   "url": "https://iitu.edu.kz/ru/programs/6b04104/"
+  },
+  "u105:6B04103": {
+   "url": "https://iitu.edu.kz/ru/programs/6b04103/"
+  },
+  "u105:6B06201": {
+   "url": "https://iitu.edu.kz/ru/programs/6b06201/"
+  },
+  "u105:6B06121": {
+   "url": "https://iitu.edu.kz/ru/programs/6b06121/"
+  },
+  "u105:6B06112": {
+   "url": "https://iitu.edu.kz/ru/programs/6b06112/"
+  },
+  "u105:6B06101": {
+   "url": "https://iitu.edu.kz/ru/programs/6b06101/"
+  },
+  "u105:6B06120": {
+   "url": "https://iitu.edu.kz/ru/programs/6b06120/"
+  },
+  "u105:6B06203": {
+   "url": "https://iitu.edu.kz/ru/programs/6b06203/"
+  },
+  "u105:6B06106": {
+   "url": "https://iitu.edu.kz/ru/programs/6b06106/"
+  },
+  "u105:6B06118": {
+   "url": "https://iitu.edu.kz/ru/programs/6b06118/"
+  },
+  "u105:6B06107": {
+   "url": "https://iitu.edu.kz/ru/programs/6b06107/"
+  },
+  "u105:6B06110": {
+   "url": "https://iitu.edu.kz/ru/programs/6b06110/"
+  },
+  "u105:6B06302": {
+   "url": "https://iitu.edu.kz/ru/programs/6b06302/"
+  },
+  "u105:6B06303": {
+   "url": "https://iitu.edu.kz/ru/programs/6b06303/"
+  },
+  "u105:6B06305": {
+   "url": "https://iitu.edu.kz/ru/programs/6b06305/"
+  },
+  "u105:6B06301": {
+   "url": "https://iitu.edu.kz/ru/programs/6b06301/"
+  },
+  "u105:6B04102": {
+   "url": "https://iitu.edu.kz/ru/programs/6b04102/"
+  },
+  "u105:6B06306": {
+   "url": "https://iitu.edu.kz/ru/programs/6b06306/"
+  },
+  "u105:6B06304": {
+   "url": "https://iitu.edu.kz/ru/programs/6b06304/"
+  },
+  "u105:6B06103": {
+   "url": "https://iitu.edu.kz/ru/programs/6b06103/"
+  },
+  "u105:6B06105": {
+   "url": "https://iitu.edu.kz/ru/programs/6b06105/"
+  },
+  "u105:6B04105": {
+   "url": "https://iitu.edu.kz/ru/programs/6b04105/"
+  },
+  "u105:6B06119": {
+   "url": "https://iitu.edu.kz/ru/programs/6b06119/"
+  },
+  "u105:6B03203": {
+   "url": "https://iitu.edu.kz/ru/programs/6b03203/"
+  },
+  "u105:6B03202": {
+   "url": "https://iitu.edu.kz/ru/programs/6b03202/"
+  },
+  "u105:6B03201": {
+   "url": "https://iitu.edu.kz/ru/programs/6b03201/"
+  },
+  "u105:6B03204": {
+   "url": "https://iitu.edu.kz/ru/programs/6b03204/"
+  },
+  "u108:6B01750": {
+   "price_kzt": 784000
+  },
+  "u108:6B01540": {
+   "price_kzt": 784000
+  },
+  "u108:6B01730": {
+   "price_kzt": 784000
+  },
+  "u108:6B01432": {
+   "price_kzt": 784000
+  },
+  "u108:6B01421": {
+   "price_kzt": 784000
+  },
+  "u108:6B01314": {
+   "price_kzt": 784000
+  },
+  "u108:6B01613": {
+   "price_kzt": 784000
+  },
+  "u108:6B01550": {
+   "price_kzt": 784000
+  },
+  "u108:6B01103": {
+   "price_kzt": 784000
+  },
+  "u108:6B01712": {
+   "price_kzt": 784000
+  },
+  "u108:6B01901": {
+   "price_kzt": 784000
+  },
+  "u108:6B01900": {
+   "price_kzt": 784000
+  },
+  "u108:6B01310": {
+   "price_kzt": 784000
+  },
+  "u108:6B01302": {
+   "price_kzt": 784000
+  },
+  "u108:6B01431": {
+   "price_kzt": 784000
+  },
+  "u108:6B01603": {
+   "price_kzt": 784000
+  },
+  "u108:6B01710": {
+   "price_kzt": 784000
+  },
+  "u108:6B01430": {
+   "price_kzt": 784000
+  },
+  "u108:6B01507": {
+   "price_kzt": 784000
+  },
+  "u108:6B01471": {
+   "price_kzt": 784000
+  },
+  "u108:6B01514": {
+   "price_kzt": 784000
+  },
+  "u108:6B01202": {
+   "price_kzt": 784000
+  },
+  "u108:6B01610": {
+   "price_kzt": 784000
+  },
+  "u108:6B01731": {
+   "price_kzt": 784000
+  },
+  "u108:6B01523": {
+   "price_kzt": 784000
+  },
+  "u108:6B01560": {
+   "price_kzt": 784000
+  },
+  "u108:6B01530": {
+   "price_kzt": 784000
+  },
+  "u108:6B01211": {
+   "price_kzt": 784000
+  },
+  "u108:6B01210": {
+   "price_kzt": 784000
+  },
+  "u108:6B01515": {
+   "price_kzt": 784000
+  },
+  "u108:6B01510": {
+   "price_kzt": 784000
+  },
+  "u108:6B01903": {
+   "price_kzt": 784000
+  },
+  "u108:6B01721": {
+   "price_kzt": 784000
+  },
+  "u108:6B01542": {
+   "price_kzt": 784000
+  },
+  "u108:6B01811": {
+   "price_kzt": 784000
+  },
+  "u108:6B01552": {
+   "price_kzt": 784000
+  },
+  "u108:6B01553": {
+   "price_kzt": 784000
+  },
+  "u108:6B01422": {
+   "price_kzt": 784000
+  },
+  "u108:6B01411": {
+   "price_kzt": 784000
+  },
+  "u108:6B01110": {
+   "price_kzt": 784000
+  },
+  "u108:6B01462": {
+   "price_kzt": 784000
+  },
+  "u108:6B01420": {
+   "price_kzt": 784000
+  },
+  "u108:6B01720": {
+   "price_kzt": 784000
+  },
+  "u11:x9007": {
+   "url": "https://innotech.edu.kz/programs/bachelor-computer-science"
+  },
+  "u11:x9008": {
+   "url": "https://innotech.edu.kz/programs/bachelor-cybersecurity"
+  },
+  "u111:6B07302": {
+   "url": "https://rudny.edu.kz/programs/%d0%bf%d1%80%d0%be%d0%b8%d0%b7%d0%b2%d0%be%d0%b4%d1%81%d1%82%d0%b2%d0%be-%d1%81%d1%82%d1%80%d0%be%d0%b8%d1%82%d0%b5%d0%bb%d1%8c%d0%bd%d1%8b%d1%85-%d0%bc%d0%b0%d1%82%d0%b5%d1%80%d0%b8%d0%b0%d0%bb%d0%be/"
+  },
+  "u111:6B07110": {
+   "url": "https://rudny.edu.kz/programs/%d1%82%d1%80%d0%b0%d0%bd%d1%81%d0%bf%d0%be%d1%80%d1%82%d0%bd%d0%b0%d1%8f-%d1%82%d0%b5%d1%85%d0%bd%d0%b8%d0%ba%d0%b0-%d0%b8-%d1%82%d0%b5%d1%85%d0%bd%d0%be%d0%bb%d0%be%d0%b3%d0%b8%d0%b8/",
+   "price_kzt": 645000
+  },
+  "u111:6B07119": {
+   "url": "https://rudny.edu.kz/programs/%d1%82%d0%b5%d0%bf%d0%bb%d0%be%d1%8d%d0%bd%d0%b5%d1%80%d0%b3%d0%b5%d1%82%d0%b8%d0%ba%d0%b0-%d0%b8-%d1%82%d0%b5%d0%bf%d0%bb%d0%be%d1%82%d0%b5%d1%85%d0%bd%d0%b8%d0%ba%d0%b0/",
+   "price_kzt": 645000
+  },
+  "u111:6B07307": {
+   "url": "https://rudny.edu.kz/programs/%d0%b8%d0%bd%d1%84%d0%be%d1%80%d0%bc%d0%b0%d1%86%d0%b8%d0%be%d0%bd%d0%bd%d0%be%d0%b5-%d0%bc%d0%be%d0%b4%d0%b5%d0%bb%d0%b8%d1%80%d0%be%d0%b2%d0%b0%d0%bd%d0%b8%d0%b5-%d0%b8-%d1%83%d0%bf%d1%80%d0%b0/",
+   "price_kzt": 645000
+  },
+  "u111:6B07111": {
+   "url": "https://rudny.edu.kz/programs/%d0%b0%d0%b2%d1%82%d0%be%d0%bc%d0%be%d0%b1%d0%b8%d0%bb%d0%b8-%d0%b8-%d1%82%d1%80%d0%b0%d0%bd%d1%81%d0%bf%d0%be%d1%80%d1%82%d0%bd%d0%b0%d1%8f-%d0%b8%d0%bd%d1%84%d1%80%d0%b0%d1%81%d1%82%d1%80%d1%83/",
+   "price_kzt": 645000
+  },
+  "u111:6B07121": {
+   "url": "https://rudny.edu.kz/programs/%d0%b8%d0%bd%d0%b6%d0%b5%d0%bd%d0%b5%d1%80%d0%b8%d1%8f-%d0%bf%d1%80%d0%be%d0%b4%d1%83%d0%ba%d1%82%d0%be%d0%b2-%d0%bf%d0%b8%d1%82%d0%b0%d0%bd%d0%b8%d1%8f/"
+  },
+  "u111:6B07109": {
+   "url": "https://rudny.edu.kz/programs/%d0%bc%d0%b5%d0%b4%d0%b8%d1%86%d0%b8%d0%bd%d1%81%d0%ba%d0%b8%d0%b9-%d0%b8%d0%bd%d0%b6%d0%b8%d0%bd%d0%b8%d1%80%d0%b8%d0%bd%d0%b3-%d1%81%d0%be%d0%b2%d0%bc%d0%b5%d1%81%d1%82%d0%bd%d0%b0%d1%8f-%d0%be/",
+   "price_kzt": 645000
+  },
+  "u111:6B07107": {
+   "url": "https://rudny.edu.kz/programs/%d0%b0%d0%b2%d1%82%d0%be%d0%bc%d0%b0%d1%82%d0%b8%d0%b7%d0%b0%d1%86%d0%b8%d1%8f-%d1%82%d0%b5%d1%85%d0%bd%d0%be%d0%bb%d0%be%d0%b3%d0%b8%d1%87%d0%b5%d1%81%d0%ba%d0%b8%d1%85-%d0%bf%d1%80%d0%be%d1%86%d0%b5/",
+   "price_kzt": 645000
+  },
+  "u111:6B07202": {
+   "url": "https://rudny.edu.kz/programs/%d1%82%d0%b5%d1%85%d0%bd%d0%be%d0%bb%d0%be%d0%b3%d0%b8%d1%8f-%d0%b8-%d0%bf%d1%80%d0%be%d0%b5%d0%ba%d1%82%d0%b8%d1%80%d0%be%d0%b2%d0%b0%d0%bd%d0%b8%d0%b5-%d0%b8%d0%b7%d0%b4%d0%b5%d0%bb%d0%b8%d0%b9/",
+   "price_kzt": 645000
+  },
+  "u111:6B07304": {
+   "url": "https://rudny.edu.kz/programs/%d1%81%d1%82%d1%80%d0%be%d0%b8%d1%82%d0%b5%d0%bb%d1%8c%d1%81%d1%82%d0%b2%d0%be-%d0%b7%d0%b4%d0%b0%d0%bd%d0%b8%d0%b9-%d0%b8-%d1%81%d0%be%d0%be%d1%80%d1%83%d0%b6%d0%b5%d0%bd%d0%b8%d0%b9/",
+   "price_kzt": 645000
+  },
+  "u111:6B07306": {
+   "url": "https://rudny.edu.kz/programs/%d1%82%d0%b5%d1%85%d0%bd%d0%be%d0%bb%d0%be%d0%b3%d0%b8%d1%8f-%d1%8d%d0%bd%d0%b5%d1%80%d0%b3%d0%be%d1%8d%d1%84%d1%84%d0%b5%d0%ba%d1%82%d0%b8%d0%b2%d0%bd%d1%8b%d1%85-%d1%81%d1%82%d1%80%d0%be%d0%b8%d1%82/",
+   "price_kzt": 645000
+  },
+  "u111:6B06107": {
+   "url": "https://rudny.edu.kz/programs/%d0%b8%d0%bd%d1%84%d0%be%d1%80%d0%bc%d0%b0%d1%86%d0%b8%d0%be%d0%bd%d0%bd%d1%8b%d0%b5-%d1%81%d0%b8%d1%81%d1%82%d0%b5%d0%bc%d1%8b-%d0%b8-%d1%82%d0%b5%d1%85%d0%bd%d0%be%d0%bb%d0%be%d0%b3%d0%b8%d0%b9/",
+   "price_kzt": 645000
+  },
+  "u111:6B11208": {
+   "url": "https://rudny.edu.kz/programs/%d0%b1%d0%b5%d0%b7%d0%be%d0%bf%d0%b0%d1%81%d0%bd%d0%be%d1%81%d1%82%d1%8c-%d0%b6%d0%b8%d0%b7%d0%bd%d0%b5%d0%b4%d0%b5%d1%8f%d1%82%d0%b5%d0%bb%d1%8c%d0%bd%d0%be%d1%81%d1%82%d0%b8-%d0%b8-%d0%b7%d0%b0/",
+   "price_kzt": 575000
+  },
+  "u111:6B07305": {
+   "url": "https://rudny.edu.kz/programs/%d0%bf%d1%80%d0%be%d0%b8%d0%b7%d0%b2%d0%be%d0%b4%d1%81%d1%82%d0%b2%d0%be-%d1%81%d1%82%d1%80%d0%be%d0%b8%d1%82%d0%b5%d0%bb%d1%8c%d0%bd%d1%8b%d1%85-%d0%bc%d0%b0%d1%82%d0%b5%d1%80%d0%b8%d0%b0%d0%bb%d0%be/",
+   "price_kzt": 645000
+  },
+  "u111:6B07216": {
+   "url": "https://rudny.edu.kz/programs/%d1%82%d0%b5%d1%85%d0%bd%d0%be%d0%bb%d0%be%d0%b3%d0%b8%d1%8f-%d0%bf%d1%80%d0%be%d0%b8%d0%b7%d0%b2%d0%be%d0%b4%d1%81%d1%82%d0%b2%d0%b0-%d0%bc%d0%b5%d1%82%d0%b0%d0%bb%d0%bb%d0%b8%d0%b7%d0%be%d0%b2%d0%b0/",
+   "price_kzt": 645000
+  },
+  "u111:6B04111": {
+   "url": "https://rudny.edu.kz/programs/%d0%bc%d0%b5%d0%bd%d0%b5%d0%b4%d0%b6%d0%bc%d0%b5%d0%bd%d1%82-%d0%be%d1%80%d0%b3%d0%b0%d0%bd%d0%b8%d0%b7%d0%b0%d1%86%d0%b8%d0%b8/",
+   "price_kzt": 575000
+  },
+  "u111:6B04110": {
+   "url": "https://rudny.edu.kz/programs/%d1%8d%d0%ba%d0%be%d0%bd%d0%be%d0%bc%d0%b8%d0%ba%d0%b0-%d0%b8-%d0%bf%d1%80%d0%b5%d0%b4%d0%bf%d1%80%d0%b8%d0%bd%d0%b8%d0%bc%d0%b0%d1%82%d0%b5%d0%bb%d1%8c%d1%81%d1%82%d0%b2%d0%be/",
+   "price_kzt": 575000
+  },
+  "u111:6B07217": {
+   "url": "https://rudny.edu.kz/programs/%d0%b8%d1%81%d0%ba%d1%83%d1%81%d1%81%d1%82%d0%b2%d0%b5%d0%bd%d0%bd%d1%8b%d0%b9-%d0%b8%d0%bd%d1%82%d0%b5%d0%bb%d0%bb%d0%b5%d0%ba%d1%82-%d0%b2-%d0%b3%d0%be%d1%80%d0%bd%d0%be-%d0%bc%d0%b5%d1%82%d0%b0/",
+   "price_kzt": 645000
+  },
+  "u111:6B07214": {
+   "url": "https://rudny.edu.kz/programs/%d0%b4%d0%be%d0%b1%d1%8b%d1%87%d0%b0-%d0%bf%d0%be%d0%bb%d0%b5%d0%b7%d0%bd%d1%8b%d1%85-%d0%b8%d1%81%d0%ba%d0%be%d0%bf%d0%b0%d0%b5%d0%bc%d1%8b%d1%85/",
+   "price_kzt": 645000
+  },
+  "u111:6B07215": {
+   "url": "https://rudny.edu.kz/programs/1212/",
+   "price_kzt": 645000
+  },
+  "u111:6B07213": {
+   "url": "https://rudny.edu.kz/programs/%d0%bf%d1%80%d0%be%d0%b8%d0%b7%d0%b2%d0%be%d0%b4%d1%81%d1%82%d0%b2%d0%be-%d0%b8-%d0%be%d0%b1%d1%80%d0%b0%d0%b1%d0%be%d1%82%d0%ba%d0%b0-%d1%87%d0%b5%d1%80%d0%bd%d1%8b%d1%85-%d0%b8-%d1%86%d0%b2%d0%b5/",
+   "price_kzt": 645000
+  },
+  "u111:6B07118": {
+   "url": "https://rudny.edu.kz/programs/%d1%8d%d0%bb%d0%b5%d0%ba%d1%82%d1%80%d0%be%d1%8d%d0%bd%d0%b5%d1%80%d0%b3%d0%b5%d1%82%d0%b8%d0%ba%d0%b0-%d0%b8-%d1%8d%d0%bb%d0%b5%d0%ba%d1%82%d1%80%d0%be%d1%82%d0%b5%d1%85%d0%bd%d0%b8%d0%ba%d0%b0/",
+   "price_kzt": 645000
+  },
+  "u111:6B07120": {
+   "url": "https://rudny.edu.kz/programs/%d1%8d%d0%ba%d1%81%d0%bf%d0%bb%d1%83%d0%b0%d1%82%d0%b0%d1%86%d0%b8%d1%8f-%d0%b8-%d1%80%d0%b5%d0%bc%d0%be%d0%bd%d1%82-%d1%82%d0%b5%d1%85%d0%bd%d0%be%d0%bb%d0%be%d0%b3%d0%b8%d1%87%d0%b5%d1%81%d0%ba/",
+   "price_kzt": 645000
+  },
   "u114:6B08301": {
    "price_kzt": 550000
   },
@@ -831,6 +1855,93 @@
   "u114:6B07505": {
    "price_kzt": 620000
   },
+  "u120:6B04201": {
+   "price_kzt": 1476600
+  },
+  "u120:6B04202": {
+   "price_kzt": 1476600
+  },
+  "u120:6B04203": {
+   "price_kzt": 1476600
+  },
+  "u120:6B02301": {
+   "price_kzt": 1476600
+  },
+  "u120:6B11103": {
+   "price_kzt": 1476600
+  },
+  "u120:6B04107": {
+   "price_kzt": 1476600
+  },
+  "u120:6B11301": {
+   "price_kzt": 1476600
+  },
+  "u120:6B03103": {
+   "price_kzt": 1476600
+  },
+  "u120:6B03101": {
+   "price_kzt": 1476600
+  },
+  "u120:6B03102": {
+   "price_kzt": 1476600
+  },
+  "u120:6B04103": {
+   "price_kzt": 1476600
+  },
+  "u120:6B04101": {
+   "price_kzt": 1476600
+  },
+  "u120:6B04102": {
+   "price_kzt": 1476600
+  },
+  "u120:6B04104": {
+   "price_kzt": 1476600
+  },
+  "u120:6B03201": {
+   "price_kzt": 1476600
+  },
+  "u120:6B03202": {
+   "price_kzt": 1476600
+  },
+  "u120:6B02102": {
+   "price_kzt": 1476600
+  },
+  "u120:6B02153": {
+   "price_kzt": 1265000
+  },
+  "u120:6B04105": {
+   "price_kzt": 1476600
+  },
+  "u120:6B11102": {
+   "price_kzt": 1476600
+  },
+  "u120:6B06201": {
+   "price_kzt": 1476600
+  },
+  "u120:6B02103": {
+   "price_kzt": 1587000
+  },
+  "u120:6B06101": {
+   "price_kzt": 1476600
+  },
+  "u120:6B06103": {
+   "price_kzt": 1476600
+  },
+  "u120:6B02101": {
+   "price_kzt": 1476600
+  },
+  "u120:6B04106": {
+   "price_kzt": 1476600
+  },
+  "u120:6B06102": {
+   "price_kzt": 1476600
+  },
+  "u120:6B06104": {
+   "price_kzt": 1476600
+  },
+  "u120:6B11101": {
+   "price_kzt": 1476600
+  },
   "sdu:6B04101": {
    "url": "https://sdu.edu.kz/ru/shkola-socialnyh-nauk-businesa-i-prava/bachelor-bslawru/ekonomika-bakalavr-ru/"
   },
@@ -839,6 +1950,156 @@
   },
   "sdu:6B04106": {
    "url": "https://sdu.edu.kz/ru/shkola-socialnyh-nauk-businesa-i-prava/bachelor-bslawru/management-bakalavr-ru/"
+  },
+  "u125:6B02203": {
+   "price_kzt": 630000
+  },
+  "u125:6B01401": {
+   "price_kzt": 630000
+  },
+  "u125:6B01301": {
+   "price_kzt": 630000
+  },
+  "u125:6B01202": {
+   "price_kzt": 840000
+  },
+  "u125:6B01501": {
+   "price_kzt": 630000
+  },
+  "u125:6B01513": {
+   "price_kzt": 630000
+  },
+  "u125:6B01705": {
+   "price_kzt": 660000
+  },
+  "u125:6B01703": {
+   "price_kzt": 630000
+  },
+  "u125:6B01514": {
+   "price_kzt": 630000
+  },
+  "u125:6B01504": {
+   "price_kzt": 630000
+  },
+  "u125:6B01601": {
+   "price_kzt": 630000
+  },
+  "u125:6B01507": {
+   "price_kzt": 840000
+  },
+  "u125:6B01517": {
+   "price_kzt": 630000
+  },
+  "u125:6B01701": {
+   "price_kzt": 630000
+  },
+  "u125:6B01402": {
+   "price_kzt": 630000
+  },
+  "u125:6B01410": {
+   "price_kzt": 630000
+  },
+  "u125:6B01101": {
+   "price_kzt": 630000
+  },
+  "u125:6B01707": {
+   "price_kzt": 630000
+  },
+  "u125:6B02305": {
+   "price_kzt": 630000
+  },
+  "u125:6B03102": {
+   "price_kzt": 630000
+  },
+  "u125:6B04109": {
+   "price_kzt": 840000
+  },
+  "u125:6B06107": {
+   "price_kzt": 630000
+  },
+  "u125:6B04108": {
+   "price_kzt": 840000
+  },
+  "u125:6B04106": {
+   "price_kzt": 630000
+  },
+  "u125:6B06106": {
+   "price_kzt": 840000
+  },
+  "u125:6B02101": {
+   "price_kzt": 630000
+  },
+  "u125:6B05303": {
+   "price_kzt": 630000
+  },
+  "u125:6B07109": {
+   "price_kzt": 840000
+  },
+  "u125:6B07103": {
+   "price_kzt": 630000
+  },
+  "u125:6B07108": {
+   "price_kzt": 840000
+  },
+  "u125:6B08303": {
+   "price_kzt": 660000
+  },
+  "u125:6B02302": {
+   "price_kzt": 630000
+  },
+  "u125:6B08201": {
+   "price_kzt": 630000
+  },
+  "u125:6B07202": {
+   "price_kzt": 630000
+  },
+  "u125:6B11201": {
+   "price_kzt": 630000
+  },
+  "u125:6B05102": {
+   "price_kzt": 630000
+  },
+  "u125:6B07104": {
+   "price_kzt": 630000
+  },
+  "u125:6B05201": {
+   "price_kzt": 630000
+  },
+  "u125:6B07301": {
+   "price_kzt": 720000
+  },
+  "u125:6B05301": {
+   "price_kzt": 630000
+  },
+  "u125:6B07302": {
+   "price_kzt": 630000
+  },
+  "u125:6B03202": {
+   "price_kzt": 630000
+  },
+  "u125:6B06105": {
+   "price_kzt": 630000
+  },
+  "u125:6B07501": {
+   "price_kzt": 630000
+  },
+  "u125:6B02204": {
+   "price_kzt": 630000
+  },
+  "u125:6B01521": {
+   "price_kzt": 787500
+  },
+  "u125:6B01518": {
+   "price_kzt": 787500
+  },
+  "u125:6B01519": {
+   "price_kzt": 787500
+  },
+  "u125:6B04111": {
+   "price_kzt": 840000
+  },
+  "u125:6B04110": {
+   "price_kzt": 840000
   },
   "mnu:6B04204": {
    "url": "https://mnu.kz/en/educational/law/"
@@ -857,6 +2118,99 @@
   },
   "mnu:6B03101": {
    "url": "https://mnu.kz/en/educational/psychology/"
+  },
+  "u13:6B05111": {
+   "url": "https://ku.edu.kz/educationalProgram/passport?id=1182",
+   "price_kzt": 5000000
+  },
+  "u13:6B04111": {
+   "url": "https://ku.edu.kz/educationalProgram/passport?id=1215",
+   "price_kzt": 5000000
+  },
+  "u13:6B06111": {
+   "url": "https://ku.edu.kz/educationalProgram/passport?id=1183",
+   "price_kzt": 5000000
+  },
+  "u13:6B01311": {
+   "url": "https://ku.edu.kz/educationalProgram/passport?id=1185",
+   "price_kzt": 5000000
+  },
+  "u13:6B01111": {
+   "url": "https://ku.edu.kz/educationalProgram/passport?id=1186",
+   "price_kzt": 5000000
+  },
+  "u13:6B01911": {
+   "url": "https://ku.edu.kz/educationalProgram/passport?id=1184",
+   "price_kzt": 5000000
+  },
+  "u130:6B11302": {
+   "url": "https://uib.edu.kz/organization-and-management-of-logistics/"
+  },
+  "u130:6B04116": {
+   "url": "https://uib.edu.kz/marketing-research-and-analytics/"
+  },
+  "u130:6B04128": {
+   "url": "https://uib.edu.kz/management/"
+  },
+  "u130:6B04115": {
+   "url": "https://uib.edu.kz/marketing-in-the-digital-economy/"
+  },
+  "u130:6B06103": {
+   "url": "https://uib.edu.kz/digital-marketing/"
+  },
+  "u130:6B03202": {
+   "url": "https://uib.edu.kz/convergent-journalism/"
+  },
+  "u130:6B06105": {
+   "url": "https://uib.edu.kz/smart-technologies/"
+  },
+  "u130:6B03104": {
+   "url": "https://uib.edu.kz/international-analytics/"
+  },
+  "u130:6B06104": {
+   "url": "https://uib.edu.kz/big-data-analytics/"
+  },
+  "u130:6B03106": {
+   "url": "https://uib.edu.kz/kk/psychological-features-of-personality-development-kz/"
+  },
+  "u130:6B04208": {
+   "url": "https://uib.edu.kz/jurisprudence/"
+  },
+  "u130:6B04120": {
+   "url": "https://uib.edu.kz/corporate-finance/"
+  },
+  "u130:6B04118": {
+   "url": "https://uib.edu.kz/aat/"
+  },
+  "u130:6B04119": {
+   "url": "https://uib.edu.kz/financial-markets-and-financial-institutions/"
+  },
+  "u130:6B11103": {
+   "url": "https://uib.edu.kz/sustainable-tourism/"
+  },
+  "u130:6B11105": {
+   "url": "https://uib.edu.kz/%d0%bc%d0%b5%d0%bd%d0%b5%d0%b4%d0%b6%d0%bc%d0%b5%d0%bd%d1%82-%d0%b3%d0%be%d1%81%d1%82%d0%b5%d0%bf%d1%80%d0%b8%d0%b8%d0%bc%d1%81%d1%82%d0%b2%d0%b0/"
+  },
+  "u130:6B03203": {
+   "url": "https://uib.edu.kz/pr/"
+  },
+  "u130:6B11303": {
+   "url": "https://uib.edu.kz/international-business-logistics/"
+  },
+  "u130:6B03107": {
+   "url": "https://uib.edu.kz/management-of-socio-psychological-processes/"
+  },
+  "u130:6B04207": {
+   "url": "https://uib.edu.kz/international-economic-law/"
+  },
+  "u130:6B04111": {
+   "url": "https://uib.edu.kz/economics-and-management/"
+  },
+  "u130:6B04126": {
+   "url": "https://uib.edu.kz/business-administration/"
+  },
+  "u130:6B04129": {
+   "url": "https://uib.edu.kz/art-management/"
   },
   "u138:6B01402": {
    "url": "https://univershu.edu.kz/ru/component/sppagebuilder/?view=page&layout=edit&id=650"
@@ -929,6 +2283,9 @@
   },
   "u138:6B01504": {
    "url": "https://univershu.edu.kz/ru/component/sppagebuilder/?view=page&layout=edit&id=639"
+  },
+  "u14:x10892": {
+   "url": "https://welcome.kaznu.kz/en/education_programs/bachelor/speciality/1683"
   },
   "u141:6B01450": {
    "url": "https://auezov.edu.kz/rus/stranitsy-ru/4136-6b01450-профессиональное-обучение"
@@ -1398,6 +2755,288 @@
   "u141:6B07222": {
    "url": "https://auezov.edu.kz/rus/stranitsy-ru/9791-6b07222-металлургическая-инженерия-и-материаловедение"
   },
+  "u15:6B06101": {
+   "url": "https://qairu.edu.kz/ru/admissions/bachelor/ai-machine-learning"
+  },
+  "u15:6B06102": {
+   "url": "https://qairu.edu.kz/ru/admissions/bachelor/physical-ai"
+  },
+  "u18:x8886": {
+   "price_kzt": 2500000
+  },
+  "u18:x9030": {
+   "price_kzt": 2500000
+  },
+  "u18:x9549": {
+   "price_kzt": 2500000
+  },
+  "u18:x9629": {
+   "price_kzt": 2500000
+  },
+  "u18:x9946": {
+   "price_kzt": 2500000
+  },
+  "u18:x10533": {
+   "price_kzt": 2500000
+  },
+  "u18:x10951": {
+   "price_kzt": 2500000
+  },
+  "u18:x10954": {
+   "price_kzt": 2500000
+  },
+  "u18:x11272": {
+   "price_kzt": 2500000
+  },
+  "u18:x11351": {
+   "price_kzt": 2500000
+  },
+  "u18:x12045": {
+   "price_kzt": 2500000
+  },
+  "u18:x12168": {
+   "price_kzt": 2500000
+  },
+  "u21:6B04103": {
+   "price_kzt": 700000
+  },
+  "u21:6B11301": {
+   "price_kzt": 650000
+  },
+  "u21:6B06101": {
+   "price_kzt": 750000
+  },
+  "u21:6B04101": {
+   "price_kzt": 700000
+  },
+  "u21:6B04104": {
+   "price_kzt": 700000
+  },
+  "u21:6B11302": {
+   "price_kzt": 650000
+  },
+  "u21:6B03201": {
+   "price_kzt": 700000
+  },
+  "u21:6B03101": {
+   "price_kzt": 850000
+  },
+  "u21:6B04207": {
+   "price_kzt": 850000
+  },
+  "u21:6B04201": {
+   "price_kzt": 850000
+  },
+  "u21:6B04202": {
+   "price_kzt": 850000
+  },
+  "u21:6B06103": {
+   "price_kzt": 750000
+  },
+  "u21:6B06104": {
+   "price_kzt": 750000
+  },
+  "u21:6B04102": {
+   "price_kzt": 700000
+  },
+  "u24:6B07192": {
+   "url": "https://alt.edu.kz/ru/shkoly/shkola-inzhenerii/departament-podvizhnogo-sostava/6b07192-podvizhnoj-sostav-zheleznyh-dorog-traektoriya-lokomotivy-dvudiplomnaya-sovmestno-s-omgups-rf/"
+  },
+  "u24:6B07193": {
+   "url": "https://alt.edu.kz/en/schools/school-of-technologies/department-of-power-engineering/6b07193-electric-power-systems-and-complexes/"
+  },
+  "u24:6B06213": {
+   "url": "https://alt.edu.kz/ru/shkoly/shkola-tehnologij/departament-telekommunikaczij/6v06213-infokommunikaczionnye-tehnologii-i-sistemy-svyazi/"
+  },
+  "u24:6B06172": {
+   "url": "https://alt.edu.kz/ru/shkoly/shkola-tehnologij/departament-kompyuternyh-nauk/6b06172-tehnologii-bolshih-dannyh/"
+  },
+  "u24:6B11371": {
+   "url": "https://alt.edu.kz/ru/shkoly/shkola-biznesa/departament-logistiki-i-biznesa/6v11371-sovremennoe-upravlenie-logistikoj/"
+  },
+  "u24:6B07191": {
+   "url": "https://alt.edu.kz/ru/shkoly/shkola-inzhenerii/departament-podvizhnogo-sostava/6b07191-inzhenernyj-menedzhment-lokomotivnogo-kompleksa/"
+  },
+  "u24:6B07187": {
+   "url": "https://alt.edu.kz/ru/shkoly/shkola-inzhenerii/departament-podvizhnogo-sostava/6b07187-inzhenernyj-menedzhment-vagonnogo-kompleksa/"
+  },
+  "u24:6B07184": {
+   "url": "https://alt.edu.kz/ru/shkoly/shkola-inzhenerii/departament-avtomobilnoj-inzhenerii-i-bezopasnosti/6v07184-inzheneriya-stroitelnyh-i-putevyh-mashin/"
+  },
+  "u24:6B07185": {
+   "url": "https://alt.edu.kz/en/schools/school-of-business/department-of-logistics-and-business/6b07185-management-of-logistics-systems-in-railway-transport/"
+  },
+  "u24:6B07186": {
+   "url": "https://alt.edu.kz/en/schools/school-of-business/department-of-logistics-and-business/6b07186-transportation-process-management-and-railway-operation/"
+  },
+  "u24:6B04148": {
+   "url": "https://alt.edu.kz/en/schools/school-of-business/department-of-logistics-and-business/6v04148-finance/"
+  },
+  "u24:6B07140": {
+   "url": "https://alt.edu.kz/ru/shkoly/shkola-tehnologij/departament-avtomatizaczii-i-upravleniya/6v07140-kiberbezopasnost-czifrovyh-sistem/"
+  },
+  "u24:6B07120": {
+   "url": "https://alt.edu.kz/en/schools/school-of-technologies/department-of-automation-and-control/6b07120-automation-and-control/"
+  },
+  "u24:6B07347": {
+   "url": "https://alt.edu.kz/en/schools/school-of-engineering/department-of-civil-engineering/6b07347-digital-construction-in-bim-technology/"
+  },
+  "u24:6B07179": {
+   "url": "https://alt.edu.kz/en/schools/school-of-engineering/department-transport-construction/6v07179-engineering-and-management-of-transport-highways/"
+  },
+  "u24:6B07336": {
+   "url": "https://alt.edu.kz/en/schools/school-of-engineering/department-transport-construction/6b07323-railway-construction-track-and-track-facilities/"
+  },
+  "u24:6B07349": {
+   "url": "https://alt.edu.kz/ru/shkoly/shkola-inzhenerii/departament-transportnogo-stroitelstva/6b07349-stroitelstvo-mostov-i-transportnyh-razvyazok/"
+  },
+  "u24:6B07329": {
+   "url": "https://alt.edu.kz/ru/shkoly/shkola-inzhenerii/departament-transportnogo-stroitelstva/6b073-stroitelstvo-promyshlennyh-i-grazhdanskih-zdanij-i-sooruzhenij/"
+  },
+  "u24:6B07183": {
+   "url": "https://alt.edu.kz/ru/shkoly/shkola-inzhenerii/departament-transportnogo-stroitelstva/6b07183-smart-roads-czifrovye-tehnologii-v-transportnyh-sooruzheniyah/"
+  },
+  "u24:6B07331": {
+   "url": "https://alt.edu.kz/ru/shkoly/shkola-inzhenerii/departament-transportnogo-stroitelstva/6v07331-kadastr-i-gradostroitelstvo/"
+  },
+  "u24:6B07180": {
+   "url": "https://alt.edu.kz/ru/shkoly/shkola-inzhenerii/departament-transportnogo-stroitelstva/6b07180-smart-underground-tonneli-i-metropoliten/"
+  },
+  "u24:6B11370": {
+   "url": "https://alt.edu.kz/ru/shkoly/shkola-biznesa/departament-logistiki-i-biznesa/6v11370-organizacziya-perevozok/"
+  },
+  "u24:6B07177": {
+   "url": "https://alt.edu.kz/ru/shkoly/shkola-inzhenerii/departament-transportnogo-stroitelstva/6v07177-%e2%80%92-neftegazovaya-transportnaya-inzheneriya/"
+  },
+  "u24:6B07348": {
+   "url": "https://alt.edu.kz/en/schools/school-of-engineering/department-transport-construction/6b07348-construction-of-highways-and-airfields/"
+  },
+  "u24:6B07176": {
+   "url": "https://alt.edu.kz/ru/shkoly/shkola-inzhenerii/departament-avtomobilnoj-inzhenerii-i-bezopasnosti/6b07179-avtomobilnaya-inzheneriya/"
+  },
+  "u24:6B07138": {
+   "url": "https://alt.edu.kz/ru/shkoly/shkola-inzhenerii/departament-avtomobilnoj-inzhenerii-i-bezopasnosti/6b07138-mashinostroenie/"
+  },
+  "u24:6B11238": {
+   "url": "https://alt.edu.kz/ru/shkoly/shkola-inzhenerii/departament-avtomobilnoj-inzhenerii-i-bezopasnosti/6b11238-tehnogennaya-i-sanitarno-ekologicheskaya-bezopasnost/"
+  },
+  "u24:6B04144": {
+   "url": "https://alt.edu.kz/ru/shkoly/shkola-biznesa/departament-logistiki-i-biznesa/6b04144-elektronnaya-kommercziya/"
+  },
+  "u24:6B06209": {
+   "url": "https://alt.edu.kz/ru/shkoly/shkola-tehnologij/departament-telekommunikaczij/6v06209-radiotehnika-elektronika-i-telekommunikaczii/"
+  },
+  "u24:6B11368": {
+   "url": "https://alt.edu.kz/ru/shkoly/shkola-biznesa/departament-logistiki-i-biznesa/6v11368-mezhdunarodnaya-logistika/"
+  },
+  "u24:6B04125": {
+   "url": "https://alt.edu.kz/ru/shkoly/shkola-biznesa/departament-logistiki-i-biznesa/6v04125-marketing-i-biznes-analitika/"
+  },
+  "u24:6B04142": {
+   "url": "https://alt.edu.kz/en/schools/school-of-business/department-of-logistics-and-business/6b04142-economics-and-management-by-industry/"
+  },
+  "u24:6B07121": {
+   "url": "https://alt.edu.kz/en/schools/school-of-technologies/department-of-power-engineering/6b07121-electric-power-engineering/"
+  },
+  "u24:6B07188": {
+   "url": "https://alt.edu.kz/ru/shkoly/shkola-tehnologij/departament-energetiki/6b07188-it-energetika/"
+  },
+  "u24:6B06126": {
+   "url": "https://alt.edu.kz/ru/shkoly/shkola-tehnologij/departament-kompyuternyh-nauk/6b06126-prikladnoj-iskusstvennyj-intellekt/"
+  },
+  "u24:6B06118": {
+   "url": "https://alt.edu.kz/ru/shkoly/shkola-tehnologij/departament-kompyuternyh-nauk/6b06118-programmnaya-inzheneriya/"
+  },
+  "u24:6B06116": {
+   "url": "https://alt.edu.kz/ru/shkoly/shkola-tehnologij/departament-kompyuternyh-nauk/6b06116-informaczionnye-sistemy/"
+  },
+  "u24:6B04145": {
+   "url": "https://alt.edu.kz/ru/shkoly/shkola-biznesa/departament-logistiki-i-biznesa/6v04145-mezhdunarodnaya-torgovlya/"
+  },
+  "u24:6B07137": {
+   "url": "https://alt.edu.kz/ru/shkoly/shkola-inzhenerii/departament-podvizhnogo-sostava/6b07137-inzheneriya-podvizhnogo-sostava-3-traektorii/"
+  },
+  "u24:6B06328": {
+   "url": "https://alt.edu.kz/ru/shkoly/shkola-tehnologij/departament-kompyuternyh-nauk/6b06328-sistemy-informaczionnoj-bezopasnosti/"
+  },
+  "u24:6B07339": {
+   "url": "https://alt.edu.kz/en/schools/school-of-engineering/department-transport-construction/6b07339-construction-of-oil-and-gas-facilities/"
+  },
+  "u24:6B07337": {
+   "url": "https://alt.edu.kz/ru/shkoly/shkola-inzhenerii/departament-transportnogo-stroitelstva/6v07321-%e2%80%92-stroitelstvo-mostovtonnelej-i-metropolitenov/"
+  },
+  "u24:6B07129": {
+   "url": "https://alt.edu.kz/ru/shkoly/shkola-inzhenerii/departament-transportnogo-stroitelstva/6b07129-mosty-tonneli-i-metropoliteny/"
+  },
+  "u24:6B07324": {
+   "url": "https://alt.edu.kz/en/schools/school-of-engineering/department-transport-construction/6b07324-%e2%80%92-construction-of-roads-and-airfields/"
+  },
+  "u24:6B07322": {
+   "url": "https://alt.edu.kz/en/schools/school-of-engineering/department-transport-construction/6v07322-construction-of-oil-and-gas-facilities/"
+  },
+  "u24:6B07173": {
+   "url": "https://alt.edu.kz/en/schools/school-of-engineering/department-rolling-stock/6b07173-rolling-stock-engineering/"
+  },
+  "u24:6B11328": {
+   "url": "https://alt.edu.kz/ru/shkoly/shkola-biznesa/departament-logistiki-i-biznesa/6v11328-upravlenie-uslugami-v-otrasli/"
+  },
+  "u24:6B07131": {
+   "url": "https://alt.edu.kz/en/schools/school-of-engineering/department-transport-construction/6v07131-linear-pipelines/"
+  },
+  "u24:6B07330": {
+   "url": "https://alt.edu.kz/ru/shkoly/shkola-inzhenerii/departament-grazhdanskogo-stroitelstva/6b07330-arhitektura-zdanij-i-sooruzhenij/"
+  },
+  "u24:6B07128": {
+   "url": "https://alt.edu.kz/en/schools/school-of-engineering/department-transport-construction/6v07128-railway-track-and-track-facilities/"
+  },
+  "u24:6B07130": {
+   "url": "https://alt.edu.kz/en/schools/school-of-engineering/department-transport-construction/6v07130-highways-and-airfields/"
+  },
+  "u24:6B11333": {
+   "url": "https://alt.edu.kz/en/schools/school-of-business/department-of-logistics-and-business/6b11333-digital-logistics/"
+  },
+  "u24:6B11330": {
+   "url": "https://alt.edu.kz/ru/shkoly/shkola-biznesa/departament-logistiki-i-biznesa/6v11330-transportnaya-logistika/"
+  },
+  "u24:6B11367": {
+   "url": "https://alt.edu.kz/en/schools/school-of-business/department-of-logistics-and-business/6b11367-traffic-management/"
+  },
+  "u24:6B06208": {
+   "url": "https://alt.edu.kz/en/schools/school-of-technologies/department-of-telecommunications/6v06208-telecommunication-systems-and-railway-communication-networks/"
+  },
+  "u24:6B11326": {
+   "url": "https://alt.edu.kz/en/schools/school-of-business/department-of-logistics-and-business/6b11326-organization-of-transportation-traffic-and-operation-of-transport/"
+  },
+  "u24:6B11235": {
+   "url": "https://alt.edu.kz/ru/shkoly/shkola-inzhenerii/departament-avtomobilnoj-inzhenerii-i-bezopasnosti/6b11235-bezopasnost-zhiznedeyatelnosti-i-ekologiya/"
+  },
+  "u24:6B07134": {
+   "url": "https://alt.edu.kz/ru/shkoly/shkola-inzhenerii/departament-avtomobilnoj-inzhenerii-i-bezopasnosti/6v07134-avtomobili-putevye-i-stroitelnye-mashiny/"
+  },
+  "u24:6B11236": {
+   "url": "https://alt.edu.kz/en/schools/school-of-engineering/department-of-automotive-engineering-and-safety/6b11236-labor-protection-and-environmental-protection-in-transport/"
+  },
+  "u24:6B07116": {
+   "url": "https://alt.edu.kz/ru/shkoly/shkola-inzhenerii/departament-podvizhnogo-sostava/6v07116-vagony/"
+  },
+  "u24:6B07117": {
+   "url": "https://alt.edu.kz/ru/shkoly/shkola-inzhenerii/departament-podvizhnogo-sostava/6v07117-lokomotivy/"
+  },
+  "u24:6B07118": {
+   "url": "https://alt.edu.kz/en/schools/school-of-engineering/department-of-automotive-engineering-and-safety/6b07118-track-and-road-vehicles/"
+  },
+  "u24:6B07119": {
+   "url": "https://alt.edu.kz/en/schools/school-of-engineering/department-of-automotive-engineering-and-safety/6b07119-cars-and-automotive-industry/"
+  },
+  "u24:6B07132": {
+   "url": "https://alt.edu.kz/ru/shkoly/shkola-tehnologij/departament-avtomatizaczii-i-upravleniya/6v07132-robototehnicheskie-sistemy-na-transporte/"
+  },
+  "u24:6B11334": {
+   "url": "https://alt.edu.kz/ru/shkoly/shkola-inzhenerii/departament-avtomobilnoj-inzhenerii-i-bezopasnosti/6b11334-transportnaya-ekologistika/"
+  },
+  "u24:6B07189": {
+   "url": "https://alt.edu.kz/ru/shkoly/shkola-tehnologij/departament-energetiki/6b07189-gorodskoj-elektricheskij-transport/"
+  },
   "u28:6B11302": {
    "url": "http://zhubanov.edu.kz/kk/tef/category/34/",
    "price_kzt": 712000
@@ -1848,6 +3487,57 @@
   "u30:6B07208": {
    "url": "https://atu.edu.kz/welcome/bachelor/cosmetech/"
   },
+  "u31:6B07120": {
+   "url": "https://energo.university/ru/education_programs/153/"
+  },
+  "u31:6B07103": {
+   "url": "https://energo.university/ru/education_programs/169/"
+  },
+  "u31:6B06201": {
+   "url": "https://energo.university/ru/education_programs/42/"
+  },
+  "u31:6B06306": {
+   "url": "https://energo.university/ru/education_programs/183/"
+  },
+  "u31:6B06307": {
+   "url": "https://energo.university/ru/education_programs/48/"
+  },
+  "u31:6B06204": {
+   "url": "https://energo.university/ru/education_programs/190/"
+  },
+  "u31:6B07128": {
+   "url": "https://energo.university/ru/education_programs/181/"
+  },
+  "u31:6B07116": {
+   "url": "https://energo.university/ru/education_programs/157/"
+  },
+  "u31:6B07123": {
+   "url": "https://energo.university/ru/education_programs/152/"
+  },
+  "u31:6B07117": {
+   "url": "https://energo.university/ru/education_programs/155/"
+  },
+  "u31:6B07101": {
+   "url": "https://energo.university/ru/education_programs/193/"
+  },
+  "u31:6B06104": {
+   "url": "https://energo.university/ru/education_programs/185/"
+  },
+  "u31:6B06103": {
+   "url": "https://energo.university/ru/education_programs/186/"
+  },
+  "u31:6B07114": {
+   "url": "https://energo.university/ru/education_programs/174/"
+  },
+  "u31:6B07108": {
+   "url": "https://energo.university/ru/education_programs/184/"
+  },
+  "u31:6B07115": {
+   "url": "https://energo.university/ru/education_programs/172/"
+  },
+  "u31:6B07125": {
+   "url": "https://energo.university/ru/education_programs/161/"
+  },
   "almau:6B03204": {
    "price_kzt": 3200000
   },
@@ -2145,6 +3835,381 @@
   "u36:6B02203": {
    "url": "https://atyrau.edu.kz/ru/Home/BachelorSpecificProfession/477346cd-0b35-4ad1-9ea9-a43f0009003f"
   },
+  "u37:6B07203": {
+   "url": "https://aogu.edu.kz/faculties/coming/bakalavriat/matematika-fizika/6v07203",
+   "price_kzt": 695100
+  },
+  "u37:6B07304": {
+   "url": "https://aogu.edu.kz/faculties/coming/bakalavriat/matematika-fizika/6v07304",
+   "price_kzt": 695100
+  },
+  "u37:6B07104": {
+   "url": "https://aogu.edu.kz/faculties/coming/bakalavriat/matematika-fizika/6v07104",
+   "price_kzt": 695100
+  },
+  "u37:6B06104": {
+   "url": "https://aogu.edu.kz/faculties/coming/bakalavriat/matematika-informatika/6v06104",
+   "price_kzt": 695100
+  },
+  "u37:6B07301": {
+   "url": "https://aogu.edu.kz/faculties/coming/bakalavriat/matematika-fizika/6v07301",
+   "price_kzt": 695100
+  },
+  "u37:6B06301": {
+   "url": "https://aogu.edu.kz/faculties/coming/bakalavriat/matematika-informatika/6b06301",
+   "price_kzt": 695100
+  },
+  "u37:6B07302": {
+   "url": "https://aogu.edu.kz/faculties/coming/bakalavriat/matematika-fizika/6v07302",
+   "price_kzt": 695100
+  },
+  "u37:6B07204": {
+   "url": "https://aogu.edu.kz/faculties/coming/bakalavriat/matematika-fizika/6v07204",
+   "price_kzt": 695100
+  },
+  "u37:6B06102": {
+   "url": "https://aogu.edu.kz/faculties/coming/bakalavriat/matematika-informatika/6v06102",
+   "price_kzt": 695100
+  },
+  "u37:6B06101": {
+   "url": "https://aogu.edu.kz/faculties/coming/bakalavriat/matematika-informatika/6v06101",
+   "price_kzt": 695100
+  },
+  "u37:6B11201": {
+   "url": "https://aogu.edu.kz/faculties/coming/bakalavriat/matematika-fizika/6b11201",
+   "price_kzt": 695100
+  },
+  "u37:6B07107": {
+   "url": "https://aogu.edu.kz/faculties/coming/bakalavriat/matematika-fizika/6v07107",
+   "price_kzt": 695100
+  },
+  "u37:6B07201": {
+   "url": "https://aogu.edu.kz/faculties/coming/bakalavriat/matematika-fizika/6v07201",
+   "price_kzt": 695100
+  },
+  "u37:6B07206": {
+   "url": "https://aogu.edu.kz/faculties/coming/bakalavriat/matematika-fizika/6b07206",
+   "price_kzt": 695100
+  },
+  "u37:6B07303": {
+   "url": "https://aogu.edu.kz/faculties/industrialno-tekhnologicheskiy-fakultet/6b07303-kommunalnoe-khozyaystvo/",
+   "price_kzt": 695100
+  },
+  "u37:6B07101": {
+   "url": "https://aogu.edu.kz/faculties/coming/bakalavriat/matematika-fizika/6v07101",
+   "price_kzt": 695100
+  },
+  "u37:6B07102": {
+   "url": "https://aogu.edu.kz/faculties/coming/bakalavriat/matematika-fizika/6v07102",
+   "price_kzt": 695100
+  },
+  "u37:6B11301": {
+   "url": "https://aogu.edu.kz/faculties/coming/bakalavriat/matematika-geografiya/6v11301",
+   "price_kzt": 695100
+  },
+  "u37:6B07106": {
+   "url": "https://aogu.edu.kz/faculties/coming/bakalavriat/khimiya-fizika/6v07106",
+   "price_kzt": 695100
+  },
+  "u37:6B06103": {
+   "price_kzt": 695100
+  },
+  "u37:6B07109": {
+   "price_kzt": 695100
+  },
+  "u37:6B07205": {
+   "url": "https://aogu.edu.kz/faculties/coming/bakalavriat/matematika-fizika/6b07205",
+   "price_kzt": 695100
+  },
+  "u37:6B07202": {
+   "url": "https://aogu.edu.kz/faculties/coming/bakalavriat/matematika-fizika/6b07202",
+   "price_kzt": 695100
+  },
+  "u39:6B07115": {
+   "url": "https://ektu.kz/educationalprograms/educationalprogramdetail.aspx?Code=7054&lang=ru",
+   "price_kzt": 805860
+  },
+  "u39:6B04109": {
+   "url": "https://ektu.kz/departments/sc_business/eduproglist/undergraduate/state_financial_management.aspx?lang=ru",
+   "price_kzt": 609840
+  },
+  "u39:6B05303": {
+   "url": "https://ektu.kz/educationalprograms/educationalprogramdetail.aspx?Code=8222&lang=ru",
+   "price_kzt": 762300
+  },
+  "u39:6B05304": {
+   "url": "https://ektu.kz/educationalprograms/educationalprogramdetail.aspx?Code=8206&lang=ru",
+   "price_kzt": 762300
+  },
+  "u39:6B07314": {
+   "price_kzt": 805860
+  },
+  "u39:6B07118": {
+   "url": "https://ektu.kz/educationalprograms/educationalprogramdetail.aspx?Code=8292&lang=ru",
+   "price_kzt": 805860
+  },
+  "u39:6B07119": {
+   "url": "https://ektu.kz/educationalprograms/educationalprogramdetail.aspx?Code=8215&lang=ru",
+   "price_kzt": 805860
+  },
+  "u39:6B06120": {
+   "url": "https://ektu.kz/educationalprograms/educationalprogramdetail.aspx?Code=8230&lang=ru",
+   "price_kzt": 1074480
+  },
+  "u39:6B07101": {
+   "url": "https://ektu.kz/educationalprograms/educationalprogramdetail.aspx?Code=8232&lang=ru",
+   "price_kzt": 805860
+  },
+  "u39:6B06201": {
+   "url": "https://ektu.kz/educationalprograms/educationalprogramdetail.aspx?Code=8231&lang=ru",
+   "price_kzt": 805860
+  },
+  "u39:6B07104": {
+   "url": "https://ektu.kz/educationalprograms/educationalprogramdetail.aspx?Code=8214&lang=ru",
+   "price_kzt": 805860
+  },
+  "u39:6B07109": {
+   "url": "https://ektu.kz/educationalprograms/educationalprogramdetail.aspx?Code=8233&lang=ru",
+   "price_kzt": 805860
+  },
+  "u39:6B08601": {
+   "url": "https://ektu.kz/educationalprograms/educationalprogramdetail.aspx?Code=8219&lang=ru",
+   "price_kzt": 762300
+  },
+  "u39:6B04107": {
+   "url": "https://ektu.kz/educationalprograms/educationalprogramdetail.aspx?Code=7761&lang=ru",
+   "price_kzt": 609840
+  },
+  "u39:6B04108": {
+   "url": "https://ektu.kz/educationalprograms/educationalprogramdetail.aspx?Code=8205&lang=ru",
+   "price_kzt": 609840
+  },
+  "u39:6B11201": {
+   "url": "https://ektu.kz/educationalprograms/educationalprogramdetail.aspx?Code=8226&lang=ru",
+   "price_kzt": 696960
+  },
+  "u39:6B07112": {
+   "url": "https://ektu.kz/educationalprograms/educationalprogramdetail.aspx?Code=7768&lang=ru",
+   "price_kzt": 805860
+  },
+  "u39:6B04104": {
+   "url": "https://ektu.kz/educationalprograms/educationalprogramdetail.aspx?Code=8203&lang=ru",
+   "price_kzt": 609840
+  },
+  "u39:6B07203": {
+   "url": "https://ektu.kz/educationalprograms/educationalprogramdetail.aspx?Code=8220&lang=ru",
+   "price_kzt": 805860
+  },
+  "u39:6B04106": {
+   "url": "https://ektu.kz/educationalprograms/educationalprogramdetail.aspx?Code=8204&lang=ru",
+   "price_kzt": 609840
+  },
+  "u39:6B04103": {
+   "url": "https://ektu.kz/educationalprograms/educationalprogramdetail.aspx?Code=8202&lang=ru",
+   "price_kzt": 609840
+  },
+  "u39:6B05301": {
+   "url": "https://ektu.kz/educationalprograms/educationalprogramdetail.aspx?Code=8207&lang=ru",
+   "price_kzt": 762300
+  },
+  "u39:6B06101": {
+   "url": "https://ektu.kz/educationalprograms/educationalprogramdetail.aspx?Code=8293&lang=ru",
+   "price_kzt": 805860
+  },
+  "u39:6B06102": {
+   "url": "https://ektu.kz/educationalprograms/educationalprogramdetail.aspx?Code=8294&lang=ru",
+   "price_kzt": 805860
+  },
+  "u39:6B07116": {
+   "url": "https://ektu.kz/educationalprograms/educationalprogramdetail.aspx?Code=8209&lang=ru",
+   "price_kzt": 805860
+  },
+  "u39:6B11202": {
+   "url": "https://ektu.kz/educationalprograms/educationalprogramdetail.aspx?Code=8227&lang=ru",
+   "price_kzt": 696960
+  },
+  "u39:6B11301": {
+   "url": "https://ektu.kz/educationalprograms/educationalprogramdetail.aspx?Code=8477&lang=ru",
+   "price_kzt": 696960
+  },
+  "u39:6B07501": {
+   "url": "https://ektu.kz/educationalprograms/educationalprogramdetail.aspx?Code=8218&lang=ru",
+   "price_kzt": 805860
+  },
+  "u39:6B07117": {
+   "url": "https://ektu.kz/educationalprograms/educationalprogramdetail.aspx?Code=8213&lang=ru",
+   "price_kzt": 805860
+  },
+  "u39:6B07103": {
+   "url": "https://ektu.kz/educationalprograms/educationalprogramdetail.aspx?Code=7773&lang=ru",
+   "price_kzt": 805860
+  },
+  "u39:6B07312": {
+   "url": "https://ektu.kz/educationalprograms/educationalprogramdetail.aspx?Code=8224&lang=ru",
+   "price_kzt": 805860
+  },
+  "u39:6B06103": {
+   "url": "https://ektu.kz/educationalprograms/educationalprogramdetail.aspx?Code=8229&lang=ru",
+   "price_kzt": 805860
+  },
+  "u39:6B08301": {
+   "url": "https://ektu.kz/educationalprograms/educationalprogramdetail.aspx?Code=8225&lang=ru",
+   "price_kzt": 762300
+  },
+  "u39:6B07204": {
+   "url": "https://ektu.kz/educationalprograms/educationalprogramdetail.aspx?Code=8221&lang=ru",
+   "price_kzt": 805860
+  },
+  "u39:6B07305": {
+   "url": "https://ektu.kz/educationalprograms/educationalprogramdetail.aspx?Code=8216&lang=ru",
+   "price_kzt": 805860
+  },
+  "u39:6B07304": {
+   "url": "https://ektu.kz/educationalprograms/educationalprogramdetail.aspx?Code=8217&lang=ru",
+   "price_kzt": 805860
+  },
+  "u39:6B07107": {
+   "url": "https://ektu.kz/educationalprograms/educationalprogramdetail.aspx?Code=8210&lang=ru",
+   "price_kzt": 805860
+  },
+  "u39:6B06107": {
+   "url": "https://ektu.kz/educationalprograms/educationalprogramdetail.aspx?Code=8208&lang=ru",
+   "price_kzt": 805860
+  },
+  "u39:6B07302": {
+   "url": "https://ektu.kz/educationalprograms/educationalprogramdetail.aspx?Code=8223&lang=ru",
+   "price_kzt": 805860
+  },
+  "u39:6B07301": {
+   "url": "https://ektu.kz/educationalprograms/educationalprogramdetail.aspx?Code=6165&lang=ru",
+   "price_kzt": 805860
+  },
+  "u39:6B07313": {
+   "url": "https://ektu.kz/educationalprograms/educationalprogramdetail.aspx?Code=7779&lang=ru",
+   "price_kzt": 805860
+  },
+  "u39:6B07202": {
+   "url": "https://ektu.kz/educationalprograms/educationalprogramdetail.aspx?Code=8212&lang=ru",
+   "price_kzt": 805860
+  },
+  "u39:6B07201": {
+   "url": "https://ektu.kz/educationalprograms/educationalprogramdetail.aspx?Code=7770&lang=ru",
+   "price_kzt": 805860
+  },
+  "u39:6B07208": {
+   "url": "https://ektu.kz/educationalprograms/educationalprogramdetail.aspx?Code=8211&lang=ru",
+   "price_kzt": 805860
+  },
+  "u39:6B07315": {
+   "url": "https://ektu.kz/educationalprograms/educationalprogramdetail.aspx?Code=8228&lang=ru"
+  },
+  "u4:6B07115": {
+   "url": "https://satbayev.university/en/specialties/tekhnologicheskie-mashiny-i-oborudovanie?professionSubjectId=2",
+   "price_kzt": 1200000
+  },
+  "u4:6B07124": {
+   "url": "https://satbayev.university/en/specialties/tekhnologiya-proizvodstva-remonta-i-ekspluatatsii-lokomotivov?professionSubjectId=2",
+   "price_kzt": 1200000
+  },
+  "u4:6B07217": {
+   "url": "https://satbayev.university/en/specialties/tekhnologiya-redkikh-i-radioaktivnykh-elementov?professionSubjectId=2",
+   "price_kzt": 1200000
+  },
+  "u4:6B07122": {
+   "url": "https://satbayev.university/en/specialties/teploenergetika?professionSubjectId=2",
+   "price_kzt": 1200000
+  },
+  "u4:6B07108": {
+   "url": "https://satbayev.university/en/specialties/transportnaya-inzheneriya?professionSubjectId=2",
+   "price_kzt": 1200000
+  },
+  "u4:6B11301": {
+   "url": "https://satbayev.university/en/specialties/transportnye-uslugi-b?professionSubjectId=17",
+   "price_kzt": 1000000
+  },
+  "u4:6B05203": {
+   "url": "https://satbayev.university/en/specialties/prikladnaya-geologiya-b?professionSubjectId=17",
+   "price_kzt": 1000000
+  },
+  "u4:6B06102": {
+   "url": "https://satbayev.university/en/specialties/kompyuternye-nauki-computer-sciences?professionSubjectId=56",
+   "price_kzt": 1300000
+  },
+  "u4:6B07131": {
+   "url": "https://satbayev.university/en/specialties/dizayn-i-tekhnologii-v-mashinostroenii?professionSubjectId=2",
+   "price_kzt": 1200000
+  },
+  "u4:6B07128": {
+   "url": "https://satbayev.university/en/specialties/tsifrovaya-energetika?professionSubjectId=2"
+  },
+  "u4:6B11310": {
+   "url": "https://satbayev.university/en/specialties/tsifrovaya-logistika?professionSubjectId=17",
+   "price_kzt": 1000000
+  },
+  "u4:6B07214": {
+   "url": "https://satbayev.university/en/specialties/drilling-engineering?professionSubjectId=57",
+   "price_kzt": 1200000
+  },
+  "u4:6B07130": {
+   "url": "https://satbayev.university/en/specialties/inzhenernaya-mekhanika-i-modelirovanie?professionSubjectId=2",
+   "price_kzt": 1200000
+  },
+  "u4:6B07109": {
+   "url": "https://satbayev.university/en/specialties/inzhenernaya-fizika?professionSubjectId=2",
+   "price_kzt": 1200000
+  },
+  "u4:6B05206": {
+   "url": "https://satbayev.university/en/specialties/inzhenernaya-ekologiya?professionSubjectId=22",
+   "price_kzt": 1200000
+  },
+  "u4:6B06301": {
+   "url": "https://satbayev.university/en/specialties/inzheneriya-kiberbezopasnosti?professionSubjectId=56",
+   "price_kzt": 1300000
+  },
+  "u4:6B07310": {
+   "url": "https://satbayev.university/en/specialties/zemleustroystvo-i-kadastr?professionSubjectId=17",
+   "price_kzt": 1200000
+  },
+  "u4:6B07220": {
+   "url": "https://satbayev.university/en/specialties/mashiny-i-tekhnologii-obrabotki-novykh-materialov?professionSubjectId=2",
+   "price_kzt": 1200000
+  },
+  "u4:6B07116": {
+   "url": "https://satbayev.university/en/specialties/tekhnologiya-osnovnykh-proizvodstv-i-novye-materialy?professionSubjectId=74",
+   "price_kzt": 1200000
+  },
+  "u4:6B04102": {
+   "url": "https://satbayev.university/en/specialties/matematicheskaya-ekonomika-i-analiz-dannykh-b?professionSubjectId=17",
+   "price_kzt": 1000000
+  },
+  "u4:6B07203": {
+   "url": "https://satbayev.university/en/specialties/metallurgicheskaya-inzheneriya-i-obogashchenie-poleznykh-iskopaemykh?professionSubjectId=2",
+   "price_kzt": 1200000
+  },
+  "u4:6B07219": {
+   "url": "https://satbayev.university/en/specialties/metallurgiya-tsvetnykh-metallov?professionSubjectId=57",
+   "price_kzt": 1200000
+  },
+  "u4:6B07205": {
+   "url": "https://satbayev.university/en/specialties/gornaya-inzheneriya?professionSubjectId=2",
+   "price_kzt": 1200000
+  },
+  "u4:6B07129": {
+   "url": "https://satbayev.university/en/specialties/yadernaya-energetika-b?professionSubjectId=2",
+   "price_kzt": 1200000
+  },
+  "u4:6B07204": {
+   "url": "https://satbayev.university/en/specialties/neftyanaya-inzheneriya?professionSubjectId=57",
+   "price_kzt": 1200000
+  },
+  "u4:6B07101": {
+   "url": "https://satbayev.university/en/specialties/energetika?professionSubjectId=2",
+   "price_kzt": 1200000
+  },
+  "u4:6B07502": {
+   "url": "https://satbayev.university/en/specialties/standartizatsiya-sertifikatsiya-i-metrologiya-po-otraslyam?professionSubjectId=2",
+   "price_kzt": 1200000
+  },
   "u40:6B01402": {
    "price_kzt": 750000
   },
@@ -2312,6 +4377,33 @@
   },
   "u40:6B01519": {
    "price_kzt": 750000
+  },
+  "u43:6B04209": {
+   "price_kzt": 1200000
+  },
+  "u43:6B01102": {
+   "price_kzt": 930000
+  },
+  "u43:6B01606": {
+   "price_kzt": 930000
+  },
+  "u43:6B01701": {
+   "price_kzt": 930000
+  },
+  "u43:6B01704": {
+   "price_kzt": 1200000
+  },
+  "u43:6B02307": {
+   "price_kzt": 1200000
+  },
+  "u43:6B04108": {
+   "price_kzt": 980000
+  },
+  "u43:6B01301": {
+   "price_kzt": 930000
+  },
+  "u43:6B01202": {
+   "price_kzt": 930000
   },
   "enu:6B01515": {
    "price_kzt": 1600000
@@ -2595,6 +4687,108 @@
   "enu:6B05323": {
    "price_kzt": 1750000
   },
+  "u48:6B11201": {
+   "url": "https://zhezu.edu.kz/ru/academics/programs/occupational-safety"
+  },
+  "u48:6B04101": {
+   "url": "https://zhezu.edu.kz/ru/academics/programs/economics"
+  },
+  "u48:6B01402": {
+   "url": "https://zhezu.edu.kz/ru/academics/programs/physical-culture"
+  },
+  "u48:6B01401": {
+   "url": "https://zhezu.edu.kz/ru/academics/programs/art-drawing"
+  },
+  "u48:6B07104": {
+   "url": "https://zhezu.edu.kz/ru/academics/programs/electrical-engineering"
+  },
+  "u48:6B07206": {
+   "url": "https://zhezu.edu.kz/ru/academics/programs/metallurgy"
+  },
+  "u48:6B01301": {
+   "url": "https://zhezu.edu.kz/ru/academics/programs/primary-education"
+  },
+  "u48:6B07103": {
+   "url": "https://zhezu.edu.kz/ru/academics/programs/tech-machines"
+  },
+  "u48:6B07301": {
+   "url": "https://zhezu.edu.kz/ru/academics/programs/construction"
+  },
+  "u48:6B07205": {
+   "url": "https://zhezu.edu.kz/ru/academics/programs/mineral-processing"
+  },
+  "u48:6B07203": {
+   "url": "https://zhezu.edu.kz/ru/academics/programs/mining"
+  },
+  "u48:6B01504": {
+   "url": "https://zhezu.edu.kz/ru/academics/programs/math-informatics"
+  },
+  "u48:6B07101": {
+   "url": "https://zhezu.edu.kz/ru/academics/programs/automation"
+  },
+  "u48:6B07201": {
+   "url": "https://zhezu.edu.kz/ru/academics/programs/geology"
+  },
+  "u48:6B01702": {
+   "url": "https://zhezu.edu.kz/ru/academics/programs/foreign-languages"
+  },
+  "u48:6B01704": {
+   "url": "https://zhezu.edu.kz/ru/academics/programs/russian-language"
+  },
+  "u48:6B01701": {
+   "url": "https://zhezu.edu.kz/ru/academics/programs/kazakh-language"
+  },
+  "u48:6B01505": {
+   "url": "https://zhezu.edu.kz/ru/academics/programs/math-physics"
+  },
+  "u48:6B01507": {
+   "url": "https://zhezu.edu.kz/ru/academics/programs/biology-chemistry"
+  },
+  "u48:6B07106": {
+   "url": "https://zhezu.edu.kz/ru/academics/programs/thermal-engineering"
+  },
+  "u50:6B08200": {
+   "url": "https://wkatu.edu.kz/instituttar/cat_veterinar-and-agricultural-technologies-kz/mal-sharuashylyghy/"
+  },
+  "u50:6B07202": {
+   "url": "https://wkatu.edu.kz/instituttar/industrial_inst_cat_kz/munaj-gaz-isi/"
+  },
+  "u50:6B07500": {
+   "url": "https://wkatu.edu.kz/instituttar/polytech_inst_cat_kz/robototehnicheskie-sistemy-4-g/"
+  },
+  "u50:6B11200": {
+   "url": "https://wkatu.edu.kz/instituttar/polytech_inst_cat_kz/ondiristegi-enbek-gigienasy-zhane-enbekti-korghau/"
+  },
+  "u50:6B07101": {
+   "url": "https://wkatu.edu.kz/instituttar/polytech_inst_cat_kz/inzheneriya-zhane-inzhenerlik-is-3/"
+  },
+  "u50:6B07109": {
+   "url": "https://wkatu.edu.kz/instituttar/polytech_inst_cat_kz/elektr-tehnikasy-zhane-avtomattandyr/"
+  },
+  "u50:6B08700": {
+   "url": "https://wkatu.edu.kz/instituttar/polytech_inst_cat_kz/agroinzheneriya/"
+  },
+  "u50:6B04107": {
+   "url": "https://wkatu.edu.kz/instituttar/ekonom_inst_cat_kz/audit-zhane-salyk-salu/"
+  },
+  "u50:6B05200": {
+   "url": "https://wkatu.edu.kz/instituttar/ekonom_inst_cat_kz/korshaghan-orta/"
+  },
+  "u50:6B07304": {
+   "url": "https://wkatu.edu.kz/instituttar/industrial_inst_cat_kz/gidromelioracziya/"
+  },
+  "u50:6B05201": {
+   "url": "https://wkatu.edu.kz/instituttar/ekonom_inst_cat_kz/zher-turaly-ghylym/"
+  },
+  "u50:6B07100": {
+   "url": "https://wkatu.edu.kz/instituttar/industrial_inst_cat_kz/inzheneriya-zhane-inzhenerlik-is/"
+  },
+  "u50:6B11300": {
+   "url": "https://wkatu.edu.kz/instituttar/polytech_inst_cat_kz/kolik-kyzmetteri/"
+  },
+  "u50:6B08400": {
+   "url": "https://wkatu.edu.kz/instituttar/cat_veterinar-and-agricultural-technologies-kz/balyk-sharuashylyghy/"
+  },
   "u52:6B10102": {
    "price_kzt": 1686487
   },
@@ -2612,6 +4806,132 @@
   },
   "u52:6B10108": {
    "price_kzt": 1146811
+  },
+  "u54:6B04204": {
+   "price_kzt": 640000
+  },
+  "u54:6B04101": {
+   "price_kzt": 640000
+  },
+  "u54:6B04201": {
+   "price_kzt": 640000
+  },
+  "u54:6B04102": {
+   "price_kzt": 640000
+  },
+  "u54:6B04103": {
+   "price_kzt": 640000
+  },
+  "u54:6B04104": {
+   "price_kzt": 640000
+  },
+  "u54:6B03101": {
+   "price_kzt": 640000
+  },
+  "u54:6B03201": {
+   "price_kzt": 640000
+  },
+  "u54:6B02302": {
+   "price_kzt": 640000
+  },
+  "u54:6B02301": {
+   "price_kzt": 640000
+  },
+  "u54:6B07202": {
+   "price_kzt": 640000
+  },
+  "u54:6B07105": {
+   "price_kzt": 640000
+  },
+  "u54:6B05201": {
+   "price_kzt": 640000
+  },
+  "u54:6B07102": {
+   "price_kzt": 640000
+  },
+  "u54:6B07101": {
+   "price_kzt": 640000
+  },
+  "u54:6B07103": {
+   "price_kzt": 640000
+  },
+  "u54:6B07109": {
+   "price_kzt": 640000
+  },
+  "u54:6B07201": {
+   "price_kzt": 640000
+  },
+  "u54:6B06103": {
+   "price_kzt": 640000
+  },
+  "u54:6B11201": {
+   "price_kzt": 640000
+  },
+  "u54:6B06102": {
+   "price_kzt": 640000
+  },
+  "u54:6B06104": {
+   "price_kzt": 640000
+  },
+  "u54:6B11301": {
+   "price_kzt": 640000
+  },
+  "u54:6B04203": {
+   "price_kzt": 640000
+  },
+  "u55:6B07311": {
+   "price_kzt": 1100000
+  },
+  "u55:6B07312": {
+   "price_kzt": 1100000
+  },
+  "u55:6B07313": {
+   "price_kzt": 1100000
+  },
+  "u55:6B11313": {
+   "price_kzt": 1100000
+  },
+  "u55:6B11314": {
+   "price_kzt": 1100000
+  },
+  "u55:6B04101": {
+   "price_kzt": 1100000
+  },
+  "u55:6B06106": {
+   "price_kzt": 1100000
+  },
+  "u55:6B07308": {
+   "price_kzt": 1100000
+  },
+  "u55:6B07309": {
+   "price_kzt": 1100000
+  },
+  "u55:6B07314": {
+   "price_kzt": 1100000
+  },
+  "u55:6B07316": {
+   "price_kzt": 1100000
+  },
+  "u55:6B07315": {
+   "price_kzt": 1100000
+  },
+  "u55:6B07107": {
+   "price_kzt": 1100000
+  },
+  "u55:6B04103": {
+   "price_kzt": 1100000
+  },
+  "u58:6B02185": {
+   "url": "https://kaznai.kz/ru/bilim-beru-ba-darlamalary-4/"
+  },
+  "u58:6B02186": {
+   "url": "https://kaznai.kz/ru/bilim-beru-ba-darlamalary-6/"
+  },
+  "u58:6B02195": {
+   "url": "https://kaznai.kz/ru/bilim-beru-ba-darlamalary-2/"
+  },
+  "u58:6B02165": {
+   "url": "https://kaznai.kz/ru/bilim-beru-ba-darlamalary-3/"
   },
   "u64:6B01402": {
    "url": "https://qyzpu.edu.kz/ru/6v01402--vizualnoe-iskusstvo-hudozhestvennij-trud-grafika-i-proektirovanie",
@@ -3323,11 +5643,23 @@
   "u69:6B02213": {
    "url": "https://farabi.university/programs/2647?lang=ru"
   },
+  "u69:6B04101": {
+   "url": "https://farabi.university/programs/1515?lang=ru"
+  },
   "u69:6B04102": {
    "url": "https://farabi.university/programs/1447?lang=ru"
   },
+  "u69:6B04103": {
+   "url": "https://farabi.university/programs/1514?lang=ru"
+  },
   "u69:6B04109": {
    "url": "https://farabi.university/programs/2189?lang=ru"
+  },
+  "u69:6B01502": {
+   "url": "https://farabi.university/programs/2570?lang=ru"
+  },
+  "u69:6B05103": {
+   "url": "https://farabi.university/programs/1451?lang=ru"
   },
   "u69:6B08401": {
    "url": "https://farabi.university/programs/1960?lang=ru"
@@ -3338,14 +5670,554 @@
   "u69:6B07105": {
    "url": "https://farabi.university/programs/1423?lang=ru"
   },
+  "u69:6B05304": {
+   "url": "https://farabi.university/programs/1436?lang=ru"
+  },
+  "u69:6B07114": {
+   "url": "https://farabi.university/programs/2435?lang=ru"
+  },
+  "u69:6B05305": {
+   "url": "https://farabi.university/programs/1795?lang=ru"
+  },
+  "u69:6B10102": {
+   "url": "https://farabi.university/programs/1535?lang=ru"
+  },
+  "u69:6B10105": {
+   "url": "https://farabi.university/programs/2346?lang=ru"
+  },
   "u69:6B10112": {
    "url": "https://farabi.university/programs/2442?lang=ru"
+  },
+  "u69:6B10101": {
+   "url": "https://farabi.university/programs/1854?lang=ru"
+  },
+  "u69:6B06201": {
+   "url": "https://farabi.university/programs/1414?lang=ru"
+  },
+  "u69:6B07107": {
+   "url": "https://farabi.university/programs/1446?lang=ru"
+  },
+  "u69:6B07115": {
+   "url": "https://farabi.university/programs/2557?lang=ru"
   },
   "u69:6B03211": {
    "url": "https://farabi.university/programs/2549?lang=ru"
   },
   "u69:6B01702": {
    "url": "https://farabi.university/programs/2663?lang=ru"
+  },
+  "u70:6B02131": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02118": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02129": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02134": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02190": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02169": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02119": {
+   "price_kzt": 1198000
+  },
+  "u70:6B01402": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02168": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02170": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02167": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02163": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02161": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02165": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02121": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02164": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02115": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02175": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02172": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02166": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02111": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02117": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02176": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02180": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02130": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02179": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02100": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02148": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02192": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02196": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02194": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02193": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02185": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02160": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02159": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02187": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02186": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02188": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02189": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02158": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02195": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02171": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02173": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02162": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02128": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02184": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02139": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02138": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02136": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02137": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02124": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02125": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02152": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02150": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02145": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02199": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02146": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02197": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02156": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02109": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02154": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02120": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02126": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02106": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02127": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02157": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02133": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02132": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02147": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02151": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02149": {
+   "price_kzt": 1198000
+  },
+  "u70:6B02153": {
+   "price_kzt": 1198000
+  },
+  "u71:6B01708": {
+   "price_kzt": 1195000
+  },
+  "u71:6B04101": {
+   "url": "https://www.ablaikhan.kz/ru/for-applicants/for-applicants/our-faculties/%D0%B1%D0%B0%D0%BA%D0%B0%D0%BB%D0%B0%D0%B2%D1%80%D0%B8%D0%B0%D1%82/%D0%BC%D0%B5%D0%B6%D0%B4%D1%83%D0%BD%D0%B0%D1%80%D0%BE%D0%B4%D0%BD%D1%8B%D0%B9-%D0%B1%D0%B8%D0%B7%D0%BD%D0%B5%D1%81.html",
+   "price_kzt": 1250000
+  },
+  "u71:6B11101": {
+   "url": "https://www.ablaikhan.kz/ru/for-applicants/for-applicants/our-faculties/%D0%B1%D0%B0%D0%BA%D0%B0%D0%BB%D0%B0%D0%B2%D1%80%D0%B8%D0%B0%D1%82/tourism.html",
+   "price_kzt": 1200000
+  },
+  "u71:6B04202": {
+   "url": "https://www.ablaikhan.kz/ru/for-applicants/for-applicants/our-faculties/%D0%B1%D0%B0%D0%BA%D0%B0%D0%BB%D0%B0%D0%B2%D1%80%D0%B8%D0%B0%D1%82/international-law.html",
+   "price_kzt": 1250000
+  },
+  "u71:6B03201": {
+   "url": "https://www.ablaikhan.kz/ru/for-applicants/for-applicants/our-faculties/%D0%B1%D0%B0%D0%BA%D0%B0%D0%BB%D0%B0%D0%B2%D1%80%D0%B8%D0%B0%D1%82/journalism.html",
+   "price_kzt": 1200000
+  },
+  "u71:6B04103": {
+   "url": "https://www.ablaikhan.kz/ru/for-applicants/for-applicants/our-faculties/%D0%B1%D0%B0%D0%BA%D0%B0%D0%BB%D0%B0%D0%B2%D1%80%D0%B8%D0%B0%D1%82/%D0%BC%D0%B5%D0%BD%D0%B5%D0%B4%D0%B6%D0%BC%D0%B5%D0%BD%D1%82-%D0%B8-%D0%BC%D0%B0%D1%80%D0%BA%D0%B5%D1%82%D0%B8%D0%BD%D0%B3.html",
+   "price_kzt": 1250000
+  },
+  "u71:6B11102": {
+   "url": "https://www.ablaikhan.kz/ru/for-applicants/for-applicants/our-faculties/%D0%B1%D0%B0%D0%BA%D0%B0%D0%BB%D0%B0%D0%B2%D1%80%D0%B8%D0%B0%D1%82/restaurant.html",
+   "price_kzt": 1200000
+  },
+  "u71:6B03101": {
+   "url": "https://www.ablaikhan.kz/ru/for-applicants/for-applicants/our-faculties/%D0%B1%D0%B0%D0%BA%D0%B0%D0%BB%D0%B0%D0%B2%D1%80%D0%B8%D0%B0%D1%82/international-relations.html",
+   "price_kzt": 1375000
+  },
+  "u71:6B02201": {
+   "url": "https://www.ablaikhan.kz/ru/for-applicants/for-applicants/our-faculties/%D0%B1%D0%B0%D0%BA%D0%B0%D0%BB%D0%B0%D0%B2%D1%80%D0%B8%D0%B0%D1%82/asian-studies.html",
+   "price_kzt": 1200000
+  },
+  "u71:6B02302": {
+   "url": "https://www.ablaikhan.kz/ru/for-applicants/for-applicants/our-faculties/%D0%B1%D0%B0%D0%BA%D0%B0%D0%BB%D0%B0%D0%B2%D1%80%D0%B8%D0%B0%D1%82/%D0%B8%D0%BD%D0%BE%D1%81%D1%82%D1%80%D0%B0%D0%BD%D0%BD%D0%B0%D1%8F-%D1%84%D0%B8%D0%BB%D0%BE%D0%BB%D0%BE%D0%B3%D0%B8%D1%8F-%D0%B5%D0%B2%D1%80%D0%BE%D0%BF%D0%B5%D0%B9%D1%81%D0%BA%D0%B8%D0%B5-%D1%8F%D0%B7%D1%8B%D0%BA%D0%B8.html",
+   "price_kzt": 1375000
+  },
+  "u71:6B02301": {
+   "url": "https://www.ablaikhan.kz/ru/for-applicants/for-applicants/our-faculties/%D0%B1%D0%B0%D0%BA%D0%B0%D0%BB%D0%B0%D0%B2%D1%80%D0%B8%D0%B0%D1%82/%D0%BF%D0%B5%D1%80%D0%B5%D0%B2%D0%BE%D0%B4%D1%87%D0%B5%D1%81%D0%BA%D0%BE%D0%B5-%D0%B4%D0%B5%D0%BB%D0%BE-%D0%B5%D0%B2%D1%80%D0%BE%D0%BF%D0%B5%D0%B9%D1%81%D0%BA%D0%B8%D0%B5-%D1%8F%D0%B7%D1%8B%D0%BA%D0%B8.html",
+   "price_kzt": 1395000
+  },
+  "u71:6B04201": {
+   "url": "https://www.ablaikhan.kz/ru/for-applicants/for-applicants/our-faculties/%D0%B1%D0%B0%D0%BA%D0%B0%D0%BB%D0%B0%D0%B2%D1%80%D0%B8%D0%B0%D1%82/law.html",
+   "price_kzt": 1250000
+  },
+  "u71:6B01701": {
+   "url": "https://www.ablaikhan.kz/ru/for-applicants/for-applicants/our-faculties/%D0%B1%D0%B0%D0%BA%D0%B0%D0%BB%D0%B0%D0%B2%D1%80%D0%B8%D0%B0%D1%82/foreign-language-two-foreign-languages.html",
+   "price_kzt": 1395000
+  },
+  "u73:6B11230": {
+   "price_kzt": 980000
+  },
+  "u73:6B05213": {
+   "price_kzt": 1200000
+  },
+  "u73:6B07116": {
+   "price_kzt": 1200000
+  },
+  "u73:6B04105": {
+   "price_kzt": 1200000
+  },
+  "u73:6B06114": {
+   "price_kzt": 1200000
+  },
+  "u73:6B04110": {
+   "price_kzt": 1200000
+  },
+  "u73:6B07219": {
+   "price_kzt": 980000
+  },
+  "u73:6B07220": {
+   "price_kzt": 980000
+  },
+  "u73:6B04108": {
+   "price_kzt": 1200000
+  },
+  "u73:6B06115": {
+   "price_kzt": 1200000
+  },
+  "u73:6B11129": {
+   "price_kzt": 1200000
+  },
+  "u73:6B11126": {
+   "price_kzt": 1200000
+  },
+  "u73:6B04107": {
+   "price_kzt": 1200000
+  },
+  "u73:6B07525": {
+   "price_kzt": 1200000
+  },
+  "u73:6B06155": {
+   "price_kzt": 1200000
+  },
+  "u73:6B11127": {
+   "price_kzt": 1200000
+  },
+  "u73:6B05112": {
+   "price_kzt": 980000
+  },
+  "u73:6B07223": {
+   "price_kzt": 980000
+  },
+  "u73:6B07119": {
+   "price_kzt": 980000
+  },
+  "u73:6B07133": {
+   "price_kzt": 1200000
+  },
+  "u73:6B07234": {
+   "price_kzt": 980000
+  },
+  "u73:6B07232": {
+   "price_kzt": 1200000
+  },
+  "u73:6B07254": {
+   "price_kzt": 980000
+  },
+  "u73:6B07117": {
+   "price_kzt": 980000
+  },
+  "u73:6B04103": {
+   "price_kzt": 1200000
+  },
+  "u78:6B06101": {
+   "url": "https://kafu.edu.kz/?post_type=post&p=10172"
+  },
+  "u78:6B04103": {
+   "url": "https://kafu.edu.kz/?post_type=post&p=10198"
+  },
+  "u78:6B01402": {
+   "url": "https://kafu.edu.kz/?post_type=post&p=10239"
+  },
+  "u78:6B04104": {
+   "url": "https://kafu.edu.kz/?post_type=post&p=10195"
+  },
+  "u78:6B03101": {
+   "url": "https://kafu.edu.kz/?post_type=post&p=10212"
+  },
+  "u78:6B11101": {
+   "url": "https://kafu.edu.kz/?post_type=post&p=10177"
+  },
+  "u78:6B04108": {
+   "url": "https://kafu.edu.kz/?post_type=post&p=10188"
+  },
+  "u78:6B01707": {
+   "url": "https://kafu.edu.kz/?post_type=post&p=10228"
+  },
+  "u78:6B03201": {
+   "url": "https://kafu.edu.kz/?post_type=post&p=10208"
+  },
+  "u78:6B04102": {
+   "url": "https://kafu.edu.kz/?post_type=post&p=10200"
+  },
+  "u78:6B03102": {
+   "url": "https://kafu.edu.kz/?post_type=post&p=10210"
+  },
+  "u78:6B04101": {
+   "url": "https://kafu.edu.kz/?post_type=post&p=10202"
+  },
+  "u78:6B01302": {
+   "url": "https://kafu.edu.kz/?post_type=post&p=10243"
+  },
+  "u78:6B11102": {
+   "url": "https://kafu.edu.kz/?post_type=post&p=10174"
+  },
+  "u78:6B04201": {
+   "url": "https://kafu.edu.kz/?post_type=post&p=10185"
+  },
+  "u78:6B01706": {
+   "url": "https://kafu.edu.kz/?post_type=post&p=10234"
+  },
+  "u78:6B04205": {
+   "url": "https://kafu.edu.kz/?post_type=post&p=10179"
+  },
+  "u78:6B01703": {
+   "url": "https://kafu.edu.kz/?post_type=post&p=10224"
+  },
+  "u78:6B02301": {
+   "url": "https://kafu.edu.kz/?post_type=post&p=10216"
+  },
+  "u8:6B04108": {
+   "url": "https://esil.edu.kz/marketing"
+  },
+  "u8:6B04110": {
+   "url": "https://esil.edu.kz/customs-business-economics"
+  },
+  "u8:6B04202": {
+   "url": "https://esil.edu.kz/business-law"
+  },
+  "u8:6B01501": {
+   "url": "https://esil.edu.kz/computer-science-teacher",
+   "price_kzt": 970000
+  },
+  "u8:6B04112": {
+   "url": "https://esil.edu.kz/human-resources"
+  },
+  "u8:6B01502": {
+   "url": "https://esil.edu.kz/math-teacher",
+   "price_kzt": 970000
+  },
+  "u8:6B06102": {
+   "url": "https://esil.edu.kz/computer-technology",
+   "price_kzt": 970000
+  },
+  "u8:6B04109": {
+   "url": "https://esil.edu.kz/digital-marketing",
+   "price_kzt": 970000
+  },
+  "u8:6B04203": {
+   "url": "https://esil.edu.kz/legal-support-of-economic-security"
+  },
+  "u8:6B04102": {
+   "price_kzt": 970000
+  },
+  "u8:6B04111": {
+   "url": "https://esil.edu.kz/digital-business"
+  },
+  "u8:6B06103": {
+   "url": "https://esil.edu.kz/data-protection",
+   "price_kzt": 970000
+  },
+  "u8:6B06101": {
+   "url": "https://esil.edu.kz/information-systems",
+   "price_kzt": 970000
+  },
+  "u8:6B05401": {
+   "url": "https://esil.edu.kz/statistics",
+   "price_kzt": 970000
+  },
+  "u8:6B04107": {
+   "url": "https://esil.edu.kz/finances",
+   "price_kzt": 970000
+  },
+  "u8:6B04204": {
+   "url": "https://esil.edu.kz/law",
+   "price_kzt": 970000
+  },
+  "u8:6B04103": {
+   "url": "https://esil.edu.kz/economics",
+   "price_kzt": 970000
+  },
+  "u8:6B04201": {
+   "url": "https://esil.edu.kz/customs-business-law"
+  },
+  "u8:6B04101": {
+   "url": "https://esil.edu.kz/management",
+   "price_kzt": 970000
+  },
+  "u8:6B04104": {
+   "url": "https://esil.edu.kz/world-economy",
+   "price_kzt": 970000
+  },
+  "u8:6B11401": {
+   "url": "https://esil.edu.kz/social-work",
+   "price_kzt": 970000
+  },
+  "u8:6B04105": {
+   "url": "https://esil.edu.kz/accounting-and-auditing",
+   "price_kzt": 970000
+  },
+  "u8:6B11101": {
+   "url": "https://esil.edu.kz/tourism",
+   "price_kzt": 970000
+  },
+  "u80:6B06106": {
+   "url": "https://dku.kz/ru/programma/informacionnyj-inzhiniring-v-ekonomike"
+  },
+  "u80:6B07127": {
+   "url": "https://dku.kz/ru/programma/mechatronics"
+  },
+  "u80:6B07108": {
+   "url": "https://dku.kz/ru/programma/energeticheskaya-i-ekologicheskaya-tehnika"
+  },
+  "u80:6B06129": {
+   "url": "https://dku.kz/ru/programma/computer-science"
+  },
+  "u80:6B04126": {
+   "url": "https://dku.kz/ru/programma/industrial-management-bachelor"
+  },
+  "u80:6B11309": {
+   "url": "https://dku.kz/ru/programma/transportnaya-logistika"
+  },
+  "u80:6B04103": {
+   "url": "https://dku.kz/ru/programma/menedzhment-predpriyatij"
+  },
+  "u80:6B04104": {
+   "url": "https://dku.kz/ru/programma/marketing"
+  },
+  "u80:6B03101": {
+   "url": "https://dku.kz/ru/programma/mezhdunarodnye-otnosheniya"
+  },
+  "u80:6B04102": {
+   "url": "https://dku.kz/ru/programma/finansy"
   },
   "u81:6B10104": {
    "url": "https://new.krmu.edu.kz/page.php?id=12312321&locale=ru"
@@ -3680,6 +6552,165 @@
   "u85:6B02203": {
    "price_kzt": 869200
   },
+  "u86:6B06104": {
+   "price_kzt": 830000
+  },
+  "u86:6B05203": {
+   "price_kzt": 819000
+  },
+  "u86:6B04105": {
+   "price_kzt": 819000
+  },
+  "u86:6B04102": {
+   "price_kzt": 819000
+  },
+  "u86:6B04111": {
+   "price_kzt": 819000
+  },
+  "u86:6B04108": {
+   "price_kzt": 819000
+  },
+  "u86:6B05201": {
+   "price_kzt": 819000
+  },
+  "u86:6B11404": {
+   "price_kzt": 819000
+  },
+  "u86:6B04106": {
+   "price_kzt": 819000
+  },
+  "u86:6B06103": {
+   "price_kzt": 819000
+  },
+  "u86:6B06101": {
+   "price_kzt": 830000
+  },
+  "u86:6B06102": {
+   "price_kzt": 830000
+  },
+  "u86:6B07201": {
+   "price_kzt": 830000
+  },
+  "u86:6B07502": {
+   "price_kzt": 830000
+  },
+  "u86:6B11303": {
+   "price_kzt": 819000
+  },
+  "u86:6B04101": {
+   "price_kzt": 819000
+  },
+  "u86:6B04110": {
+   "price_kzt": 819000
+  },
+  "u86:6B03102": {
+   "price_kzt": 819000
+  },
+  "u86:6B01402": {
+   "price_kzt": 819000
+  },
+  "u86:6B04103": {
+   "price_kzt": 819000
+  },
+  "u86:6B04104": {
+   "price_kzt": 819000
+  },
+  "u86:6B04215": {
+   "price_kzt": 819000
+  },
+  "u86:6B04212": {
+   "price_kzt": 819000
+  },
+  "u86:6B04214": {
+   "price_kzt": 819000
+  },
+  "u86:6B11102": {
+   "price_kzt": 819000
+  },
+  "u86:6B03101": {
+   "price_kzt": 819000
+  },
+  "u86:6B03103": {
+   "price_kzt": 819000
+  },
+  "u86:6B04107": {
+   "price_kzt": 819000
+  },
+  "u86:6B11101": {
+   "price_kzt": 819000
+  },
+  "u86:6B01401": {
+   "price_kzt": 819000
+  },
+  "u86:6B04213": {
+   "price_kzt": 819000
+  },
+  "u86:6B10201": {
+   "price_kzt": 819000
+  },
+  "u87:6B04216": {
+   "price_kzt": 1700000
+  },
+  "u87:6B04217": {
+   "price_kzt": 1700000
+  },
+  "u87:6B07222": {
+   "price_kzt": 1500000
+  },
+  "u87:6B07252": {
+   "price_kzt": 1500000
+  },
+  "u87:6B11229": {
+   "price_kzt": 1500000
+  },
+  "u87:6B04208": {
+   "price_kzt": 1700000
+  },
+  "u87:6B04219": {
+   "price_kzt": 1700000
+  },
+  "u87:6B07223": {
+   "price_kzt": 1500000
+  },
+  "u87:6B06120": {
+   "price_kzt": 1500000
+  },
+  "u87:6B03105": {
+   "price_kzt": 1700000
+  },
+  "u87:6B04111": {
+   "price_kzt": 1500000
+  },
+  "u87:6B04218": {
+   "price_kzt": 1700000
+  },
+  "u87:6B04109": {
+   "price_kzt": 1500000
+  },
+  "u87:6B04107": {
+   "price_kzt": 1500000
+  },
+  "u87:6B04114": {
+   "price_kzt": 1500000
+  },
+  "u87:6B04113": {
+   "price_kzt": 1700000
+  },
+  "u87:6B07326": {
+   "price_kzt": 1500000
+  },
+  "u87:6B03106": {
+   "price_kzt": 1700000
+  },
+  "u87:6B02303": {
+   "price_kzt": 1500000
+  },
+  "u87:6B02332": {
+   "price_kzt": 1500000
+  },
+  "u87:6B02135": {
+   "price_kzt": 1500000
+  },
   "u88:6B03104": {
    "url": "https://admission.yu.edu.kz/2026/06/11/6b03104-halyqaralyq-qatynastar/",
    "price_kzt": 798000
@@ -3862,6 +6893,7 @@
    "price_kzt": 897000
   },
   "u90:6B10101": {
+   "url": "https://shokan.edu.kz/ru/educational-programs/obshaya-medicina-major/",
    "price_kzt": 997500
   },
   "u90:6B07103": {
@@ -4085,6 +7117,7 @@
    "price_kzt": 556500
   },
   "u90:6B06102": {
+   "url": "https://shokan.edu.kz/ru/educational-programs/vychislitelnaya-tehnika-i-programmnoe-obespechenie-bezopasnost-kompyuternyh-sistem-i-setej/",
    "price_kzt": 593600
   },
   "u90:6B03101": {
@@ -4092,6 +7125,7 @@
    "price_kzt": 556500
   },
   "u90:6B06105": {
+   "url": "https://shokan.edu.kz/ru/educational-programs/6v06105-data-science/",
    "price_kzt": 593600
   },
   "u90:6B05101": {
@@ -4099,34 +7133,104 @@
    "price_kzt": 556500
   },
   "u90:6B06104": {
+   "url": "https://shokan.edu.kz/ru/educational-programs/informacionnye-sistemy/",
    "price_kzt": 593600
   },
   "u90:6B05301": {
+   "url": "https://shokan.edu.kz/ru/educational-programs/fizika/",
    "price_kzt": 556500
   },
   "u90:6B03202": {
+   "url": "https://shokan.edu.kz/ru/educational-programs/zhurnalistika/",
    "price_kzt": 556500
   },
   "u90:6B04107": {
+   "url": "https://shokan.edu.kz/ru/educational-programs/globalnyj-menedzhment/",
    "price_kzt": 556500
   },
   "u90:6B02201": {
+   "url": "https://shokan.edu.kz/ru/educational-programs/nauchnaya-istoriya/",
    "price_kzt": 614800
   },
   "u90:6B02302": {
+   "url": "https://shokan.edu.kz/ru/educational-programs/perevodcheskoe-delo-anglijskij-nemeckijkitajskij-major-minor/",
    "price_kzt": 614800
   },
   "u90:6B05102": {
+   "url": "https://shokan.edu.kz/ru/educational-programs/biotehnologiya-po-otraslyam/",
    "price_kzt": 556500
   },
   "u90:6B02202": {
+   "url": "https://shokan.edu.kz/ru/educational-programs/teologiya/",
    "price_kzt": 614800
   },
   "u90:6B01601": {
+   "url": "https://shokan.edu.kz/ru/educational-programs/istoriya-i-religiovedenie-major/",
    "price_kzt": 651900
   },
   "u90:6B01403": {
+   "url": "https://shokan.edu.kz/ru/educational-programs/fizicheskaya-kultura-i-sport/",
    "price_kzt": 651900
+  },
+  "u91:6B04103": {
+   "price_kzt": 540000
+  },
+  "u91:6B07111": {
+   "price_kzt": 540000
+  },
+  "u91:6B07110": {
+   "price_kzt": 540000
+  },
+  "u91:6B04105": {
+   "price_kzt": 540000
+  },
+  "u91:6B04104": {
+   "price_kzt": 540000
+  },
+  "u91:6B11319": {
+   "price_kzt": 540000
+  },
+  "u91:6B11154": {
+   "price_kzt": 540000
+  },
+  "u91:6B07514": {
+   "price_kzt": 540000
+  },
+  "u91:6B07112": {
+   "price_kzt": 540000
+  },
+  "u91:6B11318": {
+   "price_kzt": 540000
+  },
+  "u91:6B08716": {
+   "price_kzt": 540000
+  },
+  "u91:6B06107": {
+   "price_kzt": 540000
+  },
+  "u91:6B07108": {
+   "price_kzt": 540000
+  },
+  "u91:6B06150": {
+   "price_kzt": 540000
+  },
+  "u91:6B07138": {
+   "price_kzt": 540000
+  },
+  "u91:6B07213": {
+   "price_kzt": 540000
+  },
+  "u91:6B08127": {
+   "price_kzt": 540000
+  },
+  "u91:6B08147": {
+   "price_kzt": 540000
+  },
+  "u91:6B04102": {
+   "price_kzt": 540000
+  },
+  "u91:6B04148": {
+   "price_kzt": 540000
   },
   "u92:6B07106": {
    "price_kzt": 549000
@@ -4356,6 +7460,132 @@
   "u92:6B01511": {
    "price_kzt": 549000
   },
+  "u96:6B01583": {
+   "url": "https://korkyt.edu.kz/ru/staticpages/227"
+  },
+  "u96:6B03238": {
+   "url": "https://korkyt.edu.kz/ru/staticpages/244"
+  },
+  "u96:6B11380": {
+   "url": "https://korkyt.edu.kz/ru/staticpages/169"
+  },
+  "u96:6B07261": {
+   "url": "https://korkyt.edu.kz/ru/staticpages/223"
+  },
+  "u96:6B01517": {
+   "url": "https://korkyt.edu.kz/ru/staticpages/205"
+  },
+  "u96:6B01515": {
+   "url": "https://korkyt.edu.kz/ru/staticpages/203"
+  },
+  "u96:6B04141": {
+   "url": "https://korkyt.edu.kz/ru/staticpages/164"
+  },
+  "u96:6B06155": {
+   "url": "https://korkyt.edu.kz/ru/staticpages/523"
+  },
+  "u96:6B04143": {
+   "url": "https://korkyt.edu.kz/ru/staticpages/194"
+  },
+  "u96:6B01784": {
+   "url": "https://korkyt.edu.kz/ru/staticpages/234"
+  },
+  "u96:6B07368": {
+   "url": "https://korkyt.edu.kz/ru/staticpages/243"
+  },
+  "u96:6B07369": {
+   "url": "https://korkyt.edu.kz/ru/staticpages/238"
+  },
+  "u96:6B02336": {
+   "url": "https://korkyt.edu.kz/ru/staticpages/246"
+  },
+  "u96:6B03270": {
+   "url": "https://korkyt.edu.kz/ru/staticpages/245"
+  },
+  "u96:6B01516": {
+   "url": "https://korkyt.edu.kz/ru/staticpages/204"
+  },
+  "u96:6B01519": {
+   "url": "https://korkyt.edu.kz/ru/staticpages/202"
+  },
+  "u96:6B04247": {
+   "url": "https://korkyt.edu.kz/ru/staticpages/230"
+  },
+  "u96:6B07159": {
+   "url": "https://korkyt.edu.kz/ru/staticpages/228"
+  },
+  "u96:6B01505": {
+   "url": "https://korkyt.edu.kz/ru/staticpages/544"
+  },
+  "u96:6B01504": {
+   "url": "https://korkyt.edu.kz/ru/staticpages/545"
+  },
+  "u96:6B07189": {
+   "url": "https://korkyt.edu.kz/ru/staticpages/229"
+  },
+  "u96:6B08272": {
+   "url": "https://korkyt.edu.kz/ru/staticpages/235"
+  },
+  "u96:6B01603": {
+   "url": "https://korkyt.edu.kz/ru/staticpages/539"
+  },
+  "u96:6B01507": {
+   "url": "https://korkyt.edu.kz/ru/staticpages/553"
+  },
+  "u96:6B06352": {
+   "url": "https://korkyt.edu.kz/ru/staticpages/528"
+  },
+  "u96:6B07365": {
+   "url": "https://korkyt.edu.kz/ru/staticpages/233"
+  },
+  "u96:6B08674": {
+   "url": "https://korkyt.edu.kz/ru/staticpages/237"
+  },
+  "u96:6B08675": {
+   "url": "https://korkyt.edu.kz/ru/staticpages/236"
+  },
+  "u96:6B08607": {
+   "url": "https://korkyt.edu.kz/ru/staticpages/508"
+  },
+  "u96:6B01520": {
+   "url": "https://korkyt.edu.kz/ru/staticpages/561"
+  },
+  "u96:6B07366": {
+   "url": "https://korkyt.edu.kz/ru/staticpages/226"
+  },
+  "u96:6B01708": {
+   "url": "https://korkyt.edu.kz/ru/staticpages/540"
+  },
+  "u96:6B05283": {
+   "url": "https://korkyt.edu.kz/ru/staticpages/240"
+  },
+  "u96:6B01302": {
+   "url": "https://korkyt.edu.kz/ru/staticpages/547"
+  },
+  "u96:6B07367": {
+   "url": "https://korkyt.edu.kz/ru/staticpages/225"
+  },
+  "u96:6B07301": {
+   "url": "https://korkyt.edu.kz/ru/staticpages/534"
+  },
+  "u96:6B06102": {
+   "url": "https://korkyt.edu.kz/ru/staticpages/521"
+  },
+  "u96:6B06303": {
+   "url": "https://korkyt.edu.kz/ru/staticpages/522"
+  },
+  "u96:6B06101": {
+   "url": "https://korkyt.edu.kz/ru/staticpages/520"
+  },
+  "u96:6B01203": {
+   "url": "https://korkyt.edu.kz/ru/staticpages/546"
+  },
+  "u96:6B01420": {
+   "url": "https://korkyt.edu.kz/ru/staticpages/548"
+  },
+  "u96:6B06103": {
+   "url": "https://korkyt.edu.kz/ru/staticpages/526"
+  },
   "u97:6B10107": {
    "price_kzt": 2280000
   },
@@ -4367,6 +7597,9 @@
   },
   "u97:6B10101": {
    "price_kzt": 925000
+  },
+  "u98:6B10105": {
+   "url": "https://smu.edu.kz/en/educational-program/v084-nursing/"
   }
  }
 }
