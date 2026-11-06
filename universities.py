@@ -283,9 +283,9 @@ def _catalog_unis(unis: dict) -> dict[str, dict]:
             "website": u.get("website", ""),
             "admissions": {"phones": u.get("phones", []), "email": (u.get("emails") or [""])[0],
                            "address": u.get("contacts_raw", ""), "url": u.get("website", "")},
-            "price_note": "Цены — по данным открытого каталога вузов, есть не у всех программ; "
+            "price_note": "Цены есть не у всех программ; "
                           "актуальную стоимость уточняй в приёмной комиссии.",
-            "notes": "Данные открытого каталога вузов; коды программ сверены с официальным реестром образовательных программ.",
+            "notes": "Коды программ — по официальному реестру образовательных программ.",
             "catalog": True, "programs": progs,
         }
     return out
@@ -314,7 +314,7 @@ def price_text(p: dict, lang: str) -> str:
     if p["price_kzt"]:
         return money(p["price_kzt"]) + (" жылына" if lang == "kz" else " в год")
     if p.get("price_other"):
-        return p["price_other"] + (" (каталог дерегі)" if lang == "kz" else " (по данным каталога)")
+        return p["price_other"] + (" (шамамен, ЖОО сайтынан нақтыла)" if lang == "kz" else " (ориентировочно, уточни на сайте вуза)")
     return "бағасы нақтыланады" if lang == "kz" else "цена уточняется"
 
 
@@ -466,6 +466,21 @@ EXTRA_ALIASES = {
 for _slug, _extra in EXTRA_ALIASES.items():
     if _slug in UNIS:
         UNIS[_slug]["aliases"] = list(dict.fromkeys(UNIS[_slug]["aliases"] + _extra))
+# Официальные сайты вузов, проверенные 06.11.2026: в каталоге были устаревшие адреса. У ТарУ им. Дулати адрес tarsu.kz
+# теперь занят сайтом казино, у АТУ — заглушка хостинга, у остальных — старый домен без ответа или с перенаправлением.
+WEBSITE_FIXES = {
+    "u115": "https://dulaty.edu.kz", "u30": "https://atu.edu.kz", "u67": "https://abai.university",
+    "u119": "https://tashenev.edu.kz", "u36": "https://atyrau.edu.kz", "kazatu": "https://kazatu.edu.kz",
+    "u135": "https://caiu.edu.kz", "u81": "https://new.krmu.edu.kz", "u83": "https://qmu.edu.kz",
+    "u85": "https://buketov.edu.kz", "u90": "https://shokan.edu.kz", "u138": "https://univershu.edu.kz",
+    "u140": "https://okmpu.kz", "u141": "https://auezov.edu.kz", "u40": "https://vku.edu.kz", "u114": "https://htu.edu.kz", "u53": "https://wku.edu.kz",
+}
+for _slug, _url in WEBSITE_FIXES.items():
+    if _slug in UNIS:
+        UNIS[_slug]["website"] = _url
+        if isinstance(UNIS[_slug].get("admissions"), dict):
+            UNIS[_slug]["admissions"]["url"] = _url
+
 # Вузы с подтверждённым переименованием: показываем новое название, старое остаётся для поиска.
 # Университет «Сырдария» с 2022–2023 учебного года — Университет имени Ж.А. Ташенева (по сайту вуза tashenev.edu.kz).
 NEW_NAMES = {"u119": ("Университет имени Ж. Ташенева", "Университет имени Жумабека Ахметулы Ташенева", ["сырдария", "syrdariya"])}
@@ -1081,8 +1096,8 @@ def program_card(key: str, lang: str) -> str:
     if extra_facts:
         lines.append("📚 " + esc(" · ".join(extra_facts)))
     if p.get("not_in_reference"):
-        lines.append("⚠️ " + ("Бағдарлама ЖОО анықтамасында жоқ, ашық каталогта бар — 2026 жылғы қабылдауды комиссиядан нақтыла."
-                             if kz else "Программы нет в справке вуза, но она есть в открытом каталоге — набор в 2026 году уточняй в приёмной."))
+        lines.append("⚠️ " + ("Бағдарлама ЖОО анықтамасында жоқ — 2026 жылғы қабылдауды комиссиядан нақтыла."
+                             if kz else "Программы нет в справке вуза — набор в 2026 году уточняй в приёмной."))
     if not p["open"]:
         lines.append("⚠️ " + b("2026 жылы бұл бағдарламаға қабылдау жоқ." if kz else "В 2026 году набора на эту программу нет."))
     else:
@@ -1124,8 +1139,8 @@ def program_card(key: str, lang: str) -> str:
     if extra.get("note"):
         lines.append("\nℹ️ " + esc(extra["note"]))
     if UNIS[slug].get("catalog"):
-        lines.append("\nℹ️ " + ("Деректер ЖОО-лардың ашық каталогынан алынды — қабылдау комиссиясынан нақтыла."
-                               if kz else "Данные из открытого каталога вузов — уточняй в приёмной комиссии вуза."))
+        lines.append("\nℹ️ " + ("Құны мен шарттарын ЖОО сайтынан немесе қабылдау комиссиясынан нақтыла."
+                               if kz else "Стоимость и условия уточняй на сайте вуза или в приёмной комиссии."))
     else:
         lines.append("\nℹ️ " + ("Деректер бағдар ретінде берілген — ЖОО қабылдау комиссиясынан нақтыла." if kz
                                else "Данные ориентировочные — уточняй в приёмной комиссии вуза."))
@@ -1337,7 +1352,7 @@ def contacts_text(lang: str, slugs: list[str] | None = None) -> str:
         if a.get("url") or u.get("website"):
             block.append(f"🌐 {a.get('url') or u.get('website', '')}")
         lines.append("\n".join(block))
-    lines.append("\nКонтактілер ЖОО сайттарынан және ашық каталогтан алынды (қазан 2026) — құжат тапсырар алдында ЖОО сайтынан тексер." if kz
-                 else "\nКонтакты — с сайтов вузов и из открытого каталога (октябрь 2026). Перед подачей документов сверь на сайте вуза.")
+    lines.append("\nҚұжат тапсырар алдында байланыстарды ЖОО сайтынан тексер." if kz
+                 else "\nПеред подачей документов сверь контакты на сайте вуза.")
     return "\n".join(lines)
 
