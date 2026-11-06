@@ -37,7 +37,7 @@
    "admissions": null,
    "programs_list": null,
    "prices": null,
-   "price_audited": false
+   "price_audited": true
   },
   "u119": {
    "site": "https://tashenev.edu.kz",
@@ -56,7 +56,7 @@
     "8 (7252) 95-25-01"
    ],
    "email": "info@udn.edu.kz",
-   "price_audited": false
+   "price_audited": true
   },
   "sdu": {
    "site": "https://sdu.edu.kz",
@@ -101,7 +101,7 @@
     "8 (7252) 37 10 64"
    ],
    "email": "info@caiu.edu.kz",
-   "price_audited": false
+   "price_audited": true
   },
   "u138": {
    "site": "https://univershu.edu.kz",
@@ -112,7 +112,7 @@
     "8(7252) 55-58-61"
    ],
    "email": "shu2050@mail.ru",
-   "price_audited": false
+   "price_audited": true
   },
   "u140": {
    "site": "https://okmpu.kz",
@@ -133,7 +133,7 @@
    "programs_list": "https://auezov.edu.kz/index.php/rus/академический-процесс/образовательные-программы/перечень/бакалавриат",
    "prices": null,
    "email": "canselyarya@auezov.edu.kz",
-   "price_audited": false
+   "price_audited": true
   },
   "u28": {
    "site": "https://zhubanov.edu.kz",
@@ -210,7 +210,7 @@
     "8(7112) 50-98-14"
    ],
    "email": "reception@wkitu.kz",
-   "price_audited": false
+   "price_audited": true
   },
   "u52": {
    "site": "https://ospanov.university",
@@ -230,7 +230,7 @@
    "programs_list": "https://kazatu.edu.kz/ru/facultets",
    "prices": null,
    "email": "office@kazatu.edu.kz",
-   "price_audited": false
+   "price_audited": true
   },
   "u64": {
    "site": "https://qyzpu.edu.kz",
@@ -269,7 +269,7 @@
    "admissions": "https://abiturient.abaiuniversity.edu.kz/?lang=ru",
    "programs_list": "https://abai.university/ru/bakalavriat",
    "prices": null,
-   "price_audited": false
+   "price_audited": true
   },
   "u69": {
    "site": "https://farabi.university",
@@ -288,7 +288,7 @@
     "+7 727 250 83 75"
    ],
    "email": "info@medkrmu.kz",
-   "price_audited": false
+   "price_audited": true
   },
   "u83": {
    "site": "https://qmu.edu.kz",
