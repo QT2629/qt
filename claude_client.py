@@ -1,4 +1,5 @@
 # Всё общение с Claude API — в одном месте.
+import re
 import logging
 
 import anthropic
@@ -22,6 +23,14 @@ class Refused(Exception):
 
 class NoApiKey(Exception):
     """ANTHROPIC_API_KEY не задан — ИИ не подключён."""
+
+
+_SERVICE_TAG = re.compile(r"</?(?:program_details|student_profile|user_preferences|almau_details|universities)>")
+
+
+def _hide_service_tags(text: str) -> str:
+    """Служебные теги из промпта не должны попадать к человеку: заменяем на «моей базе»."""
+    return _SERVICE_TAG.sub("моей базе", text)
 
 
 async def ask_claude(knowledge_text: str, lang: str, messages: list[dict]) -> tuple[str, float]:
@@ -58,4 +67,4 @@ async def ask_claude(knowledge_text: str, lang: str, messages: list[dict]) -> tu
 
     # Ответ состоит из «блоков»; берём только текстовые.
     answer = "".join(block.text for block in response.content if block.type == "text").strip()
-    return answer, cost
+    return _hide_service_tags(answer), cost
