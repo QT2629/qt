@@ -78,7 +78,7 @@
   "u108": {
    "site": "https://ppu.edu.kz",
    "admissions": "https://ppu.edu.kz/ru/priemnaya-komissiya/",
-   "programs_list": "https://ppu.edu.kz/ru/bakalavriatnewru",
+   "programs_list": null,
    "prices": "https://ppu.edu.kz/ru/stoimost-obuceniya",
    "phones": [
     "8 (7182) 65-16-12",
@@ -633,7 +633,7 @@
   "enu": {
    "site": "https://enu.kz",
    "admissions": "https://enu.kz/kz/page/applicants",
-   "programs_list": "https://enu.kz/kz/page/applicants/bachelor",
+   "programs_list": null,
    "prices": "https://enu.kz/kz/page/applicants/tuition-fees",
    "email": "enu@enu.kz",
    "price_audited": true
@@ -678,8 +678,8 @@
   },
   "u48": {
    "site": "https://zhezu.edu.kz",
-   "admissions": null,
-   "programs_list": null,
+   "admissions": "https://zhezu.edu.kz/ru/admission",
+   "programs_list": "https://zhezu.edu.kz/ru/academics",
    "prices": null,
    "price_audited": true
   },
@@ -1259,6 +1259,9 @@
   "u100:6B07101": {
    "price_kzt": 950000
   },
+  "u101:6B01511": {
+   "url": "https://ayu.edu.kz/birimler/ru/4-fen-bilimleri-fakultesi/programlar/6B01521"
+  },
   "u101:6B10156": {
    "url": "https://ayu.edu.kz/birimler/ru/4-lisansustu-tip-egitimi-fakultesi/programlar/6B10156"
   },
@@ -1487,6 +1490,9 @@
   "u101:6B02267": {
    "url": "https://ayu.edu.kz/birimler/ru/4-filoloji-fakultesi/programlar/6B02267"
   },
+  "u102:6B04104": {
+   "url": "https://mtgu.edu.kz/ru/applicants/bakalavriat"
+  },
   "u104:6B05201": {
    "url": "https://aiu.kz/programs/bachelor/8"
   },
@@ -1498,6 +1504,9 @@
   },
   "u104:6B01401": {
    "url": "https://aiu.kz/programs/bachelor/78"
+  },
+  "u104:6B01402": {
+   "url": "https://aiu.kz/creative-exams?lang=en"
   },
   "u104:6B01506": {
    "url": "https://aiu.kz/programs/bachelor/79"
@@ -1513,6 +1522,9 @@
   },
   "u104:6B01504": {
    "url": "https://aiu.kz/programs/bachelor/36"
+  },
+  "u104:6B01601": {
+   "url": "https://aiu.kz/news/759"
   },
   "u104:6B01707": {
    "url": "https://aiu.kz/programs/bachelor/81"
@@ -1866,6 +1878,9 @@
   "u111:6B07109": {
    "url": "https://rudny.edu.kz/programs/%d0%bc%d0%b5%d0%b4%d0%b8%d1%86%d0%b8%d0%bd%d1%81%d0%ba%d0%b8%d0%b9-%d0%b8%d0%bd%d0%b6%d0%b8%d0%bd%d0%b8%d1%80%d0%b8%d0%bd%d0%b3-%d1%81%d0%be%d0%b2%d0%bc%d0%b5%d1%81%d1%82%d0%bd%d0%b0%d1%8f-%d0%be/",
    "price_kzt": 645000
+  },
+  "u111:6B02105": {
+   "url": "https://rudny.edu.kz/programs/дизайн-среды-обитания/"
   },
   "u111:6B07107": {
    "url": "https://rudny.edu.kz/programs/%d0%b0%d0%b2%d1%82%d0%be%d0%bc%d0%b0%d1%82%d0%b8%d0%b7%d0%b0%d1%86%d0%b8%d1%8f-%d1%82%d0%b5%d1%85%d0%bd%d0%be%d0%bb%d0%be%d0%b3%d0%b8%d1%87%d0%b5%d1%81%d0%ba%d0%b8%d1%85-%d0%bf%d1%80%d0%be%d1%86%d0%b5/",
@@ -2249,6 +2264,57 @@
   "u114:6B07505": {
    "price_kzt": 620000
   },
+  "u115:6B01502": {
+   "url": "https://lib.dulaty.edu.kz/index.php/kk/okhyrmandarga/obespechennost-dystsyplyn-obrazovatelnykh-programm-uchebnoi-uchebno-metodycheskoi-y-nauchnoi-lyteraturoi-po-obshcheobrazovatelnym-bazovym-y-profylyruiushchym-dystsyplynam/bakalavryat"
+  },
+  "u115:6B01503": {
+   "url": "https://lib.dulaty.edu.kz/index.php/kk/okhyrmandarga/obespechennost-dystsyplyn-obrazovatelnykh-programm-uchebnoi-uchebno-metodycheskoi-y-nauchnoi-lyteraturoi-po-obshcheobrazovatelnym-bazovym-y-profylyruiushchym-dystsyplynam/bakalavryat"
+  },
+  "u115:6B01501": {
+   "url": "https://lib.dulaty.edu.kz/index.php/kk/okhyrmandarga/obespechennost-dystsyplyn-obrazovatelnykh-programm-uchebnoi-uchebno-metodycheskoi-y-nauchnoi-lyteraturoi-po-obshcheobrazovatelnym-bazovym-y-profylyruiushchym-dystsyplynam/bakalavryat"
+  },
+  "u115:6B03212": {
+   "url": "https://lib.dulaty.edu.kz/index.php/kk/okhyrmandarga/obespechennost-dystsyplyn-obrazovatelnykh-programm-uchebnoi-uchebno-metodycheskoi-y-nauchnoi-lyteraturoi-po-obshcheobrazovatelnym-bazovym-y-profylyruiushchym-dystsyplynam/bakalavryat"
+  },
+  "u115:6B03213": {
+   "url": "https://lib.dulaty.edu.kz/index.php/kk/okhyrmandarga/obespechennost-dystsyplyn-obrazovatelnykh-programm-uchebnoi-uchebno-metodycheskoi-y-nauchnoi-lyteraturoi-po-obshcheobrazovatelnym-bazovym-y-profylyruiushchym-dystsyplynam/bakalavryat"
+  },
+  "u115:6B07108": {
+   "url": "https://lib.dulaty.edu.kz/index.php/kk/okhyrmandarga/obespechennost-dystsyplyn-obrazovatelnykh-programm-uchebnoi-uchebno-metodycheskoi-y-nauchnoi-lyteraturoi-po-obshcheobrazovatelnym-bazovym-y-profylyruiushchym-dystsyplynam/bakalavryat"
+  },
+  "u115:6B07202": {
+   "url": "https://lib.dulaty.edu.kz/index.php/kk/okhyrmandarga/obespechennost-dystsyplyn-obrazovatelnykh-programm-uchebnoi-uchebno-metodycheskoi-y-nauchnoi-lyteraturoi-po-obshcheobrazovatelnym-bazovym-y-profylyruiushchym-dystsyplynam/bakalavryat"
+  },
+  "u115:6B01802": {
+   "url": "https://lib.dulaty.edu.kz/index.php/kk/okhyrmandarga/obespechennost-dystsyplyn-obrazovatelnykh-programm-uchebnoi-uchebno-metodycheskoi-y-nauchnoi-lyteraturoi-po-obshcheobrazovatelnym-bazovym-y-profylyruiushchym-dystsyplynam/bakalavryat"
+  },
+  "u115:6B06101": {
+   "url": "https://lib.dulaty.edu.kz/index.php/kk/okhyrmandarga/obespechennost-dystsyplyn-obrazovatelnykh-programm-uchebnoi-uchebno-metodycheskoi-y-nauchnoi-lyteraturoi-po-obshcheobrazovatelnym-bazovym-y-profylyruiushchym-dystsyplynam/bakalavryat"
+  },
+  "u115:6B06102": {
+   "url": "https://lib.dulaty.edu.kz/index.php/kk/okhyrmandarga/obespechennost-dystsyplyn-obrazovatelnykh-programm-uchebnoi-uchebno-metodycheskoi-y-nauchnoi-lyteraturoi-po-obshcheobrazovatelnym-bazovym-y-profylyruiushchym-dystsyplynam/bakalavryat"
+  },
+  "u115:6B01513": {
+   "url": "https://lib.dulaty.edu.kz/index.php/kk/okhyrmandarga/obespechennost-dystsyplyn-obrazovatelnykh-programm-uchebnoi-uchebno-metodycheskoi-y-nauchnoi-lyteraturoi-po-obshcheobrazovatelnym-bazovym-y-profylyruiushchym-dystsyplynam/bakalavryat"
+  },
+  "u115:6B01514": {
+   "url": "https://lib.dulaty.edu.kz/index.php/kk/okhyrmandarga/obespechennost-dystsyplyn-obrazovatelnykh-programm-uchebnoi-uchebno-metodycheskoi-y-nauchnoi-lyteraturoi-po-obshcheobrazovatelnym-bazovym-y-profylyruiushchym-dystsyplynam/bakalavryat"
+  },
+  "u115:6B01515": {
+   "url": "https://lib.dulaty.edu.kz/index.php/kk/okhyrmandarga/obespechennost-dystsyplyn-obrazovatelnykh-programm-uchebnoi-uchebno-metodycheskoi-y-nauchnoi-lyteraturoi-po-obshcheobrazovatelnym-bazovym-y-profylyruiushchym-dystsyplynam/bakalavryat"
+  },
+  "u116:6B07104": {
+   "url": "https://psu.kz/index.php?option=com_content&view=article&id=4700&Itemid=621&lang=rus"
+  },
+  "u116:6B07105": {
+   "url": "https://psu.kz/index.php?option=com_content&view=article&id=4700&Itemid=621&lang=rus"
+  },
+  "u116:6B02202": {
+   "url": "https://psu.kz/index.php?option=com_content&view=article&id=4700&Itemid=621&lang=rus"
+  },
+  "u116:6B07201": {
+   "url": "https://psu.kz/index.php?option=com_content&view=article&id=4700&Itemid=621&lang=rus"
+  },
   "u120:6B04201": {
    "price_kzt": 1476600
   },
@@ -2336,14 +2402,152 @@
   "u120:6B11101": {
    "price_kzt": 1476600
   },
+  "u123:6B04110": {
+   "url": "https://udn.edu.kz/gumanitarno-pedagogicheskom-fakultet/"
+  },
+  "u123:6B04130": {
+   "url": "https://udn.edu.kz/gumanitarno-pedagogicheskom-fakultet/"
+  },
+  "u123:6B04160": {
+   "url": "https://udn.edu.kz/gumanitarno-pedagogicheskom-fakultet/"
+  },
+  "u123:6B04150": {
+   "url": "https://udn.edu.kz/gumanitarno-pedagogicheskom-fakultet/"
+  },
+  "u123:6B04120": {
+   "url": "https://udn.edu.kz/gumanitarno-pedagogicheskom-fakultet/"
+  },
+  "u123:6B06138": {
+   "url": "https://udn.edu.kz/estestvenno-inzhenernyj-fakultet/"
+  },
+  "u123:6B06130": {
+   "url": "https://udn.edu.kz/estestvenno-inzhenernyj-fakultet/"
+  },
+  "u123:6B01521": {
+   "url": "https://udn.edu.kz/estestvenno-inzhenernyj-fakultet/"
+  },
+  "u123:6B07320": {
+   "url": "https://udn.edu.kz/estestvenno-inzhenernyj-fakultet/"
+  },
+  "u123:6B01545": {
+   "url": "https://udn.edu.kz/estestvenno-inzhenernyj-fakultet/"
+  },
+  "u123:6B02110": {
+   "url": "https://udn.edu.kz/estestvenno-inzhenernyj-fakultet/"
+  },
+  "u123:6B07120": {
+   "url": "https://udn.edu.kz/estestvenno-inzhenernyj-fakultet/"
+  },
+  "u123:6B07310": {
+   "url": "https://udn.edu.kz/estestvenno-inzhenernyj-fakultet/"
+  },
+  "u123:6B04210": {
+   "url": "https://udn.edu.kz/gumanitarno-pedagogicheskom-fakultet/"
+  },
+  "u123:6B07110": {
+   "url": "https://udn.edu.kz/estestvenno-inzhenernyj-fakultet/"
+  },
+  "u123:6B01509": {
+   "url": "https://udn.edu.kz/estestvenno-inzhenernyj-fakultet/"
+  },
+  "u123:6B01730": {
+   "url": "https://udn.edu.kz/gumanitarno-pedagogicheskom-fakultet/"
+  },
+  "u123:6B06210": {
+   "url": "https://udn.edu.kz/estestvenno-inzhenernyj-fakultet/"
+  },
+  "u123:6B01310": {
+   "url": "https://udn.edu.kz/gumanitarno-pedagogicheskom-fakultet/"
+  },
+  "u123:6B01550": {
+   "url": "https://udn.edu.kz/estestvenno-inzhenernyj-fakultet/"
+  },
+  "u123:6B01420": {
+   "url": "https://udn.edu.kz/gumanitarno-pedagogicheskom-fakultet/"
+  },
+  "u123:6B01508": {
+   "url": "https://udn.edu.kz/estestvenno-inzhenernyj-fakultet/"
+  },
+  "u123:6B01110": {
+   "url": "https://udn.edu.kz/gumanitarno-pedagogicheskom-fakultet/"
+  },
+  "u123:6B01210": {
+   "url": "https://udn.edu.kz/gumanitarno-pedagogicheskom-fakultet/"
+  },
+  "u123:6B01710": {
+   "url": "https://udn.edu.kz/gumanitarno-pedagogicheskom-fakultet/"
+  },
+  "u123:6B01540": {
+   "url": "https://udn.edu.kz/estestvenno-inzhenernyj-fakultet/"
+  },
+  "u123:6B01910": {
+   "url": "https://udn.edu.kz/gumanitarno-pedagogicheskom-fakultet/"
+  },
+  "u123:6B01720": {
+   "url": "https://udn.edu.kz/gumanitarno-pedagogicheskom-fakultet/"
+  },
+  "u123:6B01560": {
+   "url": "https://udn.edu.kz/gumanitarno-pedagogicheskom-fakultet/"
+  },
+  "u123:6B01440": {
+   "url": "https://udn.edu.kz/estestvenno-inzhenernyj-fakultet/"
+  },
+  "u123:6B01610": {
+   "url": "https://udn.edu.kz/gumanitarno-pedagogicheskom-fakultet/"
+  },
+  "sdu:6B02201": {
+   "url": "https://sdu.edu.kz/ru/факультет-педагогики-и-гуманитарных/программы/бакалавриат/"
+  },
+  "sdu:6B03201": {
+   "url": "https://sdu.edu.kz/en/school-of-social-sciences-business-and-law/contacts-bslaw/"
+  },
+  "sdu:6B04103": {
+   "url": "https://sdu.edu.kz/en/school-of-social-sciences-business-and-law/contacts-bslaw/"
+  },
   "sdu:6B04101": {
    "url": "https://sdu.edu.kz/ru/shkola-socialnyh-nauk-businesa-i-prava/bachelor-bslawru/ekonomika-bakalavr-ru/"
   },
   "sdu:6B04102": {
    "url": "https://sdu.edu.kz/ru/shkola-socialnyh-nauk-businesa-i-prava/bachelor-bslawru/management-bakalavr-ru/"
   },
+  "sdu:6B04105": {
+   "url": "https://sdu.edu.kz/en/school-of-social-sciences-business-and-law/contacts-bslaw/"
+  },
+  "sdu:6B04104": {
+   "url": "https://sdu.edu.kz/en/school-of-social-sciences-business-and-law/contacts-bslaw/"
+  },
   "sdu:6B04106": {
    "url": "https://sdu.edu.kz/ru/shkola-socialnyh-nauk-businesa-i-prava/bachelor-bslawru/management-bakalavr-ru/"
+  },
+  "sdu:6B04202": {
+   "url": "https://sdu.edu.kz/en/school-of-social-sciences-business-and-law/contacts-bslaw/"
+  },
+  "sdu:6B04201": {
+   "url": "https://sdu.edu.kz/en/school-of-social-sciences-business-and-law/contacts-bslaw/"
+  },
+  "sdu:6B03101": {
+   "url": "https://sdu.edu.kz/en/school-of-social-sciences-business-and-law/contacts-bslaw/"
+  },
+  "sdu:6B01703": {
+   "url": "https://sdu.edu.kz/ru/факультет-педагогики-и-гуманитарных/программы/бакалавриат/"
+  },
+  "sdu:6B06108": {
+   "url": "https://sdu.edu.kz/ru/инженерные-и-естественные-науки/программы/бакалавриат/"
+  },
+  "sdu:6B04203": {
+   "url": "https://sdu.edu.kz/en/school-of-social-sciences-business-and-law/contacts-bslaw/"
+  },
+  "u125:6B01201": {
+   "url": "https://shakarim.university/ru/academy/op"
+  },
+  "u125:6B08101": {
+   "url": "https://shakarim.university/ru/academy/op"
+  },
+  "u125:6B01510": {
+   "url": "https://shakarim.university/ru/academy/op"
+  },
+  "u125:6B06104": {
+   "url": "https://shakarim.university/ru/academy/op"
   },
   "u125:6B02203": {
    "price_kzt": 630000
@@ -2615,6 +2819,9 @@
   "u130:6B03106": {
    "url": "https://uib.edu.kz/kk/psychological-features-of-personality-development-kz/"
   },
+  "u130:6B04204": {
+   "url": "https://uib.edu.kz/countering-criminal-offenses-in-the-field-of-information-protection/"
+  },
   "u130:6B04208": {
    "url": "https://uib.edu.kz/jurisprudence/"
   },
@@ -2630,6 +2837,9 @@
   "u130:6B11103": {
    "url": "https://uib.edu.kz/sustainable-tourism/"
   },
+  "u130:6B11104": {
+   "url": "https://uib.edu.kz/event-management-and-organization/"
+  },
   "u130:6B11105": {
    "url": "https://uib.edu.kz/%d0%bc%d0%b5%d0%bd%d0%b5%d0%b4%d0%b6%d0%bc%d0%b5%d0%bd%d1%82-%d0%b3%d0%be%d1%81%d1%82%d0%b5%d0%bf%d1%80%d0%b8%d0%b8%d0%bc%d1%81%d1%82%d0%b2%d0%b0/"
   },
@@ -2638,6 +2848,9 @@
   },
   "u130:6B11303": {
    "url": "https://uib.edu.kz/international-business-logistics/"
+  },
+  "u130:6B04205": {
+   "url": "https://uib.edu.kz/legal-provision-of-economic-security/"
   },
   "u130:6B03107": {
    "url": "https://uib.edu.kz/management-of-socio-psychological-processes/"
@@ -2653,6 +2866,9 @@
   },
   "u130:6B04129": {
    "url": "https://uib.edu.kz/art-management/"
+  },
+  "u135:6B01707": {
+   "url": "https://caiu.edu.kz/6b01710/"
   },
   "u138:6B01402": {
    "url": "https://univershu.edu.kz/ru/component/sppagebuilder/?view=page&layout=edit&id=650"
@@ -2686,6 +2902,9 @@
   },
   "u138:6B05101": {
    "url": "https://univershu.edu.kz/kz/component/sppagebuilder/?view=page&id=2650"
+  },
+  "u138:6B01507": {
+   "url": "https://univershu.edu.kz/ru/pages/2017-10-30-13-28-42"
   },
   "u138:6B01401": {
    "url": "https://univershu.edu.kz/ru/component/sppagebuilder/?view=page&layout=edit&id=635"
@@ -2728,6 +2947,15 @@
   },
   "u14:x10892": {
    "url": "https://welcome.kaznu.kz/en/education_programs/bachelor/speciality/1683"
+  },
+  "u140:6B01604": {
+   "url": "https://okmpu.kz/programs/bachelor/"
+  },
+  "u140:6B01903": {
+   "url": "https://okmpu.kz/programs/bachelor/"
+  },
+  "u141:6B07088": {
+   "url": "https://auezov.edu.kz/index.php/rus/академический-процесс/образовательные-программы/перечень/бакалавриат"
   },
   "u141:6B01450": {
    "url": "https://auezov.edu.kz/rus/stranitsy-ru/4136-6b01450-профессиональное-обучение"
@@ -3143,6 +3371,9 @@
   "u141:6B01410": {
    "url": "https://auezov.edu.kz/rus/allcategories-ru-ru/2-uncategorised/4131-6b01410-начальная-военная-подготовка"
   },
+  "u141:6B04110": {
+   "url": "https://auezov.edu.kz/index.php/rus/академический-процесс/образовательные-программы/перечень/бакалавриат"
+  },
   "u141:6B01901": {
    "url": "https://auezov.edu.kz/index.php/rus/stranitsy-ru/8786-6b01901-специальная-педагогика-ip"
   },
@@ -3188,6 +3419,12 @@
   "u141:6B06110": {
    "url": "https://auezov.edu.kz/rus/stranitsy-ru/4198-6b06110-информатика"
   },
+  "u141:6B05088": {
+   "url": "https://auezov.edu.kz/index.php/rus/академический-процесс/образовательные-программы/перечень/бакалавриат"
+  },
+  "u141:6B06088": {
+   "url": "https://auezov.edu.kz/index.php/rus/академический-процесс/образовательные-программы/перечень/бакалавриат"
+  },
   "u141:6B07141": {
    "url": "https://auezov.edu.kz/rus/stranitsy-ru/9785-6b07141-теплоэнергетика"
   },
@@ -3196,6 +3433,9 @@
   },
   "u141:6B07222": {
    "url": "https://auezov.edu.kz/rus/stranitsy-ru/9791-6b07222-металлургическая-инженерия-и-материаловедение"
+  },
+  "u141:6B11088": {
+   "url": "https://auezov.edu.kz/index.php/rus/академический-процесс/образовательные-программы/перечень/бакалавриат"
   },
   "u15:6B06101": {
    "url": "https://qairu.edu.kz/ru/admissions/bachelor/ai-machine-learning"
@@ -3792,6 +4032,12 @@
    "url": "http://zhubanov.edu.kz/kk/esf/category/56/",
    "price_kzt": 712000
   },
+  "u28:6D07108": {
+   "url": "http://zhubanov.edu.kz/kk/enrollee/category/9/?code=6b07108"
+  },
+  "u29:6B04116": {
+   "url": "https://ageu.edu.kz/programs/6v04116-ekonomika"
+  },
   "aitu:6B04201": {
    "url": "https://astanait.edu.kz/ru/digital-law",
    "price_kzt": 2500000
@@ -3962,6 +4208,12 @@
   "u30:6B07208": {
    "url": "https://atu.edu.kz/welcome/bachelor/cosmetech/"
   },
+  "u31:6B07105": {
+   "url": "https://energo.university/ru/education_programs/172/"
+  },
+  "u31:6B07118": {
+   "url": "https://energo.university/ru/education_programs/174/"
+  },
   "u31:6B07120": {
    "url": "https://energo.university/ru/education_programs/153/"
   },
@@ -4010,8 +4262,14 @@
   "u31:6B07115": {
    "url": "https://energo.university/ru/education_programs/172/"
   },
+  "u31:6B07131": {
+   "url": "https://energo.university/ru/education_programs/169/"
+  },
   "u31:6B07125": {
    "url": "https://energo.university/ru/education_programs/161/"
+  },
+  "u31:6B07136": {
+   "url": "https://energo.university/ru/education_programs/156/"
   },
   "almau:6B03204": {
    "price_kzt": 3200000
@@ -4883,6 +5141,12 @@
   "enu:6B01515": {
    "price_kzt": 1600000
   },
+  "enu:6B01720": {
+   "url": "https://enu.kz/ru/page/education/educational-programs/bachelor-course/2024"
+  },
+  "enu:6B05405": {
+   "url": "https://enu.kz/en/events/1464"
+  },
   "enu:6B07329": {
    "price_kzt": 1750000
   },
@@ -4912,6 +5176,9 @@
   },
   "enu:6B06307": {
    "price_kzt": 1900000
+  },
+  "enu:6B01407": {
+   "url": "https://enu.kz/ru/page/education/educational-programs/bachelor-course/2024"
   },
   "enu:6B01508": {
    "price_kzt": 1600000
@@ -5348,6 +5615,12 @@
   "u52:6B10108": {
    "price_kzt": 1146811
   },
+  "u53:6B01510": {
+   "url": "https://wku.edu.kz/ru/oku/bakalavr2/prakt-k-2"
+  },
+  "u53:6B01507": {
+   "url": "https://wku.edu.kz/ru/oku/bakalavr2/prakt-k-2"
+  },
   "u54:6B04204": {
    "price_kzt": 640000
   },
@@ -5462,6 +5735,9 @@
   "u55:6B04103": {
    "price_kzt": 1100000
   },
+  "u56:6B11101": {
+   "url": "http://ft.kazast.kz/"
+  },
   "u58:6B02185": {
    "url": "https://kaznai.kz/ru/bilim-beru-ba-darlamalary-4/"
   },
@@ -5474,6 +5750,150 @@
   "u58:6B02165": {
    "url": "https://kaznai.kz/ru/bilim-beru-ba-darlamalary-3/"
   },
+  "kazatu:6B09103": {
+   "url": "https://kazatu.edu.kz/ru/page/obrazovatel-nye-programmy-bakalavriata"
+  },
+  "kazatu:6B11302": {
+   "url": "https://kazatu.edu.kz/edu-program/organizacia-i-bezopasnost-doroznogo-dvizenia"
+  },
+  "kazatu:6B07307": {
+   "url": "https://kazatu.edu.kz/ru/page/obrazovatel-nye-programmy-bakalavriata"
+  },
+  "kazatu:6B07306": {
+   "url": "https://kazatu.edu.kz/ru/page/obrazovatel-nye-programmy-bakalavriata"
+  },
+  "u63:6B07110": {
+   "url": "https://www.kaznaru.edu.kz/ru/op/23"
+  },
+  "u63:6B04115": {
+   "url": "https://www.kaznaru.edu.kz/ru/op/16"
+  },
+  "u63:6B04111": {
+   "url": "https://www.kaznaru.edu.kz/ru/op/24"
+  },
+  "u63:6B08201": {
+   "url": "https://www.kaznaru.edu.kz/ru/op/47"
+  },
+  "u63:6B08101": {
+   "url": "https://www.kaznaru.edu.kz/ru/op/21"
+  },
+  "u63:6B08701": {
+   "url": "https://www.kaznaru.edu.kz/ru/op/26"
+  },
+  "u63:6B08601": {
+   "url": "https://www.kaznaru.edu.kz/ru/op/46"
+  },
+  "u63:6B08302": {
+   "url": "https://www.kaznaru.edu.kz/ru/op/78"
+  },
+  "u63:6B05102": {
+   "url": "https://www.kaznaru.edu.kz/ru/op/29"
+  },
+  "u63:6B08402": {
+   "url": "https://www.kaznaru.edu.kz/ru/op/54"
+  },
+  "u63:6B07308": {
+   "url": "https://www.kaznaru.edu.kz/ru/op/89"
+  },
+  "u63:6B08104": {
+   "url": "https://www.kaznaru.edu.kz/ru/op/57"
+  },
+  "u63:6B08102": {
+   "url": "https://www.kaznaru.edu.kz/ru/op/27"
+  },
+  "u63:6B08602": {
+   "url": "https://www.kaznaru.edu.kz/ru/op/51"
+  },
+  "u63:6B07104": {
+   "url": "https://www.kaznaru.edu.kz/ru/op/55"
+  },
+  "u63:6B04103": {
+   "url": "https://www.kaznaru.edu.kz/ru/op/30"
+  },
+  "u63:6B04104": {
+   "url": "https://www.kaznaru.edu.kz/ru/op/31"
+  },
+  "u63:6B05104": {
+   "url": "https://www.kaznaru.edu.kz/ru/op/74"
+  },
+  "u63:6B08103": {
+   "url": "https://www.kaznaru.edu.kz/ru/op/32"
+  },
+  "u63:6B08304": {
+   "url": "https://www.kaznaru.edu.kz/ru/op/84"
+  },
+  "u63:6B05201": {
+   "url": "https://www.kaznaru.edu.kz/ru/op/71"
+  },
+  "u63:6B08702": {
+   "url": "https://www.kaznaru.edu.kz/ru/op/19"
+  },
+  "u63:6B08603": {
+   "url": "https://www.kaznaru.edu.kz/ru/op/53"
+  },
+  "u63:6B07109": {
+   "url": "https://www.kaznaru.edu.kz/ru/op/17"
+  },
+  "u63:6B04105": {
+   "url": "https://www.kaznaru.edu.kz/ru/op/18"
+  },
+  "u63:6B08303": {
+   "url": "https://www.kaznaru.edu.kz/ru/op/86"
+  },
+  "u63:6B04106": {
+   "url": "https://www.kaznaru.edu.kz/ru/op/20"
+  },
+  "u63:6B08105": {
+   "url": "https://www.kaznaru.edu.kz/ru/op/66"
+  },
+  "u63:6B11302": {
+   "url": "https://www.kaznaru.edu.kz/ru/op/39"
+  },
+  "u63:6B07501": {
+   "url": "https://www.kaznaru.edu.kz/ru/op/44"
+  },
+  "u63:6B05103": {
+   "url": "https://www.kaznaru.edu.kz/ru/op/76"
+  },
+  "u63:6B11301": {
+   "url": "https://www.kaznaru.edu.kz/ru/op/58"
+  },
+  "u63:6B07207": {
+   "url": "https://www.kaznaru.edu.kz/ru/op/37"
+  },
+  "u63:6B06103": {
+   "url": "https://www.kaznaru.edu.kz/ru/op/42"
+  },
+  "u63:6B07210": {
+   "url": "https://www.kaznaru.edu.kz/ru/op/61"
+  },
+  "u63:6B07208": {
+   "url": "https://www.kaznaru.edu.kz/ru/op/40"
+  },
+  "u63:6B06102": {
+   "url": "https://www.kaznaru.edu.kz/ru/op/50"
+  },
+  "u63:6B04102": {
+   "url": "https://www.kaznaru.edu.kz/ru/op/22"
+  },
+  "u63:6B08301": {
+   "url": "https://www.kaznaru.edu.kz/ru/op/81"
+  },
+  "u63:6B07101": {
+   "url": "https://www.kaznaru.edu.kz/ru/op/52"
+  },
+  "u63:6B08703": {
+   "url": "https://www.kaznaru.edu.kz/ru/op/36"
+  },
+  "u63:6B11201": {
+   "url": "https://www.kaznaru.edu.kz/ru/op/38"
+  },
+  "u63:6B07103": {
+   "url": "https://www.kaznaru.edu.kz/ru/op/14"
+  },
+  "u63:6B04201": {
+   "url": "https://www.kaznaru.edu.kz/ru/op/43"
+  },
   "u64:6B01402": {
    "url": "https://qyzpu.edu.kz/ru/6v01402--vizualnoe-iskusstvo-hudozhestvennij-trud-grafika-i-proektirovanie",
    "price_kzt": 1000000
@@ -5481,6 +5901,9 @@
   "u64:6B06101": {
    "url": "https://qyzpu.edu.kz/ru/6v06101--proektirovanie-tsifrovih-analiticheskih-obrazovatelnih-sistem",
    "price_kzt": 1000000
+  },
+  "u64:6B10201": {
+   "url": "https://qyzpu.edu.kz/ru/obrazovatelnie-programmi-bakalavriata"
   },
   "u64:6B01802": {
    "url": "https://qyzpu.edu.kz/ru/6b01802--sotsialnaya-pedagogika-i-samopoznanie",
@@ -5825,6 +6248,9 @@
   "satbayev:6B07211": {
    "url": "https://satbayev.university/ru/specialties/gidrogeologiya-i-inzhenernaya-geologiya-b"
   },
+  "satbayev:6B07112": {
+   "url": "https://official.satbayev.university/ru/programs"
+  },
   "satbayev:6B07124": {
    "url": "https://satbayev.university/ru/specialties/tekhnologiya-proizvodstva-remonta-i-ekspluatatsii-lokomotivov"
   },
@@ -5894,11 +6320,20 @@
   "satbayev:6B07202": {
    "url": "https://satbayev.university/ru/specialties/prikladnaya-geologiya"
   },
+  "satbayev:6B07222": {
+   "url": "https://official.satbayev.university/ru/programs"
+  },
+  "satbayev:6B07223": {
+   "url": "https://official.satbayev.university/ru/programs"
+  },
   "satbayev:6B07109": {
    "url": "https://satbayev.university/ru/specialties/inzhenernaya-fizika"
   },
   "satbayev:6B07204": {
    "url": "https://satbayev.university/ru/specialties/neftyanaya-inzheneriya"
+  },
+  "satbayev:6B06109": {
+   "url": "https://official.satbayev.university/ru/programs"
   },
   "u66:6B10107": {
    "url": "https://kaznmu.edu.kz/ru/образовательные-программы/бакалавриат/",
@@ -5934,6 +6369,9 @@
   "u66:6B10101": {
    "url": "https://kaznmu.edu.kz/ru/образовательные-программы/бакалавриат/",
    "price_kzt": 600000
+  },
+  "u67:6B01510": {
+   "url": "https://abai.university/ru/programs"
   },
   "u69:6B10104": {
    "url": "https://farabi.university/programs/2446?lang=ru"
@@ -6321,6 +6759,9 @@
   },
   "u70:6B02130": {
    "price_kzt": 1198000
+  },
+  "u70:6B02198": {
+   "url": "https://kaznui.edu.kz/about/educational_programs"
   },
   "u70:6B02179": {
    "price_kzt": 1198000
@@ -6733,6 +7174,9 @@
   "u80:6B06106": {
    "url": "https://dku.kz/ru/programma/informacionnyj-inzhiniring-v-ekonomike"
   },
+  "u80:6B06105": {
+   "url": "https://dku.kz/programma/computer-science"
+  },
   "u80:6B07127": {
    "url": "https://dku.kz/ru/programma/mechatronics"
   },
@@ -6890,6 +7334,7 @@
    "price_kzt": 869200
   },
   "u85:6B01704": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-ffl",
    "price_kzt": 869200
   },
   "u85:6B02102": {
@@ -6902,93 +7347,113 @@
    "price_kzt": 869200
   },
   "u85:6B01511": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-bgf",
    "price_kzt": 869200
   },
   "u85:6B01801": {
    "price_kzt": 869200
   },
   "u85:6B01502": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-mit",
    "price_kzt": 869200
   },
   "u85:6B01502.1": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-mit",
    "price_kzt": 869200
   },
   "u85:6B01901": {
    "price_kzt": 869200
   },
   "u85:6B01508": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-him",
    "price_kzt": 869200
   },
   "u85:6B01707": {
    "price_kzt": 869200
   },
   "u85:6B01403": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-fks",
    "price_kzt": 869200
   },
   "u85:6B01301": {
    "price_kzt": 869200
   },
   "u85:6B01507": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-him",
    "price_kzt": 869200
   },
   "u85:6B01802": {
    "price_kzt": 869200
   },
   "u85:6B01510": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-bgf",
    "price_kzt": 869200
   },
   "u85:6B01701": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-fil",
    "price_kzt": 869200
   },
   "u85:6B01710": {
    "price_kzt": 869200
   },
   "u85:6B01504": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-fiz",
    "price_kzt": 869200
   },
   "u85:6B01501": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-mit",
    "price_kzt": 869200
   },
   "u85:6B01101": {
    "price_kzt": 869200
   },
   "u85:6B01601": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-ist",
    "price_kzt": 869200
   },
   "u85:6B01505": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-mit",
    "price_kzt": 869200
   },
   "u85:6B01702": {
    "price_kzt": 869200
   },
   "u85:6B01902": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-do",
    "price_kzt": 869200
   },
   "u85:6B01406": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-ped",
    "price_kzt": 869200
   },
   "u85:6B01705": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-do",
    "price_kzt": 869200
   },
   "u85:6B01509": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-bgf",
    "price_kzt": 869200
   },
   "u85:6B01706": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-fil",
    "price_kzt": 869200
   },
   "u85:6B01201": {
    "price_kzt": 869200
   },
   "u85:6B04103": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-econ",
    "price_kzt": 869200
   },
   "u85:6B04104": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-econ",
    "price_kzt": 869200
   },
   "u85:6B04114": {
    "price_kzt": 869200
   },
   "u85:6B06102": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-econ",
    "price_kzt": 918100
   },
   "u85:6B05403": {
@@ -7001,33 +7466,40 @@
    "price_kzt": 869200
   },
   "u85:6B04101": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-econ",
    "price_kzt": 869200
   },
   "u85:6B06201": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-fiz",
    "price_kzt": 918100
   },
   "u85:6B05304": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-fiz",
    "price_kzt": 869200
   },
   "u85:6B03106": {
    "price_kzt": 869200
   },
   "u85:6B06105": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-mit",
    "price_kzt": 918100
   },
   "u85:6B06103": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-mit",
    "price_kzt": 918100
   },
   "u85:6B02101": {
    "price_kzt": 869200
   },
   "u85:6B04201": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-zan",
    "price_kzt": 869200
   },
   "u85:6B11401": {
    "price_kzt": 869200
   },
   "u85:6B05302": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-him",
    "price_kzt": 869200
   },
   "u85:6B11102": {
@@ -7037,33 +7509,41 @@
    "price_kzt": 869200
   },
   "u85:6B04107": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-econ",
    "price_kzt": 869200
   },
   "u85:6B03201": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-fil",
    "price_kzt": 869200
   },
   "u85:6B05305": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-fiz",
    "price_kzt": 869200
   },
   "u85:6B07104": {
    "price_kzt": 918100
   },
   "u85:6B04102": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-econ",
    "price_kzt": 869200
   },
   "u85:6B05301": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-him",
    "price_kzt": 869200
   },
   "u85:6B04204": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-zan",
    "price_kzt": 869200
   },
   "u85:6B05101": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-bgf",
    "price_kzt": 869200
   },
   "u85:6B03202": {
    "price_kzt": 869200
   },
   "u85:6B03105": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-ist",
    "price_kzt": 869200
   },
   "u85:6B02305": {
@@ -7073,33 +7553,41 @@
    "price_kzt": 918100
   },
   "u85:6B07101": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-him",
    "price_kzt": 918100
   },
   "u85:6B07203": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-him",
    "price_kzt": 918100
   },
   "u85:6B04203": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-zan",
    "price_kzt": 869200
   },
   "u85:6B02306": {
    "price_kzt": 869200
   },
   "u85:6B11302": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-econ",
    "price_kzt": 869200
   },
   "u85:6B11103": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-econ",
    "price_kzt": 869200
   },
   "u85:6B11101": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-econ",
    "price_kzt": 869200
   },
   "u85:6B04113": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-econ",
    "price_kzt": 869200
   },
   "u85:6B02201": {
    "price_kzt": 869200
   },
   "u85:6B02204": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-ist",
    "price_kzt": 869200
   },
   "u85:6B03103": {
@@ -7109,6 +7597,7 @@
    "price_kzt": 869200
   },
   "u85:6B05203": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-bgf",
    "price_kzt": 869200
   },
   "u85:6B02202": {
@@ -7118,39 +7607,49 @@
    "price_kzt": 869200
   },
   "u85:6B01408": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-ist",
    "price_kzt": 869200
   },
   "u85:6B04205": {
    "price_kzt": 869200
   },
   "u85:6B05401": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-mit",
    "price_kzt": 869200
   },
   "u85:6B07105": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-fiz",
    "price_kzt": 918100
   },
   "u85:6B05303": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-him",
    "price_kzt": 869200
   },
   "u85:6B05201": {
    "price_kzt": 869200
   },
   "u85:6B05102": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-bgf",
    "price_kzt": 869200
   },
   "u85:6B06104": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-mit",
    "price_kzt": 918100
   },
   "u85:6B11301": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-fiz",
    "price_kzt": 869200
   },
   "u85:6B07103": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-fiz",
    "price_kzt": 918100
   },
   "u85:6B11201": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-fiz",
    "price_kzt": 869200
   },
   "u85:6B01703": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-do",
    "price_kzt": 869200
   },
   "u85:6B01709": {
@@ -7163,12 +7662,15 @@
    "price_kzt": 869200
   },
   "u85:6B01503": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-fiz",
    "price_kzt": 869200
   },
   "u85:6B05402": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-mit",
    "price_kzt": 869200
   },
   "u85:6B07107": {
+   "url": "https://buketov.edu.kz/ru/page/faculty/faculty-mit",
    "price_kzt": 918100
   },
   "u85:6B01402": {
@@ -7348,6 +7850,9 @@
    "url": "https://admission.yu.edu.kz/2026/06/04/6v01502-fizika/",
    "price_kzt": 897000
   },
+  "u88:6B01503": {
+   "url": "https://pedagogy.yu.edu.kz/bakalavriat-kk/"
+  },
   "u88:6B01402": {
    "price_kzt": 897000
   },
@@ -7370,6 +7875,12 @@
   "u88:6B07208": {
    "url": "https://admission.yu.edu.kz/2026/06/04/6v07208-geologiya-zhaene-pajdaly-qazbalar-kenoryndaryn-barlau/",
    "price_kzt": 798000
+  },
+  "u88:6B01511": {
+   "url": "https://pedagogy.yu.edu.kz/bakalavriat-kk/"
+  },
+  "u88:6B01706": {
+   "url": "https://philology.yu.edu.kz/bakalavriat/"
   },
   "u88:6B05201": {
    "url": "https://admission.yu.edu.kz/2026/06/02/6v05201-ekologiya/",
@@ -7438,6 +7949,9 @@
    "url": "https://admission.yu.edu.kz/2026/06/03/6v01504-himiya-6v010881-himiya-biologiya/",
    "price_kzt": 897000
   },
+  "u88:6B01507": {
+   "url": "https://pedagogy.yu.edu.kz/bakalavriat-kk/"
+  },
   "u88:6B04204": {
    "url": "https://admission.yu.edu.kz/2026/06/12/6b04204-tengiz-quqyghy/",
    "price_kzt": 798000
@@ -7450,13 +7964,25 @@
    "url": "https://admission.yu.edu.kz/2026/06/10/6b04110-marketing/",
    "price_kzt": 798000
   },
+  "u88:6B01508": {
+   "url": "https://pedagogy.yu.edu.kz/bakalavriat-kk/"
+  },
   "u88:6B04101": {
    "url": "https://admission.yu.edu.kz/2026/06/09/6v04101-menedzhment/",
    "price_kzt": 798000
   },
+  "u88:6B01509": {
+   "url": "https://pedagogy.yu.edu.kz/bakalavriat-kk/"
+  },
   "u88:6B04104": {
    "url": "https://admission.yu.edu.kz/2026/06/10/6b04104-ekonomikadaghy-biznes-analitika/",
    "price_kzt": 798000
+  },
+  "u88:6B06102": {
+   "url": "https://computer-ai.yu.edu.kz/bakalavriat-2/"
+  },
+  "u88:6B06103": {
+   "url": "https://computer-ai.yu.edu.kz/bakalavriat-2/"
   },
   "u88:6B07111": {
    "url": "https://admission.yu.edu.kz/2026/06/09/6b07111-koelik-koelik-tehnikasy-zhaene-tehnologiyalary/",
@@ -7517,6 +8043,18 @@
    "url": "https://admission.yu.edu.kz/2026/06/03/6v01504-himiya-6v010881-himiya-biologiya/",
    "price_kzt": 897000
   },
+  "u90:6B04102": {
+   "url": "https://shokan.edu.kz/ru/educational-programs/buhgalterskij-uchet-i-ekonomicheskij-analiz/"
+  },
+  "u90:6B01501": {
+   "url": "https://shokan.edu.kz/ru/educational-programs/geografiya-istoriya/"
+  },
+  "u90:6B02101": {
+   "url": "https://shokan.edu.kz/ru/educational-programs/dizajn-i-kompyuternaya-grafika/"
+  },
+  "u90:6B01517": {
+   "url": "https://shokan.edu.kz/ru/educational-programs/geografiyaa/"
+  },
   "u90:6B10101": {
    "url": "https://shokan.edu.kz/ru/educational-programs/obshaya-medicina-major/",
    "price_kzt": 997500
@@ -7528,6 +8066,9 @@
   "u90:6B07205": {
    "url": "https://shokan.edu.kz/ru/educational-programs/inzhener-3d-modelirovaniya-v-gornom-dele/",
    "price_kzt": 593600
+  },
+  "u90:6B02303": {
+   "url": "https://shokan.edu.kz/ru/educational-programs/perevodcheskoe-delo-anglijskij-nemeckijkitajskij-major-minor/"
   },
   "u90:6B01507": {
    "url": "https://shokan.edu.kz/ru/educational-programs/himiya-biologiya-poliyazychnoe-obuchenie/",
@@ -7632,6 +8173,9 @@
   "u90:6B01534": {
    "url": "https://shokan.edu.kz/ru/educational-programs/himiyaip/",
    "price_kzt": 651900
+  },
+  "u90:6B01710": {
+   "url": "https://shokan.edu.kz/ru/educational-programs/anglijskij-yazyk-ip/"
   },
   "u90:6B01103": {
    "url": "https://shokan.edu.kz/ru/educational-programs/psihologiya-v-obrazovanii/",
@@ -7797,6 +8341,9 @@
    "url": "https://shokan.edu.kz/ru/educational-programs/fizicheskaya-kultura-i-sport/",
    "price_kzt": 651900
   },
+  "u91:6B06106": {
+   "url": "https://kineu.edu.kz/ru/6v06106"
+  },
   "u91:6B04103": {
    "price_kzt": 540000
   },
@@ -7805,6 +8352,9 @@
   },
   "u91:6B07110": {
    "price_kzt": 540000
+  },
+  "u91:6B07109": {
+   "url": "https://kineu.edu.kz/ru/6b07165"
   },
   "u91:6B04105": {
    "price_kzt": 540000
@@ -7977,6 +8527,9 @@
   "u92:6B08701": {
    "price_kzt": 549000
   },
+  "u92:6B07105": {
+   "url": "https://ksu.edu.kz/educational-activity/obrazovatelnye-programmy/bakalavriat/"
+  },
   "u92:6B01502": {
    "price_kzt": 549000
   },
@@ -8136,8 +8689,14 @@
   "u96:6B04247": {
    "url": "https://korkyt.edu.kz/ru/staticpages/230"
   },
+  "u96:6B11401": {
+   "url": "https://korkyt.edu.kz/ru/page/73"
+  },
   "u96:6B07159": {
    "url": "https://korkyt.edu.kz/ru/staticpages/228"
+  },
+  "u96:6B01725": {
+   "url": "https://korkyt.edu.kz/ru/page/73"
   },
   "u96:6B01505": {
    "url": "https://korkyt.edu.kz/ru/staticpages/544"
@@ -8222,6 +8781,12 @@
   },
   "u97:6B10101": {
    "price_kzt": 925000
+  },
+  "u98:6B10103": {
+   "url": "https://smu.edu.kz/bilim-beru-bagdarlamasy/bb-6v10103-pediatriya/"
+  },
+  "u98:6B10106": {
+   "url": "https://smu.edu.kz/bilim-beru-bagdarlamasy/bb-6v10106-qogamdyq-densaulyq-saqtau/"
   },
   "u98:6B10105": {
    "url": "https://smu.edu.kz/en/educational-program/v084-nursing/"
