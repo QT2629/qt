@@ -523,6 +523,17 @@ def _apply_official_links() -> None:
 
 _apply_official_links()
 
+
+def _drop_short_phones() -> None:
+    """Обрезанные номера (меньше 10 цифр) не показываем: лучше без телефона, чем с неполным."""
+    for u in UNIS.values():
+        adm = u.get("admissions")
+        if adm and adm.get("phones"):
+            adm["phones"] = [p for p in adm["phones"] if len(re.sub(r"\D", "", p)) >= 10]
+
+
+_drop_short_phones()
+
 # Вузы с подтверждённым переименованием: показываем новое название, старое остаётся для поиска.
 # Университет «Сырдария» с 2022–2023 учебного года — Университет имени Ж.А. Ташенева (по сайту вуза tashenev.edu.kz).
 NEW_NAMES = {"u119": ("Университет имени Ж. Ташенева", "Университет имени Жумабека Ахметулы Ташенева", ["сырдария", "syrdariya"])}
