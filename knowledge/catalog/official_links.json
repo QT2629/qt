@@ -1,6 +1,18 @@
 {
- "checked_on": "2026-11-06",
+ "checked_on": "2026-11-08",
  "vuz": {
+  "u10": {
+   "site": "https://zhubanov.edu.kz",
+   "admissions": "https://zhubanov.edu.kz/ru/enrollee/category/7/",
+   "programs_list": "https://zhubanov.edu.kz/ru/campus_hw/category/1/",
+   "prices": "https://zhubanov.edu.kz/ru/enrollee/category/37/",
+   "phones": [
+    "8 (7132) 56-28-96",
+    "+7 747 518 35 83"
+   ],
+   "email": "admissions@zhubanov.edu.kz",
+   "price_audited": true
+  },
   "u100": {
    "site": "https://metu.edu.kz",
    "admissions": "https://metu.edu.kz/?page=postupaiushim",
@@ -56,6 +68,13 @@
    ],
    "price_audited": true
   },
+  "u106": {
+   "site": "https://iuth.edu.kz",
+   "admissions": "https://iuth.edu.kz/ru/priemnaya-komissiya-2026-goda/",
+   "programs_list": "https://iuth.edu.kz/ru/obrazovatelnye-programmy/",
+   "prices": "https://iuth.edu.kz/ru/stoimost-obucheniya/",
+   "price_audited": true
+  },
   "u108": {
    "site": "https://ppu.edu.kz",
    "admissions": "https://ppu.edu.kz/ru/priemnaya-komissiya/",
@@ -89,6 +108,14 @@
     "+7 (71431) 50703",
     "+7 (71431) 92568"
    ],
+   "price_audited": true
+  },
+  "u112": {
+   "site": "https://ku.edu.kz",
+   "admissions": "https://ku.edu.kz/ru/page/view?id=69",
+   "programs_list": "https://ku.edu.kz/ru/page/view?id=1588",
+   "prices": "https://ku.edu.kz/ru/page/view?id=1588",
+   "email": "admission@ku.edu.kz",
    "price_audited": true
   },
   "u114": {
@@ -206,6 +233,17 @@
     "+7 (7172) 70 30 30",
     "+7 (700) 170 30 30"
    ],
+   "price_audited": true
+  },
+  "u128": {
+   "site": "https://www.kimep.kz",
+   "admissions": "https://www.kimep.kz/prospective-students/kz/admission/",
+   "programs_list": "https://www.kimep.kz/prospective-students/files/2026/05/Tuition-and-fees-kaz-2026-27.pdf",
+   "prices": "https://www.kimep.kz/prospective-students/kz/tuition-and-fees/",
+   "phones": [
+    "+7 (727) 270-42-13"
+   ],
+   "email": "uao@kimep.kz",
    "price_audited": true
   },
   "u13": {
@@ -382,9 +420,9 @@
   },
   "u21": {
    "site": "https://q-university.edu.kz",
-   "admissions": "https://q-university.edu.kz/ru/admissions",
-   "programs_list": "https://q-university.edu.kz/ru/schools/bachelor",
-   "prices": "https://q-university.edu.kz/uploads/tuition-2026-2027.pdf",
+   "admissions": null,
+   "programs_list": null,
+   "prices": null,
    "phones": [
     "+7 727 338 3815"
    ],
@@ -409,6 +447,17 @@
    "email": "info@alt.edu.kz",
    "price_audited": true
   },
+  "u25": {
+   "site": "https://knus.edu.kz",
+   "admissions": "https://knus.edu.kz/ru/applicants/admissions-committee",
+   "programs_list": "https://knus.edu.kz/ru/applicants/academic-programs",
+   "prices": "https://knus.edu.kz/ru/applicants/tuition-fees",
+   "phones": [
+    "8 (700) 957-00-61",
+    "8 (700) 957-00-68"
+   ],
+   "price_audited": true
+  },
   "u28": {
    "site": "https://zhubanov.edu.kz",
    "admissions": "http://zhubanov.edu.kz/enrollee/category/1/",
@@ -420,6 +469,18 @@
     "+7 (7132) 56-28-96"
    ],
    "email": "admissions@zhubanov.edu.kz",
+   "price_audited": true
+  },
+  "u29": {
+   "site": "https://ageu.edu.kz",
+   "admissions": "https://ageu.edu.kz/admissions/bachelor",
+   "programs_list": "https://ageu.edu.kz/programs",
+   "prices": null,
+   "phones": [
+    "+7 (727) 309-58-15",
+    "+7 (727) 341-41-41",
+    "+7 (727) 309-30-00"
+   ],
    "price_audited": true
   },
   "aitu": {
@@ -487,9 +548,9 @@
   },
   "u36": {
    "site": "https://atyrau.edu.kz",
-   "admissions": "https://atyrau.edu.kz/ru/Information/Info/0?name=Applicants",
-   "programs_list": "https://atyrau.edu.kz/ru/Home/Bachelor",
-   "prices": "https://atyrau.edu.kz/ru/Information/Info/702?name=University",
+   "admissions": null,
+   "programs_list": null,
+   "prices": null,
    "price_audited": true
   },
   "u37": {
@@ -577,6 +638,31 @@
    "email": "enu@enu.kz",
    "price_audited": true
   },
+  "u45": {
+   "site": "https://meta.edu.kz",
+   "admissions": "https://meta.edu.kz/ru/admission-commission",
+   "programs_list": "https://meta.edu.kz/ru/programs",
+   "prices": null,
+   "phones": [
+    "+7 727 321 22 22",
+    "+7 707 495 45 45"
+   ],
+   "email": "info@meta.edu.kz",
+   "price_audited": true
+  },
+  "u46": {
+   "site": "https://www.nmu.edu.kz",
+   "admissions": "https://www.nmu.edu.kz/talapker-2",
+   "programs_list": "https://www.nmu.edu.kz/talapker-2",
+   "prices": "https://www.nmu.edu.kz/talapker-2",
+   "phones": [
+    "+7 (727) 302-09-30",
+    "+7 777 302 09 66",
+    "+7 700 302 09 30"
+   ],
+   "email": "info@nmu.edu.kz",
+   "price_audited": true
+  },
   "u47": {
    "site": "https://eiti.edu.kz",
    "admissions": "https://eiti.edu.kz/абитуриентам",
@@ -592,8 +678,8 @@
   },
   "u48": {
    "site": "https://zhezu.edu.kz",
-   "admissions": "https://zhezu.edu.kz/ru/admission",
-   "programs_list": "https://zhezu.edu.kz/ru/academics",
+   "admissions": null,
+   "programs_list": null,
    "prices": null,
    "price_audited": true
   },
@@ -676,6 +762,17 @@
    "email": "kazadi@kazadi.kz",
    "price_audited": true
   },
+  "u56": {
+   "site": "https://kazast.kz",
+   "admissions": "https://kazast.kz/",
+   "programs_list": "https://kazast.kz/",
+   "prices": null,
+   "phones": [
+    "+7 (727) 292-00-30"
+   ],
+   "email": "info@kazast.edu.kz",
+   "price_audited": true
+  },
   "u58": {
    "site": "https://kaznai.kz",
    "admissions": "https://kaznai.kz/ru/talapkerlerge/",
@@ -716,6 +813,19 @@
    "programs_list": "https://kazatu.edu.kz/ru/facultets",
    "prices": null,
    "email": "office@kazatu.edu.kz",
+   "price_audited": true
+  },
+  "u63": {
+   "site": "https://www.kaznaru.edu.kz",
+   "admissions": "https://www.kaznaru.edu.kz/ru/reception",
+   "programs_list": null,
+   "prices": null,
+   "phones": [
+    "+7 (727) 264-65-04",
+    "+7 (727) 262-11-08",
+    "+7 (727) 264-06-13"
+   ],
+   "email": "info@kaznaru.edu.kz",
    "price_audited": true
   },
   "u64": {
@@ -832,6 +942,18 @@
    "email": "ksph@ksph.kz",
    "price_audited": true
   },
+  "u77": {
+   "site": "https://kazuits.edu.kz",
+   "admissions": "https://kazuits.edu.kz/ru/postupayushchim/priemnaya-komissiya",
+   "programs_list": "https://kazuits.edu.kz/ru/obuchenie/obrazovatelnye-programmy",
+   "prices": null,
+   "phones": [
+    "+7 707 180 0879",
+    "+7 775 236 7919",
+    "+7 7112 54 58 84"
+   ],
+   "price_audited": true
+  },
   "u78": {
    "site": "https://kafu.edu.kz",
    "admissions": "https://kafu.edu.kz/ru/admission/",
@@ -843,6 +965,18 @@
     "+7 (7232) 505-030"
    ],
    "email": "kense@kafu.edu.kz",
+   "price_audited": true
+  },
+  "kbtu": {
+   "site": "https://kbtu.edu.kz",
+   "admissions": "https://kbtu.edu.kz/ru/priemnaya-komissiya-bakalavriat",
+   "programs_list": "https://kbtu.edu.kz/ru/priemnaya-komissiya-bakalavriat",
+   "prices": null,
+   "phones": [
+    "+7 (727) 357 42 51",
+    "+7 (727) 357 42 42"
+   ],
+   "email": "admission@kbtu.kz",
    "price_audited": true
   },
   "u8": {
@@ -877,6 +1011,18 @@
     "+7 727 250 83 75"
    ],
    "email": "info@medkrmu.kz",
+   "price_audited": true
+  },
+  "u82": {
+   "site": "https://tttu.edu.kz",
+   "admissions": null,
+   "programs_list": "https://tttu.edu.kz/page/bakalavriat",
+   "prices": "https://tttu.edu.kz/page/bakalavriat",
+   "phones": [
+    "8 (7213) 91 56 26",
+    "+7-700-569-06-47",
+    "+7-777-327-86-00"
+   ],
    "price_audited": true
   },
   "u83": {
@@ -950,6 +1096,18 @@
     "8 (7162) 25-42-59"
    ],
    "email": "kuam-kokchetau@mail.ru",
+   "price_audited": true
+  },
+  "u9": {
+   "site": "https://meta.edu.kz",
+   "admissions": "https://meta.edu.kz/ru/admission-commission",
+   "programs_list": "https://meta.edu.kz/en/programs",
+   "prices": null,
+   "phones": [
+    "+7 727 321 22 22",
+    "+7 707 495 45 45"
+   ],
+   "email": "info@meta.edu.kz",
    "price_audited": true
   },
   "u90": {
@@ -1042,6 +1200,14 @@
   }
  },
  "programs": {
+  "u10:x9425": {
+   "url": "https://zhubanov.edu.kz/ru/campus_hw/category/15/",
+   "price_kzt": 915000
+  },
+  "u10:x11678": {
+   "url": "https://zhubanov.edu.kz/ru/campus_hw/category/13/",
+   "price_kzt": 915000
+  },
   "u100:6B07203": {
    "price_kzt": 950000
   },
@@ -1510,6 +1676,36 @@
   "u105:6B03204": {
    "url": "https://iitu.edu.kz/ru/programs/6b03204/"
   },
+  "u106:6B11106": {
+   "url": "https://iuth.edu.kz/ru/2022/07/04/6v11106-sportivnyj-turizm-2/",
+   "price_kzt": 600000
+  },
+  "u106:6B11111": {
+   "url": "https://iuth.edu.kz/ru/2021/07/03/6v111012-tourism-guide-service-2/",
+   "price_kzt": 600000
+  },
+  "u106:6B11105": {
+   "url": "https://iuth.edu.kz/ru/2021/07/03/6b11105-menedzhment-turistskih-destinatsij/",
+   "price_kzt": 600000
+  },
+  "u106:6B11102": {
+   "url": "https://iuth.edu.kz/ru/2021/07/03/6b11102-mezhdunarodnyj-i-vnutrennij-turizm/",
+   "price_kzt": 600000
+  },
+  "u106:6B11107": {
+   "url": "https://iuth.edu.kz/ru/2022/07/04/6v11107-sportivno-ozdorovitelnyj-fitnes/",
+   "price_kzt": 600000
+  },
+  "u106:6B11109": {
+   "url": "https://iuth.edu.kz/ru/2022/07/04/6v11109-ivent-menedzhment-2/"
+  },
+  "u106:6B11101": {
+   "url": "https://iuth.edu.kz/ru/2021/07/02/6b11101-organizatsiya-industrii-turizma-i-gostepriimstva/",
+   "price_kzt": 600000
+  },
+  "u106:6B11104": {
+   "url": "https://iuth.edu.kz/ru/2021/07/03/6v11104-gostinichnyj-i-restorannyj-biznes/"
+  },
   "u108:6B01750": {
    "price_kzt": 784000
   },
@@ -1734,6 +1930,204 @@
   "u111:6B07120": {
    "url": "https://rudny.edu.kz/programs/%d1%8d%d0%ba%d1%81%d0%bf%d0%bb%d1%83%d0%b0%d1%82%d0%b0%d1%86%d0%b8%d1%8f-%d0%b8-%d1%80%d0%b5%d0%bc%d0%be%d0%bd%d1%82-%d1%82%d0%b5%d1%85%d0%bd%d0%be%d0%bb%d0%be%d0%b3%d0%b8%d1%87%d0%b5%d1%81%d0%ba/",
    "price_kzt": 645000
+  },
+  "u112:6B04104": {
+   "price_kzt": 671550
+  },
+  "u112:6B07201": {
+   "price_kzt": 671550
+  },
+  "u112:6B11102": {
+   "price_kzt": 671550
+  },
+  "u112:6B07102": {
+   "price_kzt": 671550
+  },
+  "u112:6B08104": {
+   "price_kzt": 2500000
+  },
+  "u112:6B05103": {
+   "price_kzt": 2500000
+  },
+  "u112:6B05307": {
+   "price_kzt": 2500000
+  },
+  "u112:6B01103": {
+   "price_kzt": 2500000
+  },
+  "u112:6B06203": {
+   "price_kzt": 2500000
+  },
+  "u112:6B06106": {
+   "price_kzt": 2500000
+  },
+  "u112:6B02301": {
+   "price_kzt": 671550
+  },
+  "u112:6B01302": {
+   "price_kzt": 2500000
+  },
+  "u112:6B10102": {
+   "price_kzt": 791000
+  },
+  "u112:6B05308": {
+   "price_kzt": 2500000
+  },
+  "u112:6B04108": {
+   "price_kzt": 2500000
+  },
+  "u112:6B07107": {
+   "price_kzt": 671550
+  },
+  "u112:6B01907": {
+   "price_kzt": 2500000
+  },
+  "u112:6B06102": {
+   "price_kzt": 671550
+  },
+  "u112:6B01111": {
+   "price_kzt": 5000000
+  },
+  "u112:6B06111": {
+   "price_kzt": 5000000
+  },
+  "u112:6B05111": {
+   "price_kzt": 5000000
+  },
+  "u112:6B07109": {
+   "price_kzt": 671550
+  },
+  "u112:6B01911": {
+   "price_kzt": 5000000
+  },
+  "u112:6B01311": {
+   "price_kzt": 5000000
+  },
+  "u112:6B07504": {
+   "price_kzt": 671550
+  },
+  "u112:6B07108": {
+   "price_kzt": 671550
+  },
+  "u112:6B04111": {
+   "price_kzt": 5000000
+  },
+  "u112:6B07105": {
+   "price_kzt": 671550
+  },
+  "u112:6B01906": {
+   "price_kzt": 671550
+  },
+  "u112:6B02303": {
+   "price_kzt": 671550
+  },
+  "u112:6B07103": {
+   "price_kzt": 671550
+  },
+  "u112:6B07301": {
+   "price_kzt": 671550
+  },
+  "u112:6B02302": {
+   "price_kzt": 671550
+  },
+  "u112:6B01517": {
+   "price_kzt": 671550
+  },
+  "u112:6B01602": {
+   "price_kzt": 671550
+  },
+  "u112:6B01518": {
+   "price_kzt": 671550
+  },
+  "u112:6B01516": {
+   "price_kzt": 671550
+  },
+  "u112:6B01513": {
+   "price_kzt": 671550
+  },
+  "u112:6B01515": {
+   "price_kzt": 671550
+  },
+  "u112:6B01402": {
+   "price_kzt": 671550
+  },
+  "u112:6B01401": {
+   "price_kzt": 671550
+  },
+  "u112:6B01301": {
+   "price_kzt": 671550
+  },
+  "u112:6B01101": {
+   "price_kzt": 671550
+  },
+  "u112:6B01404": {
+   "price_kzt": 671550
+  },
+  "u112:6B01519": {
+   "price_kzt": 671550
+  },
+  "u112:6B01704": {
+   "price_kzt": 671550
+  },
+  "u112:6B01405": {
+   "price_kzt": 671550
+  },
+  "u112:6B01705": {
+   "price_kzt": 671550
+  },
+  "u112:6B01706": {
+   "price_kzt": 671550
+  },
+  "u112:6B01202": {
+   "price_kzt": 671550
+  },
+  "u112:6B01406": {
+   "price_kzt": 671550
+  },
+  "u112:6B01303": {
+   "price_kzt": 671550
+  },
+  "u112:6B01908": {
+   "price_kzt": 671550
+  },
+  "u112:6B04109": {
+   "price_kzt": 2500000
+  },
+  "u112:6B08201": {
+   "price_kzt": 671550
+  },
+  "u112:6B07302": {
+   "price_kzt": 671550
+  },
+  "u112:6B06201": {
+   "price_kzt": 671550
+  },
+  "u112:6B05202": {
+   "price_kzt": 671550
+  },
+  "u112:6B11101": {
+   "price_kzt": 671550
+  },
+  "u112:6B07106": {
+   "price_kzt": 671550
+  },
+  "u112:6B08101": {
+   "price_kzt": 671550
+  },
+  "u112:6B05203": {
+   "price_kzt": 671550
+  },
+  "u112:6B04201": {
+   "price_kzt": 671550
+  },
+  "u112:6B04105": {
+   "price_kzt": 671550
+  },
+  "u112:6B08301": {
+   "price_kzt": 671550
+  },
+  "u112:6B03201": {
+   "price_kzt": 671550
   },
   "u114:6B08301": {
    "price_kzt": 550000
@@ -2118,6 +2512,54 @@
   },
   "mnu:6B03101": {
    "url": "https://mnu.kz/en/educational/psychology/"
+  },
+  "u128:6B04202": {
+   "url": "https://www.kimep.kz/school-of-law/kz/blj-program/"
+  },
+  "u128:6B06102": {
+   "url": "https://www.kimep.kz/school-of-computer-science-and-artificial-intelligence/kz/about-the-bachelor-of-science-in-computer-science-program/"
+  },
+  "u128:6B03103": {
+   "url": "https://www.kimep.kz/college-of-social-sciences/kz/bachelor-of-political-science/"
+  },
+  "u128:6B04105": {
+   "url": "https://www.kimep.kz/bang-college-of-business/kz/bachelor-of-finance/"
+  },
+  "u128:6B06101": {
+   "url": "https://www.kimep.kz/school-of-computer-science-and-artificial-intelligence/kz/bachelor-of-information-system/"
+  },
+  "u128:6B04104": {
+   "url": "https://www.kimep.kz/bang-college-of-business/kz/bachelor-of-accounting-and-audit/"
+  },
+  "u128:6B04103": {
+   "url": "https://www.kimep.kz/bang-college-of-business/kz/bachelor-of-management/"
+  },
+  "u128:6B04102": {
+   "url": "https://www.kimep.kz/bang-college-of-business/kz/bachelor-of-marketing/"
+  },
+  "u128:6B02302": {
+   "url": "https://www.kimep.kz/college-humanities-education/kz/bachelor-of-arts-in-cognitive-linguistics-and-cognitive-science/"
+  },
+  "u128:6B03102": {
+   "url": "https://www.kimep.kz/college-humanities-education/kz/bachelor-of-science-in-psychology-bsp/"
+  },
+  "u128:6B02301": {
+   "url": "https://www.kimep.kz/college-humanities-education/kz/bachelor-of-arts-in-translation-studies/"
+  },
+  "u128:6B03101": {
+   "url": "https://www.kimep.kz/college-of-social-sciences/kz/bachelor-of-international-relations/"
+  },
+  "u128:6B04106": {
+   "url": "https://www.kimep.kz/college-of-social-sciences/kz/bachelor-of-economics/"
+  },
+  "u128:6B03201": {
+   "url": "https://www.kimep.kz/college-of-social-sciences/kz/bachelor-of-journalism/"
+  },
+  "u128:6B04101": {
+   "url": "https://www.kimep.kz/college-of-social-sciences/kz/bachelor-of-public-and-municipal-administration/"
+  },
+  "u128:6B04201": {
+   "url": "https://www.kimep.kz/school-of-law/kz/bil-program/"
   },
   "u13:6B05111": {
    "url": "https://ku.edu.kz/educationalProgram/passport?id=1182",
@@ -3036,6 +3478,39 @@
   },
   "u24:6B07189": {
    "url": "https://alt.edu.kz/ru/shkoly/shkola-tehnologij/departament-energetiki/6b07189-gorodskoj-elektricheskij-transport/"
+  },
+  "u25:6B01403": {
+   "price_kzt": 1200000
+  },
+  "u25:6B01406": {
+   "price_kzt": 1200000
+  },
+  "u25:6B01407": {
+   "price_kzt": 1200000
+  },
+  "u25:6B11501": {
+   "price_kzt": 1200000
+  },
+  "u25:6B11502": {
+   "price_kzt": 1200000
+  },
+  "u25:6B11503": {
+   "price_kzt": 1200000
+  },
+  "u25:6B11504": {
+   "price_kzt": 1200000
+  },
+  "u25:6B11505": {
+   "price_kzt": 1200000
+  },
+  "u25:6B01402": {
+   "price_kzt": 900000
+  },
+  "u25:6B01404": {
+   "price_kzt": 900000
+  },
+  "u25:6B01405": {
+   "price_kzt": 900000
   },
   "u28:6B11302": {
    "url": "http://zhubanov.edu.kz/kk/tef/category/34/",
@@ -4687,6 +5162,72 @@
   "enu:6B05323": {
    "price_kzt": 1750000
   },
+  "u45:6B07101": {
+   "url": "https://meta.edu.kz/ru/programs/masinostroenie"
+  },
+  "u45:6B11307": {
+   "url": "https://meta.edu.kz/ru/programs/organizaciia-perevozok-i-logistika-na-transporte"
+  },
+  "u45:6B07102": {
+   "url": "https://meta.edu.kz/ru/programs/transport-transportnaia-texnika-i-texnologii"
+  },
+  "u45:6B07103": {
+   "url": "https://meta.edu.kz/ru/programs/elektroenergetika"
+  },
+  "u45:6B11103": {
+   "url": "https://meta.edu.kz/ru/programs/restorannoe-delo"
+  },
+  "u45:6B11101": {
+   "url": "https://meta.edu.kz/ru/programs/turizm"
+  },
+  "u45:6B07104": {
+   "url": "https://meta.edu.kz/ru/programs/robototexnika-i-mexatronika"
+  },
+  "u45:6B04201": {
+   "url": "https://meta.edu.kz/ru/programs/iurisprudenciia"
+  },
+  "u45:6B02104": {
+   "url": "https://meta.edu.kz/ru/programs/dizain"
+  },
+  "u45:6B04101": {
+   "url": "https://meta.edu.kz/ru/programs/ucet-i-audit"
+  },
+  "u45:6B07106": {
+   "url": "https://meta.edu.kz/ru/programs/vozobnovliaemaia-energetika"
+  },
+  "u45:6B04111": {
+   "url": "https://meta.edu.kz/ru/programs/menedzment"
+  },
+  "u45:6B04103": {
+   "url": "https://meta.edu.kz/ru/programs/finansy"
+  },
+  "u45:6B07112": {
+   "url": "https://meta.edu.kz/ru/programs/electronics-prototyping-and-engineering"
+  },
+  "u45:6B07107": {
+   "url": "https://meta.edu.kz/ru/programs/smart-texnologii-v-transportnom-masinostroenii"
+  },
+  "u45:6B06107": {
+   "url": "https://meta.edu.kz/ru/programs/informacionnye-sistemy"
+  },
+  "u45:6B06104": {
+   "url": "https://meta.edu.kz/ru/programs/vycislitelnaia-texnika-i-programmnoe-obespecenie"
+  },
+  "u45:6B06103": {
+   "url": "https://meta.edu.kz/ru/programs/inziniring-i-iskusstvennyi-intellekt"
+  },
+  "u45:6B06109": {
+   "url": "https://meta.edu.kz/ru/programs/it-design"
+  },
+  "u45:6B04104": {
+   "url": "https://meta.edu.kz/ru/programs/e-biznes"
+  },
+  "u45:6B04107": {
+   "url": "https://meta.edu.kz/ru/programs/digital-marketing"
+  },
+  "u45:6B04106": {
+   "url": "https://meta.edu.kz/ru/programs/finansovaia-analitika"
+  },
   "u48:6B11201": {
    "url": "https://zhezu.edu.kz/ru/academics/programs/occupational-safety"
   },
@@ -6233,6 +6774,90 @@
   },
   "u81:6B10101": {
    "url": "https://new.krmu.edu.kz/page.php?id=12312320&locale=ru"
+  },
+  "u82:6B07104": {
+   "url": "https://tttu.edu.kz/page/6b07104-6b07111-teploenergetika-promyshlennyh-predpriyatiy-i-obektov-zhkh"
+  },
+  "u82:6B07202": {
+   "url": "https://tttu.edu.kz/page/6b07202-6b07206-metallurgiya-chernyh-metallov"
+  },
+  "u82:6B07203": {
+   "url": "https://tttu.edu.kz/page/6b07203-6b07205-metallurgiya-tsvetnyh-metallov"
+  },
+  "u82:6B07208": {
+   "url": "https://tttu.edu.kz/page/6b07208-tehnologiya-pischevyh-produktov"
+  },
+  "u82:6B07113": {
+   "url": "https://tttu.edu.kz/page/6b07113-mashinostroenie"
+  },
+  "u82:6B07114": {
+   "url": "https://tttu.edu.kz/page/6b07114-tehnologicheskiy-inzhiniring-svarki"
+  },
+  "u82:6B07209": {
+   "url": "https://tttu.edu.kz/page/6b07209-tehnologiya-neftepererabatyvayuschego-proizvodstva"
+  },
+  "u82:6B07101": {
+   "url": "https://tttu.edu.kz/page/6b07101-himicheskaya-tehnologiya-organicheskih-veschestv"
+  },
+  "u82:6B11201": {
+   "url": "https://tttu.edu.kz/page/6b11201-promyshlennaya-ekologicheskaya-i-pozharnaya-bezopasnost"
+  },
+  "u82:6B07201": {
+   "url": "https://tttu.edu.kz/page/6b07201-obrabotka-materialov-davleniem"
+  },
+  "u82:6B07501": {
+   "url": "https://tttu.edu.kz/page/6b07501-standartizatsiya-metrologiya-i-sertifikatsiya"
+  },
+  "u82:6B07204": {
+   "url": "https://tttu.edu.kz/page/6b07204-tehnologiya-farmatsevticheskogo-proizvodstva"
+  },
+  "u82:6B07301": {
+   "url": "https://tttu.edu.kz/page/6b07301-promyshlennoe-i-grazhdanskoe-stroitelstvo"
+  },
+  "u82:6B07105": {
+   "url": "https://tttu.edu.kz/page/6b07105-energoobespechenie-promyshlennyh-obektov"
+  },
+  "u82:6B04103": {
+   "url": "https://tttu.edu.kz/page/op-ekonomika-biznesa"
+  },
+  "u82:6B04106": {
+   "url": "https://tttu.edu.kz/page/6b04106-uchet-i-audit-v-predprinimatelstve"
+  },
+  "u82:6B04101": {
+   "url": "https://tttu.edu.kz/page/op-management"
+  },
+  "u82:6B07111": {
+   "url": "https://tttu.edu.kz/page/6b07104-6b07111-teploenergetika-promyshlennyh-predpriyatiy-i-obektov-zhkh"
+  },
+  "u82:6B07119": {
+   "url": "https://tttu.edu.kz/page/6b07119-avtomobilestroenie"
+  },
+  "u82:6B06101": {
+   "url": "https://tttu.edu.kz/page/software-engineering"
+  },
+  "u82:6B06102": {
+   "url": "https://tttu.edu.kz/page/6v06102-tehnologii-iskusstvennogo-intellekta"
+  },
+  "u82:6B07106": {
+   "url": "https://tttu.edu.kz/page/6v07106-inzheneriya-sistem-avtomatizatsii"
+  },
+  "u82:6B07207": {
+   "url": "https://tttu.edu.kz/page/6b07207-obogaschenie-poleznyh-iskopaemyh"
+  },
+  "u82:6B07112": {
+   "url": "https://tttu.edu.kz/page/6b07112-transportno-tehnologicheskie-mashiny"
+  },
+  "u82:6B07107": {
+   "url": "https://tttu.edu.kz/page/6b07107-tehnologicheskoe-oborudovanie-promyshlennosti"
+  },
+  "u82:6B07103": {
+   "url": "https://tttu.edu.kz/page/6b07103-materialovedenie-i-tehnologiya-novyh-materialov"
+  },
+  "u82:6B07205": {
+   "url": "https://tttu.edu.kz/page/6b07203-6b07205-metallurgiya-tsvetnyh-metallov"
+  },
+  "u82:6B07206": {
+   "url": "https://tttu.edu.kz/page/6b07202-6b07206-metallurgiya-chernyh-metallov"
   },
   "u83:6B10102": {
    "price_kzt": 1550000
