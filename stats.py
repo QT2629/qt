@@ -246,11 +246,20 @@ def sources_report() -> str:
     return "\n".join(lines)
 
 
+def _not_admin() -> tuple[str, tuple]:
+    """Условие «это не администратор»: проверки владельца и команды не должны считаться пользователями."""
+    hashes = tuple(_user_hash(i) for i in config.ADMIN_IDS)
+    if not hashes:
+        return "1 = 1", ()
+    return f"user NOT IN ({', '.join('?' * len(hashes))})", hashes
+
+
 def team_short(since_day: str | None = None) -> list[str]:
     """Люди из команды: сколько человек пришло по их ссылкам и сколько из них прошли анкету (по одной строке на человека)."""
+    who, args = _not_admin()
     with _connect() as conn:
-        joined = conn.execute("SELECT user, detail, MIN(substr(ts, 1, 10)) FROM events WHERE kind = 'src_join' "
-                              "GROUP BY user").fetchall()
+        joined = conn.execute(f"SELECT user, detail, MIN(substr(ts, 1, 10)) FROM events WHERE kind = 'src_join' AND {who} "
+                              "GROUP BY user", args).fetchall()
         quiz = {u for (u,) in conn.execute("SELECT DISTINCT user FROM events WHERE kind = 'quiz_done'")}
     by_person: dict[str, list[str]] = {}
     for user, name, day in joined:
@@ -262,56 +271,60 @@ def team_short(since_day: str | None = None) -> list[str]:
 
 
 def summary(days: int = 7) -> str:
-    """Короткий отчёт для администраторов: сколько людей пользуется ботом сейчас и что они делают. Всё числами людей."""
+    """Короткий отчёт для администраторов: сколько людей пользуется ботом сейчас и что они делают. Всё числами людей.
+    Администраторы (ADMIN_IDS) в цифры не входят. Время — по Алматы (в базе ts хранится с поясом +05:00)."""
     now = datetime.now(ALMATY_TZ)
+    today = now.strftime("%Y-%m-%d")
     since = (now - timedelta(days=days)).isoformat()
-    since_day = since[:10]
+    since30 = (now - timedelta(days=30)).isoformat()
+    who, args = _not_admin()
     with _connect() as conn:
-        def one(sql: str, *args) -> float:
-            return conn.execute(sql, args).fetchone()[0] or 0
+        def one(sql: str, *params) -> float:
+            return conn.execute(sql, args + params).fetchone()[0] or 0
 
-        total = one("SELECT COUNT(DISTINCT user) FROM events")
-        active = one("SELECT COUNT(DISTINCT user) FROM events WHERE ts >= ?", since)
-        active30 = one("SELECT COUNT(DISTINCT user) FROM events WHERE ts >= ?", (now - timedelta(days=30)).isoformat())
-        today = one("SELECT COUNT(DISTINCT user) FROM events WHERE substr(ts, 1, 10) = ?", now.strftime("%Y-%m-%d"))
-        new = one("SELECT COUNT(*) FROM (SELECT user FROM events GROUP BY user HAVING MIN(ts) >= ?)", since)
-        new30 = one("SELECT COUNT(*) FROM (SELECT user FROM events GROUP BY user HAVING MIN(ts) >= ?)",
-                    (now - timedelta(days=30)).isoformat())
+        total = one(f"SELECT COUNT(DISTINCT user) FROM events WHERE {who}")
+        active = one(f"SELECT COUNT(DISTINCT user) FROM events WHERE {who} AND ts >= ?", since)
+        active30 = one(f"SELECT COUNT(DISTINCT user) FROM events WHERE {who} AND ts >= ?", since30)
+        today_users = one(f"SELECT COUNT(DISTINCT user) FROM events WHERE {who} AND substr(ts, 1, 10) = ?", today)
+        new = one(f"SELECT COUNT(*) FROM (SELECT user FROM events WHERE {who} GROUP BY user HAVING MIN(ts) >= ?)", since)
+        new30 = one(f"SELECT COUNT(*) FROM (SELECT user FROM events WHERE {who} GROUP BY user HAVING MIN(ts) >= ?)", since30)
 
         def people(kind: str) -> int:
-            return one("SELECT COUNT(DISTINCT user) FROM events WHERE ts >= ? AND kind = ?", since, kind)
+            return one(f"SELECT COUNT(DISTINCT user) FROM events WHERE {who} AND ts >= ? AND kind = ?", since, kind)
 
-        quiz, ai, chance = people("quiz_done"), people("ai"), people("chance")
-        cost = one("SELECT SUM(cost) FROM events WHERE ts >= ?", since)
-        errors = one("SELECT COUNT(*) FROM events WHERE ts >= ? AND kind = 'error'", since)
-        limit = people("limit")
-        rows = conn.execute("SELECT DISTINCT user, substr(ts, 1, 10) FROM events").fetchall()
+        quiz, ai, chance, limit = people("quiz_done"), people("ai"), people("chance"), people("limit")
+        cost = one(f"SELECT SUM(cost) FROM events WHERE {who} AND ts >= ?", since)
+        errors = one(f"SELECT COUNT(*) FROM events WHERE {who} AND ts >= ? AND kind = 'error'", since)
+        rows = conn.execute(f"SELECT DISTINCT user, substr(ts, 1, 10) FROM events WHERE {who}", args).fetchall()
     # «Вернулись»: из тех, кто пришёл раньше сегодняшнего дня, — те, кто был больше чем в один день.
     day_set: dict[str, set] = {}
     for user, day in rows:
         day_set.setdefault(user, set()).add(day)
-    older = [d for d in day_set.values() if min(d) < now.strftime("%Y-%m-%d")]
+    older = [d for d in day_set.values() if min(d) < today]
     back = sum(1 for d in older if len(d) > 1)
 
+    cost_line = f"Расходы на Claude за {days} дней: ~${cost:.2f}" + (f" (~${cost / active:.3f} на человека)" if active else "")
+    if config.CLAUDE_MODEL not in PRICES:
+        cost_line += f"\n   ⚠️ модели {config.CLAUDE_MODEL} нет в таблице цен, сумма завышена: впишите её цену в PRICES (stats.py)"
     lines = [
-        "📊 Pro4U коротко",
+        "📊 Pro4U коротко (без администраторов)",
         "",
         f"👥 Пользователей всего: {total:.0f}",
-        f"Были сегодня: {today:.0f}",
-        f"Были за {days} дней: {active:.0f} (новых {new:.0f}, вернулись {active - new:.0f})",
-        f"Были за 30 дней: {active30:.0f} (новых {new30:.0f})",
+        f"Были сегодня: {today_users:.0f}",
+        f"Были за {days} дней: {active:.0f} (из них новых {new:.0f}, пришли раньше {active - new:.0f})",
+        f"Были за 30 дней: {active30:.0f} (из них новых {new30:.0f})",
         "",
         f"Что сделали за {days} дней (людей):",
         f"• прошли анкету: {quiz:.0f}",
         f"• посчитали шанс на грант: {chance:.0f}",
         f"• задали вопрос ИИ: {ai:.0f}",
-        f"Вернулись на другой день: {back} из {len(older)}",
-        f"Расходы на Claude за {days} дней: ~${cost:.2f}" + (f" (~${cost / active:.3f} на человека)" if active else ""),
+        f"Заходили больше одного дня (из пришедших раньше сегодняшнего дня): {back} из {len(older)}",
+        cost_line,
     ]
     if errors or limit:
         lines.append("⚠️ " + ", ".join(p for p in (f"ошибок: {errors:.0f}" if errors else "",
                                                   f"упёрлись в дневной лимит: {limit:.0f} чел." if limit else "") if p))
-    team = team_short(since_day)
+    team = team_short(since[:10])
     if team:
         lines += ["", f"Привели люди из команды (за {days} дней):"] + team
     # Вывод по простым правилам, без ИИ.
