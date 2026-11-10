@@ -246,6 +246,86 @@ def sources_report() -> str:
     return "\n".join(lines)
 
 
+def team_short(since_day: str | None = None) -> list[str]:
+    """Люди из команды: сколько человек пришло по их ссылкам и сколько из них прошли анкету (по одной строке на человека)."""
+    with _connect() as conn:
+        joined = conn.execute("SELECT user, detail, MIN(substr(ts, 1, 10)) FROM events WHERE kind = 'src_join' "
+                              "GROUP BY user").fetchall()
+        quiz = {u for (u,) in conn.execute("SELECT DISTINCT user FROM events WHERE kind = 'quiz_done'")}
+    by_person: dict[str, list[str]] = {}
+    for user, name, day in joined:
+        if since_day and day < since_day:
+            continue
+        by_person.setdefault(split_source(name)[0], []).append(user)
+    return [f"• {person.capitalize()}: пришло {len(users)}, прошли анкету {sum(1 for u in users if u in quiz)}"
+            for person, users in sorted(by_person.items(), key=lambda x: -len(x[1]))]
+
+
+def summary(days: int = 7) -> str:
+    """Короткий отчёт для администраторов: сколько людей пользуется ботом сейчас и что они делают. Всё числами людей."""
+    now = datetime.now(ALMATY_TZ)
+    since = (now - timedelta(days=days)).isoformat()
+    since_day = since[:10]
+    with _connect() as conn:
+        def one(sql: str, *args) -> float:
+            return conn.execute(sql, args).fetchone()[0] or 0
+
+        total = one("SELECT COUNT(DISTINCT user) FROM events")
+        active = one("SELECT COUNT(DISTINCT user) FROM events WHERE ts >= ?", since)
+        active30 = one("SELECT COUNT(DISTINCT user) FROM events WHERE ts >= ?", (now - timedelta(days=30)).isoformat())
+        today = one("SELECT COUNT(DISTINCT user) FROM events WHERE substr(ts, 1, 10) = ?", now.strftime("%Y-%m-%d"))
+        new = one("SELECT COUNT(*) FROM (SELECT user FROM events GROUP BY user HAVING MIN(ts) >= ?)", since)
+        new30 = one("SELECT COUNT(*) FROM (SELECT user FROM events GROUP BY user HAVING MIN(ts) >= ?)",
+                    (now - timedelta(days=30)).isoformat())
+
+        def people(kind: str) -> int:
+            return one("SELECT COUNT(DISTINCT user) FROM events WHERE ts >= ? AND kind = ?", since, kind)
+
+        quiz, ai, chance = people("quiz_done"), people("ai"), people("chance")
+        cost = one("SELECT SUM(cost) FROM events WHERE ts >= ?", since)
+        errors = one("SELECT COUNT(*) FROM events WHERE ts >= ? AND kind = 'error'", since)
+        limit = people("limit")
+        rows = conn.execute("SELECT DISTINCT user, substr(ts, 1, 10) FROM events").fetchall()
+    # «Вернулись»: из тех, кто пришёл раньше сегодняшнего дня, — те, кто был больше чем в один день.
+    day_set: dict[str, set] = {}
+    for user, day in rows:
+        day_set.setdefault(user, set()).add(day)
+    older = [d for d in day_set.values() if min(d) < now.strftime("%Y-%m-%d")]
+    back = sum(1 for d in older if len(d) > 1)
+
+    lines = [
+        "📊 Pro4U коротко",
+        "",
+        f"👥 Пользователей всего: {total:.0f}",
+        f"Были сегодня: {today:.0f}",
+        f"Были за {days} дней: {active:.0f} (новых {new:.0f}, вернулись {active - new:.0f})",
+        f"Были за 30 дней: {active30:.0f} (новых {new30:.0f})",
+        "",
+        f"Что сделали за {days} дней (людей):",
+        f"• прошли анкету: {quiz:.0f}",
+        f"• посчитали шанс на грант: {chance:.0f}",
+        f"• задали вопрос ИИ: {ai:.0f}",
+        f"Вернулись на другой день: {back} из {len(older)}",
+        f"Расходы на Claude за {days} дней: ~${cost:.2f}" + (f" (~${cost / active:.3f} на человека)" if active else ""),
+    ]
+    if errors or limit:
+        lines.append("⚠️ " + ", ".join(p for p in (f"ошибок: {errors:.0f}" if errors else "",
+                                                  f"упёрлись в дневной лимит: {limit:.0f} чел." if limit else "") if p))
+    team = team_short(since_day)
+    if team:
+        lines += ["", f"Привели люди из команды (за {days} дней):"] + team
+    # Вывод по простым правилам, без ИИ.
+    if errors:
+        verdict = f"Были ошибки ({errors:.0f}): посмотрите журнал бота."
+    elif active >= 10 and quiz < active * 0.3:
+        verdict = f"Анкету прошли только {quiz:.0f} из {active:.0f}: проверьте первый экран."
+    elif active and new == 0:
+        verdict = "Новых людей не было: пора публиковать ссылки."
+    else:
+        verdict = "Тревожных сигналов нет."
+    return "\n".join(lines + ["", "Вывод: " + verdict])
+
+
 MONTHS_RU = ["январь", "февраль", "март", "апрель", "май", "июнь", "июль", "август", "сентябрь", "октябрь",
              "ноябрь", "декабрь"]
 

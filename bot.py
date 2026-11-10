@@ -450,6 +450,9 @@ async def show_stats(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None
             "Чтобы стать администратором, впишите его в .env строкой ADMIN_IDS=... и перезапустите бота."
         )
         return
+    if not any(a.lower().startswith("подроб") for a in (context.args or [])):
+        await update.message.reply_text(stats.summary(7) + "\n\nВсе подробности: /stats подробно")
+        return
     c = profiles.counts()
     await update.message.reply_text(
         stats.overview() + f"\n\n👤 Личные страницы: {c['profiles']} (внесли баллы: {c['with_scores']}, "
@@ -482,9 +485,7 @@ async def partner_link(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 
 async def weekly_report(context: ContextTypes.DEFAULT_TYPE) -> None:
     """Каждый понедельник в 10:00 по Алматы — отчёт администраторам: новые люди, ссылки команды, возвраты."""
-    since = (datetime.now(stats.ALMATY_TZ) - timedelta(days=7)).strftime("%Y-%m-%d")
-    text = ("📊 Итоги недели Pro4U\n\nПо ссылкам за 7 дней:\n" + stats.people_summary(since)
-            + "\n\nЗа всё время:\n" + stats.people_summary() + "\n\n" + stats.retention())
+    text = stats.summary(7)
     for admin_id in config.ADMIN_IDS:
         try:
             await context.bot.send_message(admin_id, text)
