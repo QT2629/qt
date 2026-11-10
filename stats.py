@@ -2,6 +2,7 @@
 # Хранит только события, без текстов сообщений. Вместо Telegram ID — его хеш,
 # чтобы в базе не было личных данных.
 import hashlib
+import os
 import sqlite3
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -12,11 +13,19 @@ DB_PATH = Path(config.DATA_DIR) / "stats.db"
 ALMATY_TZ = timezone(timedelta(hours=5))
 
 # Цены за 1 млн токенов, $: (вход, ответ, чтение кэша, запись кэша на 1 час).
+# Вход и ответ — из справочника цен Anthropic на 06.10.2026. Чтение кэша для Opus 5.5, Sonnet 5.5 и Fable 5.1 указано там же;
+# остальные цифры кэша выведены по тому же правилу, что у прежних моделей: чтение — 0,1 от цены входа, запись на час — 2 цены входа.
 PRICES = {
     "claude-haiku-4-5": (1.0, 5.0, 0.10, 2.0),
+    "claude-haiku-5-5": (0.10, 0.50, 0.01, 0.20),
     "claude-sonnet-5": (2.0, 10.0, 0.20, 4.0),
+    "claude-sonnet-5-5": (2.0, 10.0, 0.20, 4.0),
     "claude-opus-5": (5.0, 25.0, 0.50, 10.0),
+    "claude-opus-5-5": (4.0, 20.0, 0.20, 8.0),
+    "claude-fable-5-1": (10.0, 50.0, 0.25, 20.0),
 }
+# У Haiku 5.5 запросы длиннее 100 000 токенов входа стоят в 5 раз дороже (0,50 / 2,50).
+LONG_PROMPT = {"claude-haiku-5-5": (100_000, 5)}
 
 
 def _connect() -> sqlite3.Connection:
@@ -60,14 +69,14 @@ def ref_code(user_id: int) -> str:
 
 
 def request_cost(model: str, usage) -> float:
-    """Примерная стоимость одного запроса к Claude в долларах."""
+    """Примерная стоимость одного запроса к Claude в долларах. Неизвестная модель считается по цене Opus 5."""
     price_in, price_out, price_read, price_write = PRICES.get(model, PRICES["claude-opus-5"])
-    return (
-        usage.input_tokens * price_in
-        + usage.output_tokens * price_out
-        + (usage.cache_read_input_tokens or 0) * price_read
-        + (usage.cache_creation_input_tokens or 0) * price_write
-    ) / 1_000_000
+    read = usage.cache_read_input_tokens or 0
+    write = usage.cache_creation_input_tokens or 0
+    limit, factor = LONG_PROMPT.get(model, (None, 1))
+    if limit and usage.input_tokens + read + write > limit:
+        price_in, price_out, price_read, price_write = (p * factor for p in (price_in, price_out, price_read, price_write))
+    return (usage.input_tokens * price_in + usage.output_tokens * price_out + read * price_read + write * price_write) / 1_000_000
 
 
 def report(days: int) -> str:
@@ -246,6 +255,20 @@ def sources_report() -> str:
     return "\n".join(lines)
 
 
+def storage_warning() -> str:
+    """Предупреждение, если на Railway нет постоянного диска (Volume): тогда статистика и история обнуляются при каждом
+    перезапуске. Railway сам задаёт RAILWAY_VOLUME_MOUNT_PATH, когда к сервису подключён Volume."""
+    on_railway = any(os.getenv(k) for k in ("RAILWAY_PROJECT_ID", "RAILWAY_SERVICE_ID", "RAILWAY_ENVIRONMENT_NAME"))
+    if not on_railway:
+        return ""
+    mount = os.getenv("RAILWAY_VOLUME_MOUNT_PATH")
+    db = os.path.realpath(DB_PATH)
+    if mount and (db + os.sep).startswith(os.path.realpath(mount) + os.sep):
+        return ""
+    return ("⚠️ Статистика НЕ сохраняется при перезапуске бота: на Railway нет постоянного диска для папки с данными. "
+            "Добавьте Volume с путём /app/data (сервис бота → Volumes) — иначе цифры ниже начинаются заново после каждой выкладки.")
+
+
 def _not_admin() -> tuple[str, tuple]:
     """Условие «это не администратор»: проверки владельца и команды не должны считаться пользователями."""
     hashes = tuple(_user_hash(i) for i in config.ADMIN_IDS)
@@ -296,6 +319,7 @@ def summary(days: int = 7) -> str:
         cost = one(f"SELECT SUM(cost) FROM events WHERE {who} AND ts >= ?", since)
         errors = one(f"SELECT COUNT(*) FROM events WHERE {who} AND ts >= ? AND kind = 'error'", since)
         rows = conn.execute(f"SELECT DISTINCT user, substr(ts, 1, 10) FROM events WHERE {who}", args).fetchall()
+        first_day = conn.execute("SELECT MIN(substr(ts, 1, 10)) FROM events").fetchone()[0]
     # «Вернулись»: из тех, кто пришёл раньше сегодняшнего дня, — те, кто был больше чем в один день.
     day_set: dict[str, set] = {}
     for user, day in rows:
@@ -303,11 +327,13 @@ def summary(days: int = 7) -> str:
     older = [d for d in day_set.values() if min(d) < today]
     back = sum(1 for d in older if len(d) > 1)
 
+    warn = storage_warning()
     cost_line = f"Расходы на Claude за {days} дней: ~${cost:.2f}" + (f" (~${cost / active:.3f} на человека)" if active else "")
     if config.CLAUDE_MODEL not in PRICES:
         cost_line += f"\n   ⚠️ модели {config.CLAUDE_MODEL} нет в таблице цен, сумма завышена: впишите её цену в PRICES (stats.py)"
     lines = [
         "📊 Pro4U коротко (без администраторов)",
+        f"Данные в базе с {first_day[8:10]}.{first_day[5:7]}.{first_day[:4]}" if first_day else "Данных пока нет",
         "",
         f"👥 Пользователей всего: {total:.0f}",
         f"Были сегодня: {today_users:.0f}",
@@ -324,6 +350,8 @@ def summary(days: int = 7) -> str:
     if errors or limit:
         lines.append("⚠️ " + ", ".join(p for p in (f"ошибок: {errors:.0f}" if errors else "",
                                                   f"упёрлись в дневной лимит: {limit:.0f} чел." if limit else "") if p))
+    if warn:
+        lines += ["", warn]
     team = team_short(since[:10])
     if team:
         lines += ["", f"Привели люди из команды (за {days} дней):"] + team
