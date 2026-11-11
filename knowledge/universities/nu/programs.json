@@ -1,0 +1,535 @@
+[
+  {
+    "code": "nu-1",
+    "name_ru": "Geology",
+    "section": "School of Engineering",
+    "ent_subjects": "ЕНТ не нужен: NUET (математика + критическое мышление) / SAT / ACT / IB / A-level / НИШ-12 / олимпиада",
+    "ent_note": "NUET: минимум 120 в сумме и не менее 50 по каждому разделу (основной приём 2027/28); мидгод-платный: 130 и 60. IELTS 6.0 / TOEFL эквивалент. Цена 15 000 USD в год; 7 290 000 тенге по внутреннему курсу 486 (расчёт по сайту NU, уточнять). Самооплата возможна по GPA 4.0 или ЕНТ 85 (на английском).",
+    "tracks": [],
+    "key_courses": [
+      "GEOL 101 Fundamentals of Geology",
+      "GEOL 206 Field Geology I",
+      "GEOL 304 Geophysics",
+      "GEOL 307 GIS",
+      "GEOL 401 Petroleum Geology and Geochemistry"
+    ],
+    "careers": [
+      "геолог (поисковый, рудный, нефтяной)",
+      "гидрогеолог",
+      "геофизик",
+      "геохимик",
+      "GIS-аналитик",
+      "консультант по минеральным ресурсам"
+    ],
+    "workplaces": [
+      "KMG Engineering",
+      "TengizChevrOil",
+      "KATCO",
+      "Schlumberger",
+      "Национальная геологическая служба РК",
+      "SRK Consulting",
+      "Halliburton"
+    ],
+    "price_kzt": 7290000,
+    "url": "https://soe.nu.edu.kz/bachelor_of_geology"
+  },
+  {
+    "code": "nu-2",
+    "name_ru": "Mathematics",
+    "section": "School of Computing and Artificial Intelligence",
+    "ent_subjects": "ЕНТ не нужен: NUET (математика + критическое мышление) / SAT / ACT / IB / A-level / НИШ-12 / олимпиада",
+    "ent_note": "NUET: минимум 120 в сумме и не менее 50 по каждому разделу (основной приём 2027/28); мидгод-платный: 130 и 60. IELTS 6.0 / TOEFL эквивалент. Цена 15 000 USD в год; 7 290 000 тенге по внутреннему курсу 486 (расчёт по сайту NU, уточнять). Самооплата возможна по GPA 4.0 или ЕНТ 85 (на английском).",
+    "tracks": [],
+    "key_courses": [
+      "MATH 251 Discrete Mathematics",
+      "MATH 321 Probability",
+      "MATH 411 Linear Programming",
+      "MATH 424 Mathematical Finance",
+      "MATH 455 Stochastic Calculus"
+    ],
+    "careers": [
+      "прикладной математик",
+      "data scientist",
+      "статистик/аналитик данных",
+      "квантовый аналитик",
+      "актуарный аналитик",
+      "финансовый/риск-аналитик",
+      "исследователь"
+    ],
+    "workplaces": [],
+    "price_kzt": 7290000,
+    "url": "https://scai.nu.edu.kz/bsc-math"
+  },
+  {
+    "code": "nu-3",
+    "name_ru": "Physics",
+    "section": "School of Sciences and Humanities",
+    "ent_subjects": "ЕНТ не нужен: NUET (математика + критическое мышление) / SAT / ACT / IB / A-level / НИШ-12 / олимпиада",
+    "ent_note": "NUET: минимум 120 в сумме и не менее 50 по каждому разделу (основной приём 2027/28); мидгод-платный: 130 и 60. IELTS 6.0 / TOEFL эквивалент. Цена 15 000 USD в год; 7 290 000 тенге по внутреннему курсу 486 (расчёт по сайту NU, уточнять). Самооплата возможна по GPA 4.0 или ЕНТ 85 (на английском).",
+    "tracks": [],
+    "key_courses": [],
+    "careers": [
+      "R&D в естественных науках и инженерии",
+      "астрономия и космос",
+      "аэрокосмос и оборона",
+      "геофизика и сейсмология",
+      "нефть и газ, горное дело",
+      "финансы и банки",
+      "телеком и HPC"
+    ],
+    "workplaces": [],
+    "price_kzt": 7290000,
+    "url": "https://ssh.nu.edu.kz/bscphysics"
+  },
+  {
+    "code": "nu-4",
+    "name_ru": "Chemistry",
+    "section": "School of Sciences and Humanities",
+    "ent_subjects": "ЕНТ не нужен: NUET (математика + критическое мышление) / SAT / ACT / IB / A-level / НИШ-12 / олимпиада",
+    "ent_note": "NUET: минимум 120 в сумме и не менее 50 по каждому разделу (основной приём 2027/28); мидгод-платный: 130 и 60. IELTS 6.0 / TOEFL эквивалент. Цена 15 000 USD в год; 7 290 000 тенге по внутреннему курсу 486 (расчёт по сайту NU, уточнять). Самооплата возможна по GPA 4.0 или ЕНТ 85 (на английском).",
+    "tracks": [],
+    "key_courses": [
+      "CHEM 211 Organic Chemistry I",
+      "CHEM 331 Physical Chemistry I",
+      "CHEM 341 Biochemistry I",
+      "CHEM 320 Instrumental Analysis",
+      "CHEM 488/489 Directed Research"
+    ],
+    "careers": [
+      "фармацевтика и химическое производство",
+      "материаловедение, экология",
+      "клиническая и медицинская химия",
+      "наука и преподавание",
+      "химическая безопасность, судебная экспертиза"
+    ],
+    "workplaces": [],
+    "price_kzt": 7290000,
+    "url": "https://ssh.nu.edu.kz/bscchem"
+  },
+  {
+    "code": "nu-5",
+    "name_ru": "Sociology",
+    "section": "School of Sciences and Humanities",
+    "ent_subjects": "ЕНТ не нужен: NUET (математика + критическое мышление) / SAT / ACT / IB / A-level / НИШ-12 / олимпиада",
+    "ent_note": "NUET: минимум 120 в сумме и не менее 50 по каждому разделу (основной приём 2027/28); мидгод-платный: 130 и 60. IELTS 6.0 / TOEFL эквивалент. Цена 15 000 USD в год; 7 290 000 тенге по внутреннему курсу 486 (расчёт по сайту NU, уточнять). Самооплата возможна по GPA 4.0 или ЕНТ 85 (на английском).",
+    "tracks": [],
+    "key_courses": [
+      "SOC 101 Introduction to Sociology",
+      "SOC 201 Social Science Research Methods",
+      "SOC 203 Quantitative Methods",
+      "SOC 214 Qualitative Methods",
+      "SOC 301 Classical Sociological Theory"
+    ],
+    "careers": [
+      "маркетинговые и социальные исследования",
+      "анализ данных",
+      "политический анализ",
+      "социальные службы",
+      "HR и управление проектами",
+      "журналистика и образование"
+    ],
+    "workplaces": [
+      "BISAM",
+      "Brif",
+      "TNS Central Asia",
+      "CIOM",
+      "UN Women",
+      "IOM",
+      "UNDP",
+      "UNICEF",
+      "UNESCO",
+      "Khabar",
+      "KAZINFORM",
+      "Radio Azattyq"
+    ],
+    "price_kzt": 7290000,
+    "url": "https://ssh.nu.edu.kz/basociology"
+  },
+  {
+    "code": "nu-6",
+    "name_ru": "Political Science and International Relations",
+    "section": "School of Sciences and Humanities",
+    "ent_subjects": "ЕНТ не нужен: NUET (математика + критическое мышление) / SAT / ACT / IB / A-level / НИШ-12 / олимпиада",
+    "ent_note": "NUET: минимум 120 в сумме и не менее 50 по каждому разделу (основной приём 2027/28); мидгод-платный: 130 и 60. IELTS 6.0 / TOEFL эквивалент. Цена 15 000 USD в год; 7 290 000 тенге по внутреннему курсу 486 (расчёт по сайту NU, уточнять). Самооплата возможна по GPA 4.0 или ЕНТ 85 (на английском).",
+    "tracks": [],
+    "key_courses": [
+      "PLS 120 Introduction to Political Theory",
+      "PLS 140 Introduction to Comparative Politics",
+      "PLS 150 Introduction to International Relations",
+      "PLS 210 Political Science Research Methods",
+      "PLS 330 Politics and Governance of Eurasia"
+    ],
+    "careers": [
+      "госслужба",
+      "политический/исследовательский аналитик",
+      "аналитик данных",
+      "дипломатия",
+      "НКО и международные организации",
+      "правозащита"
+    ],
+    "workplaces": [
+      "Министерство экономики РК",
+      "Администрация Президента",
+      "МИД РК",
+      "World Bank",
+      "AIFC",
+      "посольство США",
+      "Astana Times",
+      "Vlast",
+      "KPMG",
+      "KazMunaiGas"
+    ],
+    "price_kzt": 7290000,
+    "url": "https://ssh.nu.edu.kz/bapsir"
+  },
+  {
+    "code": "nu-7",
+    "name_ru": "Computer Science",
+    "section": "School of Computing and Artificial Intelligence",
+    "ent_subjects": "ЕНТ не нужен: NUET (математика + критическое мышление) / SAT / ACT / IB / A-level / НИШ-12 / олимпиада",
+    "ent_note": "NUET: минимум 120 в сумме и не менее 50 по каждому разделу (основной приём 2027/28); мидгод-платный: 130 и 60. IELTS 6.0 / TOEFL эквивалент. Цена 15 000 USD в год; 7 290 000 тенге по внутреннему курсу 486 (расчёт по сайту NU, уточнять). Самооплата возможна по GPA 4.0 или ЕНТ 85 (на английском).",
+    "tracks": [],
+    "key_courses": [
+      "CSCI 151 Programming for Scientists and Engineers",
+      "CSCI 270 Algorithms",
+      "CSCI 341 Database Systems",
+      "CSCI 332 Operating Systems",
+      "CSCI 390 Artificial Intelligence",
+      "CSCI 408/409 Senior Project"
+    ],
+    "careers": [
+      "разработчик ПО",
+      "ML/AI-инженер",
+      "data scientist/инженер данных",
+      "специалист по кибербезопасности",
+      "системный/сетевой инженер",
+      "веб/мобильный разработчик",
+      "IoT/embedded"
+    ],
+    "workplaces": [],
+    "price_kzt": 7290000,
+    "url": "https://scai.nu.edu.kz/bsc-cs"
+  },
+  {
+    "code": "nu-8",
+    "name_ru": "Nursing",
+    "section": "School of Medicine",
+    "ent_subjects": "ЕНТ не нужен: NUET (математика + критическое мышление) / SAT / ACT / IB / A-level / НИШ-12 / олимпиада",
+    "ent_note": "NUET: минимум 120 в сумме и не менее 50 по каждому разделу (основной приём 2027/28); мидгод-платный: 130 и 60. IELTS 6.0 / TOEFL эквивалент. Цена 15 000 USD в год; 7 290 000 тенге по внутреннему курсу 486 (расчёт по сайту NU, уточнять). Самооплата возможна по GPA 4.0 или ЕНТ 85 (на английском). На странице программы указан срок 2 года (240 ECTS) — условия приёма уточнять.",
+    "tracks": [],
+    "key_courses": [],
+    "careers": [
+      "здравоохранение (общественное здоровье, больницы и клиники)",
+      "продолжение в магистратуре NU"
+    ],
+    "workplaces": [],
+    "price_kzt": 7290000,
+    "url": "https://nusom.nu.edu.kz/bn"
+  },
+  {
+    "code": "nu-9",
+    "name_ru": "Biological Sciences",
+    "section": "School of Medicine",
+    "ent_subjects": "ЕНТ не нужен: NUET (математика + критическое мышление) / SAT / ACT / IB / A-level / НИШ-12 / олимпиада",
+    "ent_note": "NUET: минимум 120 в сумме и не менее 50 по каждому разделу (основной приём 2027/28); мидгод-платный: 130 и 60. IELTS 6.0 / TOEFL эквивалент. Цена 15 000 USD в год; 7 290 000 тенге по внутреннему курсу 486 (расчёт по сайту NU, уточнять). Самооплата возможна по GPA 4.0 или ЕНТ 85 (на английском).",
+    "tracks": [],
+    "key_courses": [
+      "Biochemistry I",
+      "Molecular Cell Biology",
+      "Immunology",
+      "Genetics",
+      "Introduction to Microbiology"
+    ],
+    "careers": [
+      "исследователь/лаборант",
+      "аспирантура и медицинские науки",
+      "работа в здравоохранении и экологии"
+    ],
+    "workplaces": [
+      "университеты",
+      "фарма-, биотех- и агрокомпании",
+      "больницы",
+      "научные институты"
+    ],
+    "price_kzt": 7290000,
+    "url": "https://nusom.nu.edu.kz/bbs"
+  },
+  {
+    "code": "nu-10",
+    "name_ru": "Business Administration (BBA)",
+    "section": "Graduate School of Business",
+    "ent_subjects": "ЕНТ не нужен: NUET (математика + критическое мышление) / SAT / ACT / IB / A-level / НИШ-12 / олимпиада",
+    "ent_note": "NUET: минимум 120 в сумме и не менее 50 по каждому разделу (основной приём 2027/28); мидгод-платный: 130 и 60. IELTS 6.0 / TOEFL эквивалент. Цена 15 000 USD в год; 7 290 000 тенге по внутреннему курсу 486 (расчёт по сайту NU, уточнять). Самооплата возможна по GPA 4.0 или ЕНТ 85 (на английском).",
+    "tracks": [],
+    "key_courses": [],
+    "careers": [
+      "корпоративные финансы, банки, инвестиции, финтех (трек Finance and Business Analytics)",
+      "брендинг, менеджмент и предпринимательство (трек Management, Marketing and Entrepreneurship)"
+    ],
+    "workplaces": [],
+    "price_kzt": 7290000,
+    "url": "https://gsb.nu.edu.kz/bba"
+  },
+  {
+    "code": "nu-11",
+    "name_ru": "Economics",
+    "section": "Graduate School of Business",
+    "ent_subjects": "ЕНТ не нужен: NUET (математика + критическое мышление) / SAT / ACT / IB / A-level / НИШ-12 / олимпиада",
+    "ent_note": "NUET: минимум 120 в сумме и не менее 50 по каждому разделу (основной приём 2027/28); мидгод-платный: 130 и 60. IELTS 6.0 / TOEFL эквивалент. Цена 15 000 USD в год; 7 290 000 тенге по внутреннему курсу 486 (расчёт по сайту NU, уточнять). Самооплата возможна по GPA 4.0 или ЕНТ 85 (на английском).",
+    "tracks": [],
+    "key_courses": [],
+    "careers": [
+      "консалтинг и профессиональные услуги",
+      "банки и финансы",
+      "международные организации",
+      "энергетика и промышленность",
+      "госсектор",
+      "продолжение в магистратуре по экономике, бизнесу, МО, праву"
+    ],
+    "workplaces": [
+      "Deloitte",
+      "EY",
+      "KPMG",
+      "PwC",
+      "McKinsey",
+      "AIFC",
+      "Halyk Bank",
+      "Kaspi Bank",
+      "World Bank",
+      "National Bank of Kazakhstan",
+      "Chevron",
+      "Samruk-Kazyna"
+    ],
+    "price_kzt": 7290000,
+    "url": "https://gsb.nu.edu.kz/econ"
+  },
+  {
+    "code": "nu-12",
+    "name_ru": "Бизнес-администрирование (совместно с HKUST)",
+    "section": "Graduate School of Business",
+    "ent_subjects": "ЕНТ не нужен: NUET (математика + критическое мышление) / SAT / ACT / IB / A-level / НИШ-12 / олимпиада",
+    "ent_note": "Официальное название: Business Administration in Eurasian Business. Joint Degree with HKUST. NUET: минимум 120 в сумме и не менее 50 по каждому разделу (основной приём 2027/28); мидгод-платный: 130 и 60. IELTS 6.0 / TOEFL эквивалент. Цена 15 000 USD в год; 7 290 000 тенге по внутреннему курсу 486 (расчёт по сайту NU, уточнять). Самооплата возможна по GPA 4.0 или ЕНТ 85 (на английском).",
+    "tracks": [],
+    "key_courses": [],
+    "careers": [
+      "карьера в Гонконге и Казахстане (по странице: возможности в Гонконге)"
+    ],
+    "workplaces": [],
+    "price_kzt": 7290000,
+    "url": "https://gsb.nu.edu.kz/bbaeabu"
+  },
+  {
+    "code": "nu-13",
+    "name_ru": "Robotics Engineering",
+    "section": "School of Computing and Artificial Intelligence",
+    "ent_subjects": "ЕНТ не нужен: NUET (математика + критическое мышление) / SAT / ACT / IB / A-level / НИШ-12 / олимпиада",
+    "ent_note": "NUET: минимум 120 в сумме и не менее 50 по каждому разделу (основной приём 2027/28); мидгод-платный: 130 и 60. IELTS 6.0 / TOEFL эквивалент. Цена 15 000 USD в год; 7 290 000 тенге по внутреннему курсу 486 (расчёт по сайту NU, уточнять). Самооплата возможна по GPA 4.0 или ЕНТ 85 (на английском).",
+    "tracks": [],
+    "key_courses": [
+      "ROBT 202 System Dynamics and Modeling",
+      "ROBT 303 Linear Control Theory with Laboratory",
+      "ROBT 312 Robotics I: Kinematics and Dynamics",
+      "ROBT 402 Robotic/Mechatronic System Design",
+      "ROBT 403 Robotics II"
+    ],
+    "careers": [
+      "инженер по робототехнике и мехатронике",
+      "PLC/промышленная автоматизация",
+      "embedded-инженер",
+      "робототехнический разработчик ПО",
+      "инженер по компьютерному зрению/ML",
+      "R&D-инженер"
+    ],
+    "workplaces": [],
+    "price_kzt": 7290000,
+    "url": "https://scai.nu.edu.kz/bsc-rob"
+  },
+  {
+    "code": "nu-14",
+    "name_ru": "Mining and Minerals Engineering",
+    "section": "School of Engineering",
+    "ent_subjects": "ЕНТ не нужен: NUET (математика + критическое мышление) / SAT / ACT / IB / A-level / НИШ-12 / олимпиада",
+    "ent_note": "NUET: минимум 120 в сумме и не менее 50 по каждому разделу (основной приём 2027/28); мидгод-платный: 130 и 60. IELTS 6.0 / TOEFL эквивалент. Цена 15 000 USD в год; 7 290 000 тенге по внутреннему курсу 486 (расчёт по сайту NU, уточнять). Самооплата возможна по GPA 4.0 или ЕНТ 85 (на английском).",
+    "tracks": [],
+    "key_courses": [
+      "MINE 302 Fundamentals of Geomechanics",
+      "MINE 304 Resource Estimation",
+      "MINE 306 Underground Mining Systems and Design",
+      "MINE 307 Surface Mining Systems and Design",
+      "MINE 402 Mine Planning",
+      "MINE 405 Mine Ventilation"
+    ],
+    "careers": [
+      "горный инженер (подземные и открытые работы)",
+      "планирование горных работ",
+      "геомеханик/геотехник",
+      "инженер по вентиляции шахт",
+      "инженер по безопасности и экологии"
+    ],
+    "workplaces": [
+      "KazMinerals",
+      "Kazzinc",
+      "Kazakhmys",
+      "ERG",
+      "RG Gold",
+      "SRK Consulting",
+      "Altynalmas",
+      "Solidcore Resources"
+    ],
+    "price_kzt": 7290000,
+    "url": "https://soe.nu.edu.kz/bachelor_of_me"
+  },
+  {
+    "code": "nu-15",
+    "name_ru": "Petroleum Engineering",
+    "section": "School of Engineering",
+    "ent_subjects": "ЕНТ не нужен: NUET (математика + критическое мышление) / SAT / ACT / IB / A-level / НИШ-12 / олимпиада",
+    "ent_note": "NUET: минимум 120 в сумме и не менее 50 по каждому разделу (основной приём 2027/28); мидгод-платный: 130 и 60. IELTS 6.0 / TOEFL эквивалент. Цена 15 000 USD в год; 7 290 000 тенге по внутреннему курсу 486 (расчёт по сайту NU, уточнять). Самооплата возможна по GPA 4.0 или ЕНТ 85 (на английском).",
+    "tracks": [],
+    "key_courses": [
+      "PETE 204 Reservoir Rock and Fluid Properties",
+      "PETE 302 Reservoir Engineering I",
+      "PETE 303 Well Logging and Formation Evaluation",
+      "PETE 307 Production Engineering",
+      "PETE 311 Reservoir Simulation"
+    ],
+    "careers": [
+      "нефтегазовая разведка и добыча",
+      "сервисные и буровые компании",
+      "инжиниринг и консалтинг",
+      "энергетика и ВИЭ",
+      "промышленная безопасность и экология"
+    ],
+    "workplaces": [
+      "KMG Engineering",
+      "SLB",
+      "Chevron",
+      "KazMunaiGas",
+      "Shell",
+      "TengizChevrOil",
+      "Halliburton",
+      "KPO"
+    ],
+    "price_kzt": 7290000,
+    "url": "https://soe.nu.edu.kz/bachelor_of_pe"
+  },
+  {
+    "code": "nu-16",
+    "name_ru": "Chemical and Materials Engineering",
+    "section": "School of Engineering",
+    "ent_subjects": "ЕНТ не нужен: NUET (математика + критическое мышление) / SAT / ACT / IB / A-level / НИШ-12 / олимпиада",
+    "ent_note": "NUET: минимум 120 в сумме и не менее 50 по каждому разделу (основной приём 2027/28); мидгод-платный: 130 и 60. IELTS 6.0 / TOEFL эквивалент. Цена 15 000 USD в год; 7 290 000 тенге по внутреннему курсу 486 (расчёт по сайту NU, уточнять). Самооплата возможна по GPA 4.0 или ЕНТ 85 (на английском).",
+    "tracks": [],
+    "key_courses": [
+      "CHME 202 Fluid Mechanics",
+      "CHME 303 Separation Processes",
+      "CHME 304 Chemical Reaction Engineering",
+      "CHME 400 Process Design and Simulation",
+      "CHME 402 Materials Chemistry"
+    ],
+    "careers": [
+      "инженер-технолог/процессов",
+      "моделирование и управление процессами",
+      "промышленная безопасность и риски",
+      "экология, качество, биопроцессы",
+      "R&D и консалтинг"
+    ],
+    "workplaces": [
+      "KMG Engineering",
+      "TCO",
+      "SLB",
+      "NCOC",
+      "Kazatomprom",
+      "KPI",
+      "KPO",
+      "Baker Hughes"
+    ],
+    "price_kzt": 7290000,
+    "url": "https://soe.nu.edu.kz/bachelor_of_cme"
+  },
+  {
+    "code": "nu-17",
+    "name_ru": "Electrical and Computer Engineering",
+    "section": "School of Engineering",
+    "ent_subjects": "ЕНТ не нужен: NUET (математика + критическое мышление) / SAT / ACT / IB / A-level / НИШ-12 / олимпиада",
+    "ent_note": "NUET: минимум 120 в сумме и не менее 50 по каждому разделу (основной приём 2027/28); мидгод-платный: 130 и 60. IELTS 6.0 / TOEFL эквивалент. Цена 15 000 USD в год; 7 290 000 тенге по внутреннему курсу 486 (расчёт по сайту NU, уточнять). Самооплата возможна по GPA 4.0 или ЕНТ 85 (на английском).",
+    "tracks": [],
+    "key_courses": [
+      "ELCE 200 Circuit Theory I",
+      "ELCE 202 Digital Logic Design",
+      "ELCE 300 Microprocessor Systems",
+      "ELCE 308 Communication Systems",
+      "ENG 400 Capstone Project"
+    ],
+    "careers": [
+      "инженер-электрик/электронщик",
+      "embedded-системы",
+      "энергосистемы",
+      "автоматизация и управление",
+      "телеком и сети",
+      "R&D"
+    ],
+    "workplaces": [],
+    "price_kzt": 7290000,
+    "url": "https://soe.nu.edu.kz/bachelor_of_ece"
+  },
+  {
+    "code": "nu-18",
+    "name_ru": "Civil and Environmental Engineering",
+    "section": "School of Engineering",
+    "ent_subjects": "ЕНТ не нужен: NUET (математика + критическое мышление) / SAT / ACT / IB / A-level / НИШ-12 / олимпиада",
+    "ent_note": "NUET: минимум 120 в сумме и не менее 50 по каждому разделу (основной приём 2027/28); мидгод-платный: 130 и 60. IELTS 6.0 / TOEFL эквивалент. Цена 15 000 USD в год; 7 290 000 тенге по внутреннему курсу 486 (расчёт по сайту NU, уточнять). Самооплата возможна по GPA 4.0 или ЕНТ 85 (на английском).",
+    "tracks": [],
+    "key_courses": [
+      "CEE 203 Structural Analysis",
+      "CEE 300 Structural Design - Concrete",
+      "CEE 302 Geotechnical Engineering",
+      "CEE 305 Hydraulics and Hydrology",
+      "CEE 401 Construction Technology and Management"
+    ],
+    "careers": [
+      "инженер-строитель, конструктор, геотехник",
+      "водные ресурсы и экология",
+      "транспорт и инфраструктура",
+      "руководитель строительных проектов",
+      "геодезия/геоматика"
+    ],
+    "workplaces": [],
+    "price_kzt": 7290000,
+    "url": "https://soe.nu.edu.kz/bachelor_of_cee"
+  },
+  {
+    "code": "nu-19",
+    "name_ru": "Mechanical and Aerospace Engineering",
+    "section": "School of Engineering",
+    "ent_subjects": "ЕНТ не нужен: NUET (математика + критическое мышление) / SAT / ACT / IB / A-level / НИШ-12 / олимпиада",
+    "ent_note": "NUET: минимум 120 в сумме и не менее 50 по каждому разделу (основной приём 2027/28); мидгод-платный: 130 и 60. IELTS 6.0 / TOEFL эквивалент. Цена 15 000 USD в год; 7 290 000 тенге по внутреннему курсу 486 (расчёт по сайту NU, уточнять). Самооплата возможна по GPA 4.0 или ЕНТ 85 (на английском).",
+    "tracks": [],
+    "key_courses": [
+      "MAE 301 Engineering Thermodynamics",
+      "MAE 303 Control Systems",
+      "MAE 306 Computer Aided Engineering",
+      "MAE 401 Mechanical Systems Design",
+      "MAE 454 Aerodynamics"
+    ],
+    "careers": [
+      "инженер-механик/аэрокосмический",
+      "CAD/CAE",
+      "системы управления",
+      "производство и материалы",
+      "энергосистемы",
+      "БПЛА",
+      "R&D"
+    ],
+    "workplaces": [
+      "Airbus",
+      "Rolls-Royce",
+      "Air Astana",
+      "Alstom",
+      "Wabtec",
+      "Air Liquide"
+    ],
+    "price_kzt": 7290000,
+    "url": "https://soe.nu.edu.kz/bachelor_of_mae"
+  }
+]

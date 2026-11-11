@@ -1,0 +1,310 @@
+[
+  {
+    "code": "6B01703",
+    "name_ru": "Иностранный язык: два иностранных языка (английский)",
+    "section": "Бизнес, право и педагогика",
+    "ent_subjects": "",
+    "ent_note": "ЕНТ от 75 (педагогика). Американская программа: тест по английскому и собеседование.",
+    "tracks": [
+      "американская программа (английский)"
+    ],
+    "key_courses": [],
+    "careers": [],
+    "workplaces": [],
+    "price_kzt": 620000,
+    "url": "https://kafu.edu.kz/tuesim/bakalavriat/",
+    "grant_2026": {
+      "gop": "B016 Подготовка учителей казахского языка и литературы",
+      "gop_source": "по коду программы в реестре",
+      "count": 0,
+      "min": null
+    }
+  },
+  {
+    "code": "6B02301",
+    "name_ru": "Перевод",
+    "section": "Иностранные языки",
+    "ent_subjects": "",
+    "ent_note": "ЕНТ от 50; американская программа: тест и собеседование.",
+    "tracks": [
+      "американская программа (английский)"
+    ],
+    "key_courses": [],
+    "careers": [],
+    "workplaces": [],
+    "price_kzt": 620000,
+    "url": "https://kafu.edu.kz/tuesim/bakalavriat/",
+    "grant_2026": {
+      "gop": "B036 Переводческое дело",
+      "gop_source": "по коду программы в реестре",
+      "count": 0,
+      "min": null
+    }
+  },
+  {
+    "code": "6B03101",
+    "name_ru": "Международные отношения",
+    "section": "Право и международные отношения",
+    "ent_subjects": "",
+    "ent_note": "ЕНТ от 50; американская программа: тест и собеседование.",
+    "tracks": [
+      "американская программа (английский)"
+    ],
+    "key_courses": [],
+    "careers": [],
+    "workplaces": [],
+    "price_kzt": 620000,
+    "url": "https://kafu.edu.kz/tuesim/bakalavriat/",
+    "grant_2026": {
+      "gop": "B041 Психология",
+      "gop_source": "по коду программы в реестре",
+      "count": 0,
+      "min": null
+    }
+  },
+  {
+    "code": "6B04102",
+    "name_ru": "Менеджмент",
+    "section": "Бизнес",
+    "ent_subjects": "",
+    "ent_note": "ЕНТ от 50; американская программа: тест и собеседование.",
+    "tracks": [
+      "американская программа (английский)"
+    ],
+    "key_courses": [],
+    "careers": [],
+    "workplaces": [],
+    "price_kzt": 620000,
+    "url": "https://kafu.edu.kz/tuesim/bakalavriat/",
+    "grant_2026": {
+      "gop": "B044 Менеджмент и управление",
+      "gop_source": "по коду программы в реестре",
+      "count": 0,
+      "min": null
+    }
+  },
+  {
+    "code": "6B06101",
+    "name_ru": "Информационные системы",
+    "section": "Бизнес",
+    "ent_subjects": "",
+    "ent_note": "ЕНТ от 50; американская программа: тест и собеседование.",
+    "tracks": [
+      "американская программа (английский)"
+    ],
+    "key_courses": [],
+    "careers": [],
+    "workplaces": [],
+    "price_kzt": 620000,
+    "url": "https://kafu.edu.kz/tuesim/bakalavriat/",
+    "grant_2026": {
+      "gop": "B057 Информационные технологии",
+      "gop_source": "по коду программы в реестре",
+      "count": 0,
+      "min": null
+    }
+  },
+  {
+    "code": "6B11101",
+    "name_ru": "Туризм",
+    "section": "Бизнес",
+    "ent_subjects": "",
+    "ent_note": "ЕНТ от 50; американская программа: тест и собеседование.",
+    "tracks": [
+      "американская программа (английский)"
+    ],
+    "key_courses": [],
+    "careers": [],
+    "workplaces": [],
+    "price_kzt": 620000,
+    "url": "https://kafu.edu.kz/tuesim/bakalavriat/",
+    "grant_2026": {
+      "gop": "B091 Туризм",
+      "gop_source": "по коду программы в реестре",
+      "count": 0,
+      "min": null
+    }
+  },
+  {
+    "code": "kafu-7",
+    "name_ru": "Ақпараттық-коммуникациялық технологиялар",
+    "section": "ИКТ",
+    "ent_subjects": "",
+    "ent_note": "Название с каталога kafu.edu.kz; код, предметы и цена не показаны; общий ЕНТ-порог школьников: 75 (педагогика, право), 50 (остальные).",
+    "tracks": [],
+    "key_courses": [],
+    "careers": [],
+    "workplaces": [],
+    "price_kzt": 620000,
+    "url": "https://kafu.edu.kz/kk/mamandyqtar/?specSlug=computer-science-kk"
+  },
+  {
+    "code": "kafu-8",
+    "name_ru": "Право и правоохранительная деятельность",
+    "section": "Бизнес, право, менеджмент",
+    "ent_subjects": "",
+    "ent_note": "Название с каталога kafu.edu.kz; код, предметы и цена не показаны; общий ЕНТ-порог школьников: 75 (педагогика, право), 50 (остальные).",
+    "tracks": [],
+    "key_courses": [],
+    "careers": [],
+    "workplaces": [],
+    "price_kzt": 620000,
+    "url": "https://kafu.edu.kz/kk/mamandyqtar/?specSlug=business-management-kk"
+  },
+  {
+    "code": "kafu-9",
+    "name_ru": "Юриспруденция",
+    "section": "Бизнес, право, менеджмент",
+    "ent_subjects": "",
+    "ent_note": "Название с каталога kafu.edu.kz; код, предметы и цена не показаны; общий ЕНТ-порог школьников: 75 (педагогика, право), 50 (остальные).",
+    "tracks": [],
+    "key_courses": [],
+    "careers": [],
+    "workplaces": [],
+    "price_kzt": 620000,
+    "url": "https://kafu.edu.kz/kk/mamandyqtar/?specSlug=business-management-kk"
+  },
+  {
+    "code": "kafu-10",
+    "name_ru": "Маркетинг и PR-менеджмент",
+    "section": "Бизнес, право, менеджмент",
+    "ent_subjects": "",
+    "ent_note": "Название с каталога kafu.edu.kz; код, предметы и цена не показаны; общий ЕНТ-порог школьников: 75 (педагогика, право), 50 (остальные).",
+    "tracks": [],
+    "key_courses": [],
+    "careers": [],
+    "workplaces": [],
+    "price_kzt": 620000,
+    "url": "https://kafu.edu.kz/kk/mamandyqtar/?specSlug=business-management-kk"
+  },
+  {
+    "code": "kafu-11",
+    "name_ru": "Финансы",
+    "section": "Бизнес, право, менеджмент",
+    "ent_subjects": "",
+    "ent_note": "Название с каталога kafu.edu.kz; код, предметы и цена не показаны; общий ЕНТ-порог школьников: 75 (педагогика, право), 50 (остальные).",
+    "tracks": [],
+    "key_courses": [],
+    "careers": [],
+    "workplaces": [],
+    "price_kzt": 620000,
+    "url": "https://kafu.edu.kz/kk/mamandyqtar/?specSlug=business-management-kk"
+  },
+  {
+    "code": "kafu-12",
+    "name_ru": "Учёт и аудит",
+    "section": "Бизнес, право, менеджмент",
+    "ent_subjects": "",
+    "ent_note": "Название с каталога kafu.edu.kz; код, предметы и цена не показаны; общий ЕНТ-порог школьников: 75 (педагогика, право), 50 (остальные).",
+    "tracks": [],
+    "key_courses": [],
+    "careers": [],
+    "workplaces": [],
+    "price_kzt": 620000,
+    "url": "https://kafu.edu.kz/kk/mamandyqtar/?specSlug=business-management-kk"
+  },
+  {
+    "code": "kafu-13",
+    "name_ru": "Экономика",
+    "section": "Бизнес, право, менеджмент",
+    "ent_subjects": "",
+    "ent_note": "Название с каталога kafu.edu.kz; код, предметы и цена не показаны; общий ЕНТ-порог школьников: 75 (педагогика, право), 50 (остальные).",
+    "tracks": [],
+    "key_courses": [],
+    "careers": [],
+    "workplaces": [],
+    "price_kzt": 620000,
+    "url": "https://kafu.edu.kz/kk/mamandyqtar/?specSlug=business-management-kk"
+  },
+  {
+    "code": "kafu-14",
+    "name_ru": "Русский язык и литература",
+    "section": "Педагогические науки",
+    "ent_subjects": "",
+    "ent_note": "Название с каталога kafu.edu.kz; код, предметы и цена не показаны; общий ЕНТ-порог школьников: 75 (педагогика, право), 50 (остальные).",
+    "tracks": [],
+    "key_courses": [],
+    "careers": [],
+    "workplaces": [],
+    "price_kzt": 620000,
+    "url": "https://kafu.edu.kz/kk/mamandyqtar/?specSlug=pedagogic-kk"
+  },
+  {
+    "code": "kafu-15",
+    "name_ru": "Казахский язык и литература",
+    "section": "Педагогические науки",
+    "ent_subjects": "",
+    "ent_note": "Название с каталога kafu.edu.kz; код, предметы и цена не показаны; общий ЕНТ-порог школьников: 75 (педагогика, право), 50 (остальные).",
+    "tracks": [],
+    "key_courses": [],
+    "careers": [],
+    "workplaces": [],
+    "price_kzt": 620000,
+    "url": "https://kafu.edu.kz/kk/mamandyqtar/?specSlug=pedagogic-kk"
+  },
+  {
+    "code": "kafu-16",
+    "name_ru": "Физическая культура и спорт",
+    "section": "Педагогические науки",
+    "ent_subjects": "",
+    "ent_note": "Название с каталога kafu.edu.kz; код, предметы и цена не показаны; общий ЕНТ-порог школьников: 75 (педагогика, право), 50 (остальные).",
+    "tracks": [],
+    "key_courses": [],
+    "careers": [],
+    "workplaces": [],
+    "price_kzt": 620000,
+    "url": "https://kafu.edu.kz/kk/mamandyqtar/?specSlug=pedagogic-kk"
+  },
+  {
+    "code": "kafu-17",
+    "name_ru": "Начальное образование",
+    "section": "Педагогические науки",
+    "ent_subjects": "",
+    "ent_note": "Название с каталога kafu.edu.kz; код, предметы и цена не показаны; общий ЕНТ-порог школьников: 75 (педагогика, право), 50 (остальные).",
+    "tracks": [],
+    "key_courses": [],
+    "careers": [],
+    "workplaces": [],
+    "price_kzt": 620000,
+    "url": "https://kafu.edu.kz/kk/mamandyqtar/?specSlug=pedagogic-kk"
+  },
+  {
+    "code": "kafu-18",
+    "name_ru": "Журналистика",
+    "section": "Социальные науки, журналистика",
+    "ent_subjects": "",
+    "ent_note": "Название с каталога kafu.edu.kz; код, предметы и цена не показаны; общий ЕНТ-порог школьников: 75 (педагогика, право), 50 (остальные).",
+    "tracks": [],
+    "key_courses": [],
+    "careers": [],
+    "workplaces": [],
+    "price_kzt": 620000,
+    "url": "https://kafu.edu.kz/kk/mamandyqtar/?specSlug=social-journal-kk"
+  },
+  {
+    "code": "kafu-19",
+    "name_ru": "Психология",
+    "section": "Социальные науки, журналистика",
+    "ent_subjects": "",
+    "ent_note": "Название с каталога kafu.edu.kz; код, предметы и цена не показаны; общий ЕНТ-порог школьников: 75 (педагогика, право), 50 (остальные).",
+    "tracks": [],
+    "key_courses": [],
+    "careers": [],
+    "workplaces": [],
+    "price_kzt": 620000,
+    "url": "https://kafu.edu.kz/kk/mamandyqtar/?specSlug=social-journal-kk"
+  },
+  {
+    "code": "kafu-20",
+    "name_ru": "Ресторанное и гостиничное дело",
+    "section": "Сервис",
+    "ent_subjects": "",
+    "ent_note": "Название с каталога kafu.edu.kz; код, предметы и цена не показаны; общий ЕНТ-порог школьников: 75 (педагогика, право), 50 (остальные).",
+    "tracks": [],
+    "key_courses": [],
+    "careers": [],
+    "workplaces": [],
+    "price_kzt": 620000,
+    "url": "https://kafu.edu.kz/kk/mamandyqtar/?specSlug=services-kk"
+  }
+]

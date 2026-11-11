@@ -1,0 +1,51 @@
+{
+  "slug": "tu_berlin_aktau",
+  "short": "KINI Актау",
+  "name_ru": "Казахстанско-Германский институт устойчивой инженерии (KINI) при Yessenov University, Актау (в списке грантов 2025 — «филиал ТУ Берлина в Актау»)",
+  "name_kz": "Қазақ-неміс тұрақты инженерия институты",
+  "name_en": "Kazakh-German Institute of Sustainable Engineering (KINI), Yessenov University, Aktau",
+  "aliases": [
+    "kini",
+    "tu berlin актау",
+    "yessenov",
+    "актау немецкий",
+    "есенов университет",
+    "казахстанско-германский институт",
+    "технический университет берлина актау"
+  ],
+  "city": "Актау",
+  "type": "институт на базе университета Есенова с немецкими вузами-партнёрами (в списке грантов обозначен как филиал TU Berlin — формулировка не подтверждена)",
+  "website": "https://yu.edu.kz",
+  "programs_url": null,
+  "price_note": "Цена не найдена. QazMonitor (через поиск): частичное покрытие обучения до 30 000 € для студентов — ориентир, не подтверждено.",
+  "notes": "KINI (Казахстанско-Германский институт устойчивой инженерии) основан в 2023 году Yessenov University и Казахстанско-Немецким университетом (DKU); 1 июня 2026 в Берлине третьим учредителем стал Hof University (МИД РК, посольство в Берлине). Официальные источники называют его институтом, а не филиалом TU Berlin; TU Berlin упомянут лишь как партнёр научного проекта AKTANTEN. Фраза «филиал ТУ Берлина в Актау» из списка грантов подтверждения не нашла — вероятно, так подписан KINI. Бакалавриат 9 семестров (Актау, затем DKU в Алматы, затем Германия), языки — казахский, русский, английский, немецкий (с нуля). На 30.09.2026: 163 студента, 153 на госгрантах, шесть программ бакалавриата (24.kz); на 1.06.2026: 148 студентов и около 150 планируемых абитуриентов на следующий год.",
+  "admission_special": {
+    "summary": "Набор в бакалавриат идёт: в 2024 году выделено 150 госгрантов (oq.gov.kz), по данным 24.kz от 30.09.2026 из 163 студентов 153 учатся на грантах. Условия 2024: ЕНТ от 60 баллов и не менее 6 по каждому предмету; профильные пары — математика+физика или география+математика. Данных об условиях 2026, внутренних экзаменах, ценах и сроках нет. Немецкий знать не нужно, его учат с нуля; входной тест по английскому описан как бесплатный (lada.kz). Диплом — двойной с немецким вузом-партнёром. Обучение в Германии на 7–9 семестрах поддерживается DAAD.",
+    "exam_name": null,
+    "ent_required": true,
+    "ent_note": "Набор 2024: не менее 60 баллов и не менее 6 по каждому предмету (устарело, 2025–2026 не подтверждено).",
+    "eligibility": null,
+    "deadlines": "2024: подача на грант до 24.07.2024; 2026–2027 не найдено.",
+    "documents": [],
+    "grants": "2024: 150 госгрантов; 30.09.2026: 153 студента на грантах (24.kz). Цена платного обучения не найдена.",
+    "diploma": "Двойной: казахстанский и немецкого вуза-партнёра (по объявлению)",
+    "source": "https://oq.gov.kz/qazalemnews/422 ; https://www.gov.kz/memleket/entities/education/press/news/details/1291852 ; https://24.kz/ru/news/obrazovanie-i-nauka/695509-uchjonye-iz-germanii-pribyli-v-aktau-dlya-provedeniya-sovmestnykh-nauchnykh-issledovanij ; https://www.gov.kz/memleket/entities/mfa-berlin/press/news/details/1232180 ; https://24.kz/ru/news/social/795589-inzhenerov-dlya-novoj-energetiki-gotovyat-v-aktau ; https://www.lada.kz/gosinformzakaz/138375-kini-v-mangistau-kak-kazakhstan-stroit-akademicheskii-khab-dlia-podgotovki-inzhenerov-budushchego.html",
+    "checked_on": "2026-11-11"
+  },
+  "grant_list_code": null,
+  "admissions": {
+    "phones": [
+      "+7 701 441 28 15"
+    ],
+    "email": "",
+    "address": "Актау, 32 мкр, Yessenov University, каб. E104",
+    "hours": "",
+    "url": "https://oq.gov.kz/qazalemnews/422",
+    "checked_on": "2026-11-11",
+    "source": "oq.gov.kz (2024)"
+  },
+  "dorm": null,
+  "source": "oq.gov.kz, gov.kz, 24.kz; mfa-berlin gov.kz; lada.kz",
+  "data_year": 2026,
+  "checked_on": "2026-11-11"
+}

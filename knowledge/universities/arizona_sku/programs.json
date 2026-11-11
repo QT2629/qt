@@ -1,0 +1,238 @@
+[
+  {
+    "code": "6B01103",
+    "name_ru": "Психология в образовании",
+    "section": "Педагогика и психология (B001)",
+    "ent_subjects": "",
+    "ent_note": "ЕНТ не ниже 75 баллов (педагогика). Форматы: совместная и двудипломная. Группа грантов 2026: B001, 20 мест.",
+    "tracks": [
+      "совместная",
+      "двудипломная"
+    ],
+    "key_courses": [],
+    "careers": [],
+    "workplaces": [],
+    "price_kzt": null,
+    "url": "https://ku.edu.kz/page/view?id=2424&lang=ru",
+    "grant_2026": {
+      "gop": "B001 Педагогика и психология",
+      "gop_source": "по коду программы в реестре",
+      "count": 0,
+      "min": null
+    }
+  },
+  {
+    "code": "6B01302",
+    "name_ru": "Начальное образование и инклюзивная практика",
+    "section": "Педагогика и методика начального обучения (B003)",
+    "ent_subjects": "",
+    "ent_note": "ЕНТ не ниже 75 баллов (педагогика). Совместная и двудипломная. Группа грантов 2026: B003, 14 мест.",
+    "tracks": [
+      "совместная",
+      "двудипломная"
+    ],
+    "key_courses": [],
+    "careers": [],
+    "workplaces": [],
+    "price_kzt": null,
+    "url": "https://ku.edu.kz/page/view?id=2424&lang=ru",
+    "grant_2026": {
+      "gop": "B003 Педагогика и методика начального обучения",
+      "gop_source": "по коду программы в реестре",
+      "count": 0,
+      "min": null
+    }
+  },
+  {
+    "code": "6B01907",
+    "name_ru": "Специальное образование и инклюзивная практика",
+    "section": "Специальная педагогика (B020)",
+    "ent_subjects": "",
+    "ent_note": "ЕНТ не ниже 75 баллов (педагогика). Совместная и двудипломная. Группа грантов 2026: B020, 18 мест.",
+    "tracks": [
+      "совместная",
+      "двудипломная"
+    ],
+    "key_courses": [],
+    "careers": [],
+    "workplaces": [],
+    "price_kzt": null,
+    "url": "https://ku.edu.kz/page/view?id=2424&lang=ru",
+    "grant_2026": {
+      "gop": "B020 Специальная педагогика",
+      "gop_source": "по коду программы в реестре",
+      "count": 0,
+      "min": null
+    }
+  },
+  {
+    "code": "6B05103",
+    "name_ru": "Биотехнология",
+    "section": "Биологические науки (B050)",
+    "ent_subjects": "",
+    "ent_note": "ЕНТ не ниже 50 баллов. Совместная и двудипломная (Applied Biotechnology, Arizona). Группа грантов 2026: B050, 46 мест.",
+    "tracks": [
+      "совместная",
+      "двудипломная"
+    ],
+    "key_courses": [],
+    "careers": [],
+    "workplaces": [],
+    "price_kzt": null,
+    "url": "https://ku.edu.kz/page/view?id=2424&lang=ru",
+    "grant_2026": {
+      "gop": "B050 Биологические и смежные науки",
+      "gop_source": "по коду программы в реестре",
+      "count": 0,
+      "min": null
+    }
+  },
+  {
+    "code": "6B05307",
+    "name_ru": "Химическая экспертиза и аналитический контроль производства",
+    "section": "Химия (B053)",
+    "ent_subjects": "",
+    "ent_note": "ЕНТ не ниже 50 баллов. Только совместная программа. Группа грантов 2026: B053, 9 мест.",
+    "tracks": [
+      "совместная"
+    ],
+    "key_courses": [],
+    "careers": [],
+    "workplaces": [],
+    "price_kzt": null,
+    "url": "https://ku.edu.kz/page/view?id=2424&lang=ru",
+    "grant_2026": {
+      "gop": "B054 Физика",
+      "gop_source": "по коду программы в реестре",
+      "count": 0,
+      "min": null
+    }
+  },
+  {
+    "code": "6B06106",
+    "name_ru": "Информационные системы в менеджменте",
+    "section": "Информационные технологии (B057)",
+    "ent_subjects": "",
+    "ent_note": "ЕНТ не ниже 50 баллов. Совместная и двудипломная (Data Science, Arizona). Группа грантов 2026: B057, 140 мест.",
+    "tracks": [
+      "совместная",
+      "двудипломная"
+    ],
+    "key_courses": [],
+    "careers": [],
+    "workplaces": [],
+    "price_kzt": null,
+    "url": "https://ku.edu.kz/page/view?id=2424&lang=ru",
+    "grant_2026": {
+      "gop": "B057 Информационные технологии",
+      "gop_source": "по коду программы в реестре",
+      "count": 0,
+      "min": null
+    }
+  },
+  {
+    "code": "6B06203",
+    "name_ru": "Электроника и телекоммуникации",
+    "section": "Связь (B059)",
+    "ent_subjects": "",
+    "ent_note": "ЕНТ не ниже 50 баллов. Только совместная программа. Группа грантов 2026: B059, 15 мест.",
+    "tracks": [
+      "совместная"
+    ],
+    "key_courses": [],
+    "careers": [],
+    "workplaces": [],
+    "price_kzt": null,
+    "url": "https://ku.edu.kz/page/view?id=2424&lang=ru",
+    "grant_2026": {
+      "gop": "B059 Коммуникации и коммуникационные технологии",
+      "gop_source": "по коду программы в реестре",
+      "count": 0,
+      "min": null
+    }
+  },
+  {
+    "code": "6B08103",
+    "name_ru": "Защита растений (Plant Health Science)",
+    "section": "Растениеводство (B077)",
+    "ent_subjects": "",
+    "ent_note": "ЕНТ не ниже 50 баллов. Только совместная программа. Название в правилах дано как Plant Health Science. Группа грантов 2026: B077 (B077 Растениеводство, 8 мест на обе программы).",
+    "tracks": [
+      "совместная"
+    ],
+    "key_courses": [],
+    "careers": [],
+    "workplaces": [],
+    "price_kzt": null,
+    "url": "https://ku.edu.kz/page/view?id=2424&lang=ru",
+    "grant_2026": {
+      "gop": "B077 Растениеводство",
+      "gop_source": "по коду программы в реестре",
+      "count": 0,
+      "min": null
+    }
+  },
+  {
+    "code": "6B08104",
+    "name_ru": "Наука и технология растениеводства (Plant Science and Technology)",
+    "section": "Растениеводство (B077)",
+    "ent_subjects": "",
+    "ent_note": "ЕНТ не ниже 50 баллов. Только совместная программа. Группа грантов 2026: B077 (B077 Растениеводство, 8 мест на обе программы).",
+    "tracks": [
+      "совместная"
+    ],
+    "key_courses": [],
+    "careers": [],
+    "workplaces": [],
+    "price_kzt": null,
+    "url": "https://ku.edu.kz/page/view?id=2424&lang=ru",
+    "grant_2026": {
+      "gop": "B077 Растениеводство",
+      "gop_source": "по коду программы в реестре",
+      "count": 0,
+      "min": null
+    }
+  },
+  {
+    "code": "6B05308",
+    "name_ru": "Астрономия и методы дистанционного зондирования",
+    "section": "Астрономия (B054)",
+    "ent_subjects": "",
+    "ent_note": "ЕНТ не ниже 50 баллов. Только совместная программа. Группа грантов 2026: B054, 9 мест.",
+    "tracks": [
+      "совместная"
+    ],
+    "key_courses": [],
+    "careers": [],
+    "workplaces": [],
+    "price_kzt": null,
+    "url": "https://ku.edu.kz/page/view?id=2424&lang=ru",
+    "grant_2026": {
+      "gop": "B054 Физика",
+      "gop_source": "по коду программы в реестре",
+      "count": 0,
+      "min": null
+    }
+  },
+  {
+    "code": "6B04108",
+    "name_ru": "Бизнес и менеджмент",
+    "section": "Финансы, экономика, банковское дело, страхование (B046)",
+    "ent_subjects": "",
+    "ent_note": "ЕНТ не ниже 50 баллов. Только совместная программа. Группа грантов 2026: B046, 103 мест.",
+    "tracks": [
+      "совместная"
+    ],
+    "key_courses": [],
+    "careers": [],
+    "workplaces": [],
+    "price_kzt": null,
+    "url": "https://ku.edu.kz/page/view?id=2424&lang=ru",
+    "grant_2026": {
+      "gop": "B047 Маркетинг и реклама",
+      "gop_source": "по коду программы в реестре",
+      "count": 0,
+      "min": null
+    }
+  }
+]

@@ -1,0 +1,104 @@
+[
+  {
+    "code": "6B07108",
+    "name_ru": "Electrical and Electronic Systems (BEng, электроэнергетика)",
+    "section": "Heriot-Watt University International Campus",
+    "ent_subjects": "Математика + Физика (по вторичным источникам)",
+    "ent_note": "Порог ЕНТ 65 по вторичным источникам 2025; на сайте вуза не указан. IELTS 5.0 или экзамен Heriot-Watt. Код из bilim.expert (вторичный).",
+    "tracks": [],
+    "key_courses": [
+      "Mathematics and Physics (1 курс)",
+      "Circuits and Analysis",
+      "Digital Design",
+      "Electrical Power",
+      "Embedded Systems",
+      "Linear Control"
+    ],
+    "careers": [
+      "Electrical Engineer",
+      "Electronics Engineer",
+      "Automation Engineer",
+      "Systems Engineer",
+      "Renewable Energy Engineer",
+      "Embedded Systems Developer",
+      "Engineering Project Manager"
+    ],
+    "workplaces": [],
+    "price_kzt": 2700000,
+    "url": "https://zhubanov.edu.kz/en/campus_hw/category/14/",
+    "grant_2026": {
+      "gop": "B062 Электротехника и электроэнергетика",
+      "gop_source": "по коду программы в реестре",
+      "count": 0,
+      "min": null
+    }
+  },
+  {
+    "code": "6B07209",
+    "name_ru": "Petroleum with Transition Engineering (BEng, нефтяная инженерия и энергоменеджмент)",
+    "section": "Heriot-Watt University International Campus",
+    "ent_subjects": "Математика + Физика (по вторичным источникам)",
+    "ent_note": "Порог ЕНТ 65 по вторичным источникам 2025; на сайте вуза не указан. Код из bilim.expert.",
+    "tracks": [],
+    "key_courses": [
+      "Fluid Mechanics",
+      "Thermodynamics",
+      "Drilling Engineering",
+      "Reservoir Engineering 1-2",
+      "Production Technology",
+      "Energy Economics"
+    ],
+    "careers": [
+      "Petroleum Engineer",
+      "Drilling Engineer",
+      "Geothermal Energy Engineer",
+      "Carbon Storage Specialist",
+      "Oil and Gas Process Engineer",
+      "Sustainability Specialist",
+      "Energy Analyst"
+    ],
+    "workplaces": [],
+    "price_kzt": 2700000,
+    "url": "https://zhubanov.edu.kz/en/campus_hw/category/13/",
+    "grant_2026": {
+      "gop": "B071 Горное дело и добыча полезных ископаемых",
+      "gop_source": "по коду программы в реестре",
+      "count": 0,
+      "min": null
+    }
+  },
+  {
+    "code": "6B06107",
+    "name_ru": "Computational Sciences with Software Engineering (BSc, компьютерная инженерия)",
+    "section": "Heriot-Watt University International Campus",
+    "ent_subjects": "Математика + Информатика (по вторичным источникам)",
+    "ent_note": "Порог ЕНТ 65 по вторичным источникам 2025; на сайте вуза не указан. Код из bilim.expert.",
+    "tracks": [],
+    "key_courses": [
+      "Programming Languages",
+      "Data Structures and Algorithms",
+      "Database Management",
+      "Web Programming",
+      "Operating Systems and Concurrency",
+      "Computer Network Security"
+    ],
+    "careers": [
+      "Developer",
+      "Database Developer",
+      "Database Administrator",
+      "System Administrator",
+      "Web Developer",
+      "Backend Developer",
+      "Cybersecurity Specialist"
+    ],
+    "workplaces": [],
+    "price_kzt": 2700000,
+    "url": "https://zhubanov.edu.kz/en/campus_hw/category/15/",
+    "grant_2026": {
+      "gop": "B057 Информационные технологии",
+      "gop_source": "по коду программы в реестре",
+      "count": 0,
+      "min": null
+    }
+  }
+]

@@ -1,0 +1,58 @@
+{
+  "slug": "coventry_kz",
+  "short": "Coventry KZ",
+  "name_ru": "Coventry University Kazakhstan (Астана, Алматы)",
+  "name_kz": "Coventry University Kazakhstan",
+  "name_en": "Coventry University Kazakhstan",
+  "aliases": [
+    "coventry",
+    "coventry university kazakhstan",
+    "британский университет ковентри",
+    "ковентри",
+    "ковентри астана"
+  ],
+  "city": "Астана (второй кампус — Алматы)",
+  "type": "филиал иностранного вуза (Coventry University, Великобритания)",
+  "website": "https://coventry.edu.kz",
+  "programs_url": "https://coventry.edu.kz",
+  "price_note": "Официальная страница coventry.edu.kz/fees-and-payments (проверено 2026-11-11; помечена как обновляемая под 2026-2027): Foundation Year и бакалавриат — 11 400 GBP при полной оплате, 12 000 GBP при 3 платежах, 13 200 GBP помесячно; одинаково для граждан РК и иностранцев. Страница не уточняет явно, что сумма за один год; в price_kzt стоит пересчёт 11 400 x 680 тг (базовый курс с этой страницы) = 7 752 000 тг, если курс выше 680, сумма пересчитывается. Депозит 50 000 тг, сбор за подачу 28 000 тг.",
+  "notes": "Британский Coventry University: кампус в Астане (с 2024) и второй в Алматы (с сентября 2026). Обучение на английском; бакалавриат 3 года, Foundation Year — подготовительный год (итого 4). Диплом Coventry University. На сайте перечислено 12 программ в Астане и 16 в Алматы.",
+  "admission_special": {
+    "summary": "ЕНТ для поступления не требуется (страница admission-requirements). Бакалавриат (3 года) напрямую — при наличии Foundation или эквивалента (аттестат плюс год бакалавриата, диплом колледжа, IB) и IELTS 6.0 (не ниже 5.5) или TOEFL iBT 79; для остальных — Foundation Year с IELTS 5.0 (4.5) или TOEFL 62 (в январе 2027 — 5.5/5.0). Английский могут не требовать, если последние 3 года учёбы были на английском. Набор бакалавриата — сентябрь 2027; Foundation — январь 2027 и сентябрь 2027. Документы IELTS, фото и школьный сертификат можно подать до 31 августа. Сбор за подачу 28 000 тг; предоплата 2 500 GBP засчитывается в стоимость. Собственные гранты: конкурс на 2026-2027 прошёл (дедлайн 22.02.2026) для Business и Computer Science, только для граждан РК-выпускников 2026 с GPA от 4/5 и IELTS 6.0; после конкурса требуется ЕНТ минимум 50 баллов. Скидка Early Bird до 20% для Foundation сентября 2027. Диплом Coventry University.",
+    "exam_name": null,
+    "ent_required": false,
+    "ent_note": "ЕНТ не требуется (admission-requirements). Исключение: победителям грантового конкурса 2026 нужен сертификат ЕНТ минимум 50 баллов; в документах Foundation ЕНТ — при наличии.",
+    "eligibility": "Выпускники школ/колледжей (гражданство любое; цена одинаковая). На грантовый конкурс 2026 — только граждане РК, выпускники 2026, GPA от 4.0 за 10 (или 11) класс или призёры олимпиад.",
+    "deadlines": "Набор: Foundation — сентябрь 2026 (уже прошёл), январь 2027, сентябрь 2027 (ранняя подача открыта); бакалавриат — сентябрь 2027. IELTS, фото и аттестат — до 31 августа. Общего дедлайна подачи на странице нет. Грантовый конкурс 2026-2027 закрылся 22.02.2026; даты следующего конкурса не найдены.",
+    "documents": [
+      "паспорт или удостоверение (обе стороны)",
+      "фото",
+      "аттестат с транскриптом (или GCSE/IGCSE, A-level, IB)",
+      "IELTS/TOEFL/Duolingo (если нужен)",
+      "сертификат ЕНТ (если есть, для Foundation)",
+      "контакты родителя/опекуна"
+    ],
+    "grants": "Собственные гранты вуза (полное покрытие обучения): конкурс 2026-2027 для Business и CS (число мест на странице не указано; в СМИ 200 в год от государства, вторичный источник — bes.media 27.04.2026: около 200 грантов Coventry). Early Bird до 20% на Foundation. Платно: 11 400 GBP/год. Скидки «Келешек» на странице не подтверждены.",
+    "diploma": "Диплом Coventry University (Великобритания).",
+    "source": "https://coventry.edu.kz/en/apply-to-coventry-university ; https://coventry.edu.kz/admission-requirements ; https://coventry.edu.kz/scholarships ; https://coventry.edu.kz/fees-and-payments ; https://coventry.edu.kz/en/undegraduate ; https://bes.media/news/filiali-britanskih-vuzov-v-kazahstane-delayut-stavku-na-zarubezhnih-studentov-sayasat-nurbek-6a944b/",
+    "checked_on": "2026-11-11"
+  },
+  "grant_list_code": null,
+  "admissions": {
+    "phones": [
+      "+7 700 317 33 33 (Астана)",
+      "+7 700 318 00 17 (Алматы)",
+      "+7 700 317 80 02 (WhatsApp, виртуальная приёмная)"
+    ],
+    "email": "admissions@coventry.edu.kz (общий info@coventry.edu.kz; Алматы apply.almaty@coventry.edu.kz)",
+    "address": "Астана, Коргалжынское шоссе, 13А; Алматы, мкр. Самал-3, 15/1",
+    "hours": "",
+    "url": "https://coventry.edu.kz/en/apply-to-coventry-university",
+    "checked_on": "2026-11-11",
+    "source": "https://coventry.edu.kz/en/apply-to-coventry-university ; https://coventry.edu.kz/scholarships"
+  },
+  "dorm": null,
+  "source": "https://coventry.edu.kz/en/apply-to-coventry-university ; https://coventry.edu.kz/admission-requirements ; https://coventry.edu.kz/scholarships ; https://coventry.edu.kz/fees-and-payments ; https://coventry.edu.kz/en/undegraduate ; https://bes.media/news/filiali-britanskih-vuzov-v-kazahstane-delayut-stavku-na-zarubezhnih-studentov-sayasat-nurbek-6a944b/",
+  "data_year": 2026,
+  "checked_on": "2026-11-11"
+}

@@ -1,0 +1,53 @@
+[
+  {
+    "code": "anhalt-1",
+    "name_ru": "Электротехника и информационные технологии (Electrical Engineering and IT)",
+    "section": "Филиал Hochschule Anhalt в Алматы",
+    "ent_subjects": "Математика + Физика",
+    "ent_note": "Грант от 70 баллов; платное от 50 + внутренний экзамен; 4 года (8 семестров); английский + немецкий; два диплома. Код 6B на сайте не указан; названия модулей на странице нет.",
+    "tracks": [],
+    "key_courses": [],
+    "careers": [
+      "энергетика",
+      "телекоммуникации",
+      "машиностроение",
+      "стажировки на 3–4 курсах в Казахстане и Германии"
+    ],
+    "workplaces": [],
+    "price_kzt": 4400000,
+    "url": "https://anhalt.university/programs/elektrotehnika-i-informaczionnye-tehnologii/"
+  },
+  {
+    "code": "anhalt-2",
+    "name_ru": "Биомедицинская инженерия",
+    "section": "Филиал Hochschule Anhalt в Алматы",
+    "ent_subjects": "Математика + Физика",
+    "ent_note": "Грант от 70; платное от 50 + внутренний экзамен; 4 года; два диплома. Код 6B на сайте не указан.",
+    "tracks": [],
+    "key_courses": [
+      "моделирование биомедицинских процессов",
+      "электронные схемы",
+      "обработка биосигналов",
+      "медицинские устройства"
+    ],
+    "careers": [
+      "инженер в сфере медицинских устройств"
+    ],
+    "workplaces": [],
+    "price_kzt": 4400000,
+    "url": "https://anhalt.university/programs/biomediczinskaya-inzheneriya/"
+  },
+  {
+    "code": "anhalt-3",
+    "name_ru": "International Business (Международный бизнес)",
+    "section": "Головной вуз Hochschule Anhalt (гибрид), приём через Алматы",
+    "ent_subjects": "Математика+география / математика+физика / математика+информатика / английский+всемирная история",
+    "ent_note": "Только платно, 30 мест, 6 семестров, английский (IELTS 6.5), диплом немецкого вуза.",
+    "tracks": [],
+    "key_courses": [],
+    "careers": [],
+    "workplaces": [],
+    "price_kzt": 4400000,
+    "url": "https://anhalt.university/programs/international-business/"
+  }
+]

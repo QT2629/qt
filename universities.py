@@ -22,6 +22,7 @@ UNI_DIR = Path(__file__).parent / "knowledge" / "universities"
 # Каталог бакалавриата всех вузов страны (univision.kz + studyinkz.kz + реестр epvo.kz, гранты 2026).
 # Собирается программой tools/build_catalog.py.
 CATALOG_PATH = Path(__file__).parent / "knowledge" / "catalog" / "kz_bachelor.json.gz"
+SPECIAL_PATH = Path(__file__).parent / "knowledge" / "catalog" / "admission_special.json"  # особый приём: вуз → admission_special
 NAME_TR = runpy.run_path(str(CATALOG_PATH.parent / "name_translations.py"))["NAMES"]
 
 # Записи каталога, которые не являются программами (факультеты, коды групп, пустые названия).
@@ -174,6 +175,11 @@ def _load() -> dict[str, dict]:
             for p in u["programs"].values():
                 clean_program(p)
     unis.update(_catalog_unis(unis))
+    # Особый порядок приёма для вузов, у которых нет своей папки-справки (AlmaU, вузы из каталога).
+    if SPECIAL_PATH.exists():
+        for slug, special in json.loads(SPECIAL_PATH.read_text(encoding="utf-8")).items():
+            if slug in unis and not unis[slug].get("admission_special"):
+                unis[slug]["admission_special"] = special
     for slug, u in unis.items():
         for p in u["programs"].values():
             p["key"] = f"{slug}:{p['code']}"
@@ -192,6 +198,8 @@ def _apply_grants(unis: dict) -> None:
             gop = g["gop"].split()[0]
             nat = grants.get(None, gop, "2026", "g")
             if not nat:  # группы нет в новых списках — оставляем прежние цифры
+                if "kz_min" not in g:  # прежних цифр нет (например, ведомственные вузы): блок грантов не показываем
+                    p.pop("grant_2026")
                 continue
             here = grants.get(slug, gop, "2026", "g") if known else ([g["count"], g["min"]] if g.get("count") else None)
             g.update(count=here[0] if here else 0, min=here[1] if here else None, kz_min=nat[1], kz_count=nat[0])
@@ -244,8 +252,11 @@ def _catalog_unis(unis: dict) -> dict[str, dict]:
             # Программы, которых нет в справке вуза, — добавляем из каталога с пометкой (набор уточнять).
             known = set().union(*(_stems5(" ".join((x["name_ru"], x.get("name_translation", ""))))
                                   for x in cur["programs"].values()))
+            if cur.get("catalog_programs") is False:  # в каталоге у вуза чужой список (например, программы базового вуза)
+                continue
             for code, c in progs.items():
-                if code in cur["programs"] or not clean_program(c):
+                # к проверенной справке добавляем только программы с кодом из реестра (6B…), а не служебные «x123»
+                if code in cur["programs"] or not code.startswith("6B") or not clean_program(c):
                     continue
                 stems = _stems5(c["name_ru"] + " " + c.get("name_translation", ""))
                 if not stems or stems & known:  # похожая программа уже есть в справке — скорее всего, прежняя версия

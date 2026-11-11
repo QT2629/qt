@@ -1,0 +1,60 @@
+{
+  "slug": "dmu_kz",
+  "short": "DMU Kazakhstan",
+  "name_ru": "De Montfort University Kazakhstan (Алматы)",
+  "name_kz": "De Montfort University Kazakhstan",
+  "name_en": "De Montfort University Kazakhstan",
+  "aliases": [
+    "de montfort",
+    "dmu",
+    "dmuk",
+    "британский университет алматы",
+    "де монтфорт",
+    "де монфор",
+    "де монфорт"
+  ],
+  "city": "Алматы",
+  "type": "филиал иностранного вуза (De Montfort University, Лестер, Великобритания)",
+  "website": "https://dmuk.edu.kz",
+  "programs_url": "https://dmuk.edu.kz/study/undergraduateStudies",
+  "price_note": "Официальная страница dmuk.edu.kz/prospectiveStudents/tuition (проверено 2026-11-11, набор сентября 2026/27): бакалавриат 12 500 USD в год, Foundation 12 500 USD, одинаково для граждан РК и иностранцев. Платёж в тенге по курсу Нацбанка на день оплаты (индексация); в калькуляторе на сайте пример 5 594 000 тг. Предоплата 20% (невозвратная) в течение 7 дней после оффера; скидка 3% за оплату года до 31 августа; платежи до 31 августа и 31 декабря. Единая цена без дополнительных сборов. Курс на дату не фиксирован, поэтому price_kzt = null.",
+  "notes": "De Montfort University Kazakhstan — британский университет в Алматы (пр. Аль-Фараби, 120/48), диплом De Montfort University Leicester. Обучение на английском, блочная система (один предмет в блоке по 7 недель). Бакалавриат 3 года; выпускники 11-летней школы идут через International Foundation Year (1 год, NCUK), выпускники 12-летней школы, A-level, IB или колледжа — напрямую. Десять программ бакалавриата в трёх факультетах: Business, Computing, Art & Design; плюс Global MBA.",
+  "admission_special": {
+    "summary": "ЕНТ не требуется (прямо указано на странице Entry requirements). Бакалавриат: IELTS 6.0 общий с 5.5 по компонентам или эквивалент, завершённые A-level, IB или диплом колледжа (12 лет школы); срок 3 года. Foundation: IELTS 5.0 (не ниже 4.5), завершённая школа или колледж, 1 год. Нужны личное заявление и рекомендательное письмо; для Art & Design — портфолио (не менее 5 работ) и собеседование. При недостатке английского есть подготовительные курсы CELL, IELTS можно сдать в самом вузе (партнёр British Council). Подача онлайн через портал, затем оффер, принятие и невозвратный депозит 20% в течение 7 дней. Госгрантов в общем списке нет; свой конкурс DMUK Talent 27: 320 стипендий на набор сентября 2027 (50-100% оплаты) для программ Business и Computing, нужен средний балл от 3.5/5; один 90-минутный тест (критическое мышление, анализ) на английском или русском, 28 ноября 2026; приём заявок 15.09-23.11.2026. Диплом — De Montfort University.",
+    "exam_name": null,
+    "ent_required": false,
+    "ent_note": "ЕНТ не требуется (dmuk.edu.kz/prospectiveStudents/entry).",
+    "eligibility": "Выпускники школ (11 лет — через Foundation; 12 лет, A-level, IB, колледж — напрямую) и иностранцы; на стипендию Talent 27 — выпускники школ и колледжей Казахстана с GPA от 3.5/5.",
+    "deadlines": "Общие сроки подачи на странице не найдены (подача идёт через портал); платежи до 31 августа и 31 декабря. DMUK Talent 27 (набор сентября 2027): приём заявок 15.09.2026 — 23.11.2026, экзамен 28.11.2026, результаты 02.12.2026, зачисление до 19.12.2026.",
+    "documents": [
+      "личное заявление",
+      "рекомендательное письмо (для Foundation обязательно)",
+      "сертификат IELTS или эквивалент",
+      "документ об окончании школы/колледжа (A-level, IB)",
+      "портфолио + собеседование (Art & Design)",
+      "для Talent 27: транскрипт с GPA 3.5/5"
+    ],
+    "grants": "Госгрантов нет (по univision.kz, не подтверждено официально). Свои стипендии: DMUK Talent 27 — 320 мест (на странице в шапке также указано 254 в год — расхождение), покрытие 50-100% оплаты; ранее объявлялось 200+ грантов до 50% (el.kz, 21.04.2026). Скидка 3% за предоплату года.",
+    "diploma": "Диплом De Montfort University Leicester (британский).",
+    "source": "https://dmuk.edu.kz/prospectiveStudents/entry ; https://dmuk.edu.kz/prospectiveStudents/tuition ; https://dmuk.edu.kz/prospectiveStudents/talents27 ; https://dmuk.edu.kz/study/undergraduateStudies ; https://dmuk.edu.kz/prospectiveStudents/apply ; https://www.ncuk.ac.uk/where-can-i-study/de-montfort-university-kazakhstan/ ; https://el.kz/en/british-university-allocates-over-200-grants-for-kazakhstan-graduates_400046538/",
+    "checked_on": "2026-11-11"
+  },
+  "grant_list_code": null,
+  "admissions": {
+    "phones": [
+      "+7 700 836 85 39 (общие вопросы)",
+      "+7 771 500 57 77 (приёмная, WhatsApp)"
+    ],
+    "email": "admissions@dmuk.edu.kz",
+    "address": "Алматы, пр. Аль-Фараби, 120/48, Медеуский район, 050044",
+    "hours": "",
+    "url": "https://dmuk.edu.kz/prospectiveStudents/apply",
+    "checked_on": "2026-11-11",
+    "source": "https://dmuk.edu.kz/prospectiveStudents/entry"
+  },
+  "dorm": null,
+  "source": "https://dmuk.edu.kz/prospectiveStudents/entry ; https://dmuk.edu.kz/prospectiveStudents/tuition ; https://dmuk.edu.kz/prospectiveStudents/talents27 ; https://dmuk.edu.kz/study/undergraduateStudies ; https://dmuk.edu.kz/prospectiveStudents/apply ; https://www.ncuk.ac.uk/where-can-i-study/de-montfort-university-kazakhstan/ ; https://el.kz/en/british-university-allocates-over-200-grants-for-kazakhstan-graduates_400046538/",
+  "data_year": 2026,
+  "checked_on": "2026-11-11",
+  "catalog_programs": false
+}

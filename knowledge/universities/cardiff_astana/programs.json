@@ -1,0 +1,103 @@
+[
+  {
+    "code": "cardiff_astana-1",
+    "name_ru": "Computer Science (BSc)",
+    "section": "Cardiff University Kazakhstan",
+    "ent_subjects": "",
+    "ent_note": "3 года. A-level BBC + GCSE Maths B/6 или иная квалификация; IELTS 6.5 (5.5). ЕНТ не упомянут. 17 000 USD/год (2027). Агрегатор: ЕНТ 120 (Математика+Информатика) — не подтверждено вузом.",
+    "tracks": [
+      "с foundation year"
+    ],
+    "key_courses": [
+      "Fundamentals of Programming",
+      "Object Oriented Programming and Data Structures",
+      "Software Engineering",
+      "Algorithms and Data Structures",
+      "Machine Learning",
+      "Fundamentals of AI"
+    ],
+    "careers": [],
+    "workplaces": [],
+    "price_kzt": null,
+    "url": "https://cardiff.edu.kz/courses/computer-science-bsc/"
+  },
+  {
+    "code": "cardiff_astana-2",
+    "name_ru": "Civil Engineering (BEng)",
+    "section": "Cardiff University Kazakhstan",
+    "ent_subjects": "",
+    "ent_note": "3 года. A-level BBC с B по математике; IELTS 6.5 (5.5). ЕНТ не упомянут. 17 000 USD/год (2027). Агрегатор: ЕНТ 110 (Математика+Физика) — не подтверждено вузом.",
+    "tracks": [
+      "с foundation year"
+    ],
+    "key_courses": [
+      "Engineering Maths and Computation",
+      "Hydraulics and Soil Mechanics",
+      "Structural Analysis and Design Theory",
+      "Environmental Engineering",
+      "Geotechnical Engineering",
+      "Civil Engineering Design"
+    ],
+    "careers": [],
+    "workplaces": [],
+    "price_kzt": null,
+    "url": "https://cardiff.edu.kz/courses/civil-engineering-beng-2/"
+  },
+  {
+    "code": "cardiff_astana-3",
+    "name_ru": "Exploration Geology (BSc)",
+    "section": "Cardiff University Kazakhstan",
+    "ent_subjects": "",
+    "ent_note": "3 года. A-level BBC с одной естественной наукой (или BCC с двумя) + GCSE Maths C/4; IELTS 6.5 (5.5). ЕНТ не упомянут. 17 000 USD/год (2027). Агрегатор: ЕНТ 95 (Математика+География) — не подтверждено.",
+    "tracks": [
+      "с foundation year"
+    ],
+    "key_courses": [
+      "Exploring Planet Earth",
+      "Earth Materials",
+      "Sedimentary Facies and Environments",
+      "Petrology and Volcanology",
+      "Structural Geology and Geophysical Investigation",
+      "Mineral Deposit Exploration and Evaluation"
+    ],
+    "careers": [],
+    "workplaces": [],
+    "price_kzt": null,
+    "url": "https://cardiff.edu.kz/courses/exploration-geology-bsc/"
+  },
+  {
+    "code": "cardiff_astana-4",
+    "name_ru": "Business Management (BSc)",
+    "section": "Cardiff University Kazakhstan",
+    "ent_subjects": "",
+    "ent_note": "3 года. A-level BBB + GCSE Maths B/6; IELTS 6.5 (5.5). ЕНТ не упомянут. 17 000 USD/год (2027). Агрегатор: ЕНТ 115 (Математика+География) — не подтверждено.",
+    "tracks": [
+      "с foundation year"
+    ],
+    "key_courses": [
+      "Principles of Marketing",
+      "Management: Theory and Evidence",
+      "Introduction to Business Accounting",
+      "Marketing & Strategy",
+      "Strategic Management",
+      "Contemporary Supply Chain Management"
+    ],
+    "careers": [],
+    "workplaces": [],
+    "price_kzt": null,
+    "url": "https://cardiff.edu.kz/courses/business-management-bsc/"
+  },
+  {
+    "code": "cardiff_astana-5",
+    "name_ru": "Foundation Year (подготовительный год для любой бакалаврской программы)",
+    "section": "Cardiff University Kazakhstan",
+    "ent_subjects": "",
+    "ent_note": "Аттестат 11 кл. со средним 4+ и математикой 4+; IELTS 6.0 (5.5); госстипендия возможна только здесь; 17 000 USD/год (2027).",
+    "tracks": [],
+    "key_courses": [],
+    "careers": [],
+    "workplaces": [],
+    "price_kzt": null,
+    "url": "https://cardiff.edu.kz/courses/foundation-year/"
+  }
+]

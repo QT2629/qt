@@ -1,0 +1,30 @@
+{
+  "_comment": "Привязка строк списков грантников к вузам бота, когда в каталоге нет кода ОВПО. by_code: код вуза из списка -> slug; by_note: часть названия списка госзаказа (филиалы иностранных вузов) -> slug. Проверено по официальным спискам 2025 и 2026 годов, 11.11.2026.",
+  "by_code": {
+    "529": "u68",
+    "530": "coventry_kz",
+    "531": "mephi_almaty",
+    "532": "gubkin_atyrau",
+    "533": "rkhtu_taraz",
+    "535": "cardiff_astana",
+    "544": "nyfa_kz",
+    "546": "innotech"
+  },
+  "by_note": {
+    "Хериот-Уатт": "heriot_watt_aktobe",
+    "Университета Аризона в городе Петропавловск": "arizona_sku",
+    "Стратегического партнерства между Северо": "arizona_sku",
+    "Arizona State University в городе Шымкент": "asu_shymkent",
+    "Лотарингии": "lorraine_abai",
+    "Ташкентский институт инженеров ирригации": "tiiame_almaty",
+    "City University": "cityu_satbayev",
+    "Анхальта": "anhalt",
+    "Пекинского университета языка": "blcu_astana",
+    "Университета Гази": "gazi_shymkent",
+    "Сеульским национальным университетом": "korkyt_seoultech",
+    "«Восход»": "voshod_baikonur",
+    "Московский государственный институт международных отношений": "mgimo_astana",
+    "University of Innovation and Technology": "innotech",
+    "Технического университета Берлина": "tu_berlin_aktau"
+  }
+}

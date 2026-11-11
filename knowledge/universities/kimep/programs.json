@@ -1,0 +1,560 @@
+[
+  {
+    "code": "6B04106",
+    "name_ru": "Economics",
+    "section": "College of Social Sciences",
+    "ent_subjects": "География + Математика",
+    "ent_note": "Минимум ЕНТ 50 (не менее 3 по грамотности чтения и математике, не менее 5 по остальным); нужно подтверждение английского (сертификат или внутренний тест). Цена: 163 230 тенге за кредит, 30-36 кредитов в год = 4 896 900 - 5 876 280 тенге (прейскурант 2026-27).",
+    "tracks": [],
+    "key_courses": [
+      "Introduction to Economics ECN1101.2",
+      "Mathematics for Business and Economics ECN1201",
+      "Introduction to Statistics ECN2083",
+      "Principles of Microeconomics ECN2103",
+      "Econometric Methods ECN3184"
+    ],
+    "careers": [
+      "аналитик",
+      "консультант",
+      "экономист в госсекторе и бизнесе",
+      "банки, международное развитие, исследования"
+    ],
+    "workplaces": [
+      "Halyk Bank",
+      "Kaspi Bank",
+      "ForteBank",
+      "Asian Development Bank",
+      "World Bank",
+      "Deloitte",
+      "KPMG",
+      "EY",
+      "PwC",
+      "Tengizchevroil"
+    ],
+    "price_kzt": 4896900,
+    "url": "https://www.kimep.kz/college-of-social-sciences/kz/bachelor-of-economics/",
+    "grant_2026": {
+      "gop": "B044 Менеджмент и управление",
+      "gop_source": "по коду программы в реестре",
+      "count": 0,
+      "min": null
+    }
+  },
+  {
+    "code": "6B04103",
+    "name_ru": "Management",
+    "section": "Bang College of Business",
+    "ent_subjects": "География + Математика",
+    "ent_note": "Минимум ЕНТ 50 (не менее 3 по грамотности чтения и математике, не менее 5 по остальным); нужно подтверждение английского (сертификат или внутренний тест). Цена: 163 230 тенге за кредит, 30-36 кредитов в год = 4 896 900 - 5 876 280 тенге (прейскурант 2026-27).",
+    "tracks": [],
+    "key_courses": [
+      "Fundamentals of Management MGT3001",
+      "Financial Management FIN3121",
+      "Marketing Fundamentals MKT3130",
+      "Business Statistical Analysis GEN2402",
+      "Business Strategy and Policy MGT4201"
+    ],
+    "careers": [
+      "работа в бизнесе и госслужбе (роли на странице не названы)"
+    ],
+    "workplaces": [],
+    "price_kzt": 4896900,
+    "url": "https://www.kimep.kz/bang-college-of-business/kz/bachelor-of-management/",
+    "grant_2026": {
+      "gop": "B044 Менеджмент и управление",
+      "gop_source": "по коду программы в реестре",
+      "count": 0,
+      "min": null
+    }
+  },
+  {
+    "code": "6B04104",
+    "name_ru": "Accounting and Audit",
+    "section": "Bang College of Business",
+    "ent_subjects": "География + Математика",
+    "ent_note": "Минимум ЕНТ 50 (не менее 3 по грамотности чтения и математике, не менее 5 по остальным); нужно подтверждение английского (сертификат или внутренний тест). Цена: 163 230 тенге за кредит, 30-36 кредитов в год = 4 896 900 - 5 876 280 тенге (прейскурант 2026-27).",
+    "tracks": [],
+    "key_courses": [
+      "Financial Accounting II ACC3101",
+      "Advanced Financial Accounting ACC4201",
+      "Audit ACC4203",
+      "Taxation in Kazakhstan ACC3210"
+    ],
+    "careers": [
+      "бухгалтерия",
+      "аудит",
+      "налогообложение (специализации: Professional Accounting, Audit, Taxation)"
+    ],
+    "workplaces": [],
+    "price_kzt": 4896900,
+    "url": "https://www.kimep.kz/bang-college-of-business/kz/bachelor-of-accounting-and-audit/",
+    "grant_2026": {
+      "gop": "B044 Менеджмент и управление",
+      "gop_source": "по коду программы в реестре",
+      "count": 0,
+      "min": null
+    }
+  },
+  {
+    "code": "6B04105",
+    "name_ru": "Finance",
+    "section": "Bang College of Business",
+    "ent_subjects": "География + Математика",
+    "ent_note": "Минимум ЕНТ 50 (не менее 3 по грамотности чтения и математике, не менее 5 по остальным); нужно подтверждение английского (сертификат или внутренний тест). Цена: 163 230 тенге за кредит, 30-36 кредитов в год = 4 896 900 - 5 876 280 тенге (прейскурант 2026-27).",
+    "tracks": [],
+    "key_courses": [
+      "Financial Management FIN3121",
+      "Corporate Finance FIN3210",
+      "Investments FIN3220",
+      "Financial Modeling FIN4211",
+      "Financial Derivatives FIN4224"
+    ],
+    "careers": [
+      "корпоративные финансы и инвестиции",
+      "финансовые институты и управление рисками (две специализации)"
+    ],
+    "workplaces": [],
+    "price_kzt": 4896900,
+    "url": "https://www.kimep.kz/bang-college-of-business/kz/bachelor-of-finance/",
+    "grant_2026": {
+      "gop": "B047 Маркетинг и реклама",
+      "gop_source": "по коду программы в реестре",
+      "count": 0,
+      "min": null
+    }
+  },
+  {
+    "code": "6B04101",
+    "name_ru": "Public and Local Administration",
+    "section": "College of Social Sciences",
+    "ent_subjects": "География + Математика",
+    "ent_note": "Минимум ЕНТ 50 (не менее 3 по грамотности чтения и математике, не менее 5 по остальным); нужно подтверждение английского (сертификат или внутренний тест). Цена: 163 230 тенге за кредит, 30-36 кредитов в год = 4 896 900 - 5 876 280 тенге (прейскурант 2026-27).",
+    "tracks": [],
+    "key_courses": [
+      "Fundamentals of Public Administration PAD2111",
+      "Public Policy Analysis PAD3542",
+      "Fundamentals of Public Financial Management PAF3511",
+      "Local Government PAD4553",
+      "Research Methods in Social Sciences CSS3101"
+    ],
+    "careers": [
+      "политика и госуправление, международные организации, НКО",
+      "финансовый аналитик/бюджетный аналитик, аудитор госсектора"
+    ],
+    "workplaces": [
+      "Deloitte",
+      "EY",
+      "PwC",
+      "KPMG",
+      "IMF",
+      "World Bank",
+      "ADB",
+      "OECD",
+      "Samruk-Kazyna",
+      "Kazakhtelecom",
+      "KazMunayGas",
+      "Национальный банк РК"
+    ],
+    "price_kzt": 4896900,
+    "url": "https://www.kimep.kz/college-of-social-sciences/kz/bachelor-of-public-and-municipal-administration/",
+    "grant_2026": {
+      "gop": "B044 Менеджмент и управление",
+      "gop_source": "по коду программы в реестре",
+      "count": 0,
+      "min": null
+    }
+  },
+  {
+    "code": "6B04102",
+    "name_ru": "Marketing",
+    "section": "Bang College of Business",
+    "ent_subjects": "География + Математика",
+    "ent_note": "Минимум ЕНТ 50 (не менее 3 по грамотности чтения и математике, не менее 5 по остальным); нужно подтверждение английского (сертификат или внутренний тест). Цена: 163 230 тенге за кредит, 30-36 кредитов в год = 4 896 900 - 5 876 280 тенге (прейскурант 2026-27).",
+    "tracks": [],
+    "key_courses": [
+      "Marketing Fundamentals MKT3130",
+      "Strategic Marketing MKT3150",
+      "Consumer Behavior MKT3201",
+      "Marketing Communications MKT3202",
+      "Brand Management MKT3214",
+      "Digital Marketing MKT4210"
+    ],
+    "careers": [
+      "бренд-менеджмент",
+      "продажи",
+      "маркетинговые коммуникации",
+      "цифровой маркетинг"
+    ],
+    "workplaces": [],
+    "price_kzt": 4896900,
+    "url": "https://www.kimep.kz/bang-college-of-business/kz/bachelor-of-marketing/",
+    "grant_2026": {
+      "gop": "B044 Менеджмент и управление",
+      "gop_source": "по коду программы в реестре",
+      "count": 0,
+      "min": null
+    }
+  },
+  {
+    "code": "6B04201",
+    "name_ru": "International Law",
+    "section": "School of Law",
+    "ent_subjects": "Всемирная история + Основы права",
+    "ent_note": "Минимум ЕНТ 75 (не менее 3 по грамотности чтения и математике, не менее 5 по остальным); нужно подтверждение английского (сертификат или внутренний тест). Цена: 163 230 тенге за кредит, 30-36 кредитов в год = 4 896 900 - 5 876 280 тенге (прейскурант 2026-27). Английский: IELTS 6.5+ — прямой допуск; 5.5-6.0 — собеседование.",
+    "tracks": [],
+    "key_courses": [
+      "Public International Law LAW3311",
+      "Private International Law LAW3312",
+      "International Commercial Law LAW4506",
+      "Law of Treaties LAW4514",
+      "International Criminal Law and Procedure LAW4515"
+    ],
+    "careers": [
+      "юрист",
+      "работа в международных и неправительственных организациях",
+      "частная практика",
+      "магистратура"
+    ],
+    "workplaces": [
+      "юридические фирмы",
+      "бизнес и финансовые компании",
+      "международные организации",
+      "консалтинг",
+      "министерства"
+    ],
+    "price_kzt": 4896900,
+    "url": "https://www.kimep.kz/school-of-law/kz/bil-program/",
+    "grant_2026": {
+      "gop": "B049 Право",
+      "gop_source": "по коду программы в реестре",
+      "count": 0,
+      "min": null
+    }
+  },
+  {
+    "code": "6B04202",
+    "name_ru": "Law (Jurisprudence)",
+    "section": "School of Law",
+    "ent_subjects": "Всемирная история + Основы права",
+    "ent_note": "Минимум ЕНТ 75 (не менее 3 по грамотности чтения и математике, не менее 5 по остальным); нужно подтверждение английского (сертификат или внутренний тест). Цена: 163 230 тенге за кредит, 30-36 кредитов в год = 4 896 900 - 5 876 280 тенге (прейскурант 2026-27). Английский: IELTS 6.5+ — прямой допуск; 5.5-6.0 — собеседование.",
+    "tracks": [],
+    "key_courses": [
+      "Roman Law LAW2303",
+      "Constitutional Law of RK LAW2104",
+      "Civil Law: General Part LAW2108",
+      "Contract Law and Practice in Kazakhstan LAW3301",
+      "Criminal Procedural Law of RK LAW4401"
+    ],
+    "careers": [
+      "юридическая практика",
+      "магистратура по праву"
+    ],
+    "workplaces": [
+      "юридические фирмы",
+      "бизнес",
+      "финансовые организации",
+      "госорганы"
+    ],
+    "price_kzt": 4896900,
+    "url": "https://www.kimep.kz/school-of-law/kz/blj-program/",
+    "grant_2026": {
+      "gop": "B049 Право",
+      "gop_source": "по коду программы в реестре",
+      "count": 0,
+      "min": null
+    }
+  },
+  {
+    "code": "6B03101",
+    "name_ru": "International Relations",
+    "section": "College of Social Sciences",
+    "ent_subjects": "Иностранный язык + Всемирная история",
+    "ent_note": "Минимум ЕНТ 50 (не менее 3 по грамотности чтения и математике, не менее 5 по остальным); нужно подтверждение английского (сертификат или внутренний тест). Цена: 163 230 тенге за кредит, 30-36 кредитов в год = 4 896 900 - 5 876 280 тенге (прейскурант 2026-27).",
+    "tracks": [],
+    "key_courses": [
+      "Fundamentals of International Relations IRL2512",
+      "Theories of International Relations IRL3521",
+      "International Institutions and Law IRL3517",
+      "Security Studies IRL3547",
+      "Foreign Policy of Kazakhstan IRL3520"
+    ],
+    "careers": [
+      "дипломатическая служба",
+      "международные и транснациональные компании",
+      "госсектор и НКО"
+    ],
+    "workplaces": [
+      "OSCE",
+      "World Bank",
+      "МИД РК",
+      "ООН",
+      "посольства",
+      "Парламент РК (стажировки)"
+    ],
+    "price_kzt": 4896900,
+    "url": "https://www.kimep.kz/college-of-social-sciences/kz/bachelor-of-international-relations/",
+    "grant_2026": {
+      "gop": "B041 Психология",
+      "gop_source": "по коду программы в реестре",
+      "count": 0,
+      "min": null
+    }
+  },
+  {
+    "code": "kimep-10",
+    "name_ru": "Political Science",
+    "section": "College of Social Sciences",
+    "ent_subjects": "Иностранный язык + Всемирная история (по таблице вуза, строка в одной группе с IR; уточнить)",
+    "ent_note": "Минимум ЕНТ 50 (не менее 3 по грамотности чтения и математике, не менее 5 по остальным); нужно подтверждение английского (сертификат или внутренний тест). Цена: 163 230 тенге за кредит, 30-36 кредитов в год = 4 896 900 - 5 876 280 тенге (прейскурант 2026-27).",
+    "tracks": [],
+    "key_courses": [
+      "Political Analysis",
+      "Public Policy Analysis",
+      "Research Design and Methods",
+      "Comparative Politics",
+      "Undergraduate Seminar in Political Science"
+    ],
+    "careers": [
+      "госслужба",
+      "квазигосударственные компании",
+      "международные компании и НКО",
+      "консалтинг"
+    ],
+    "workplaces": [],
+    "price_kzt": 4896900,
+    "url": "https://www.kimep.kz/college-of-social-sciences/kz/bachelor-of-political-science/"
+  },
+  {
+    "code": "6B01701",
+    "name_ru": "Two Foreign Languages",
+    "section": "College of Humanities and Education",
+    "ent_subjects": "Иностранный язык + профиль «педагогическое направление» (расшифровка в таблице вуза нечёткая)",
+    "ent_note": "Минимум ЕНТ 75 (не менее 3 по грамотности чтения и математике, не менее 5 по остальным); нужно подтверждение английского (сертификат или внутренний тест). Цена: 163 230 тенге за кредит, 30-36 кредитов в год = 4 896 900 - 5 876 280 тенге (прейскурант 2026-27). Онлайн-эссе 300-400 слов.",
+    "tracks": [],
+    "key_courses": [
+      "Teaching Approaches and Methods for English Language Teaching",
+      "Language and Its Structure II: Morphology and Syntax",
+      "Introduction to Critical Pedagogy",
+      "Introduction to Language Testing",
+      "Discourse Analysis"
+    ],
+    "careers": [
+      "преподавание и образовательный менеджмент",
+      "перевод",
+      "контент и копирайтинг",
+      "PR, маркетинг, HR",
+      "дипломатия и международные организации"
+    ],
+    "workplaces": [],
+    "price_kzt": 4896900,
+    "url": "https://www.kimep.kz/college-humanities-education/kz/bachelor-of-arts-in-foreign-language/",
+    "grant_2026": {
+      "gop": "B016 Подготовка учителей казахского языка и литературы",
+      "gop_source": "по коду программы в реестре",
+      "count": 0,
+      "min": null
+    }
+  },
+  {
+    "code": "6B02302",
+    "name_ru": "Cognitive Science",
+    "section": "College of Humanities and Education",
+    "ent_subjects": "Иностранный язык + Всемирная история",
+    "ent_note": "Минимум ЕНТ 50 (не менее 3 по грамотности чтения и математике, не менее 5 по остальным); нужно подтверждение английского (сертификат или внутренний тест). Цена: 163 230 тенге за кредит, 30-36 кредитов в год = 4 896 900 - 5 876 280 тенге (прейскурант 2026-27). По математической грамотности минимум 5.",
+    "tracks": [],
+    "key_courses": [
+      "Data Analysis and Machine Learning CLP3102",
+      "Introduction to NLP CLP3201",
+      "Corpus Linguistics LING3306",
+      "Psycholinguistics COGN1202",
+      "Introduction to Artificial Intelligence"
+    ],
+    "careers": [
+      "ИИ и обработка информации",
+      "анализ данных",
+      "EdTech",
+      "геймдизайн",
+      "вычислительная лингвистика/NLP"
+    ],
+    "workplaces": [],
+    "price_kzt": 4896900,
+    "url": "https://www.kimep.kz/college-humanities-education/kz/bachelor-of-arts-in-cognitive-linguistics-and-cognitive-science/",
+    "grant_2026": {
+      "gop": "B036 Переводческое дело",
+      "gop_source": "по коду программы в реестре",
+      "count": 0,
+      "min": null
+    }
+  },
+  {
+    "code": "6B02301",
+    "name_ru": "Translation (Translation and Professional Communications)",
+    "section": "College of Humanities and Education",
+    "ent_subjects": "Иностранный язык + Всемирная история",
+    "ent_note": "Минимум ЕНТ 50 (не менее 3 по грамотности чтения и математике, не менее 5 по остальным); нужно подтверждение английского (сертификат или внутренний тест). Цена: 163 230 тенге за кредит, 30-36 кредитов в год = 4 896 900 - 5 876 280 тенге (прейскурант 2026-27).",
+    "tracks": [],
+    "key_courses": [
+      "Introduction to Translation Studies",
+      "Introduction to Interpreting",
+      "Translation Technology",
+      "Foundations of Linguistics",
+      "Subtitling for Film and TV"
+    ],
+    "careers": [
+      "письменный и устный перевод",
+      "локализация игр и субтитрирование",
+      "издательское дело",
+      "контент",
+      "PR и маркетинг"
+    ],
+    "workplaces": [],
+    "price_kzt": 4896900,
+    "url": "https://www.kimep.kz/college-humanities-education/kz/bachelor-of-arts-in-translation-studies/",
+    "grant_2026": {
+      "gop": "B036 Переводческое дело",
+      "gop_source": "по коду программы в реестре",
+      "count": 0,
+      "min": null
+    }
+  },
+  {
+    "code": "6B06101",
+    "name_ru": "Information Systems",
+    "section": "Bang College of Business (страница есть и в School of CS and AI)",
+    "ent_subjects": "Математика + Информатика",
+    "ent_note": "Минимум ЕНТ 50 (не менее 3 по грамотности чтения и математике, не менее 5 по остальным); нужно подтверждение английского (сертификат или внутренний тест). Цена: 163 230 тенге за кредит, 30-36 кредитов в год = 4 896 900 - 5 876 280 тенге (прейскурант 2026-27).",
+    "tracks": [],
+    "key_courses": [
+      "Algorithms, Data Structures and Programming IFS2204",
+      "Database Management Systems in Business CIT2302",
+      "Decision Support Systems IFS4204",
+      "Big Data Analytics CIT3805",
+      "ERP Systems IFS4306"
+    ],
+    "careers": [
+      "аналитик приложений",
+      "data analyst/scientist",
+      "бизнес-аналитик",
+      "IT-консультант",
+      "системный аналитик/разработчик"
+    ],
+    "workplaces": [
+      "финансовые организации",
+      "IT-компании",
+      "консалтинг",
+      "госорганы",
+      "ритейл"
+    ],
+    "price_kzt": 4896900,
+    "url": "https://www.kimep.kz/bang-college-of-business/kz/bachelor-of-information-systems/",
+    "grant_2026": {
+      "gop": "B057 Информационные технологии",
+      "gop_source": "по коду программы в реестре",
+      "count": 0,
+      "min": null
+    }
+  },
+  {
+    "code": "6B06102",
+    "name_ru": "Computer Science",
+    "section": "School of Computer Science and Artificial Intelligence",
+    "ent_subjects": "Математика + Информатика",
+    "ent_note": "Минимум ЕНТ 50 (не менее 3 по грамотности чтения и математике, не менее 5 по остальным); нужно подтверждение английского (сертификат или внутренний тест). Цена: 163 230 тенге за кредит, 30-36 кредитов в год = 4 896 900 - 5 876 280 тенге (прейскурант 2026-27). Обязателен Math Placement Test.",
+    "tracks": [
+      "Data Analytics",
+      "Software Engineering",
+      "Artificial Intelligence",
+      "Cybersecurity"
+    ],
+    "key_courses": [
+      "Structured Programming 1 (Python) SCS1104",
+      "Data Structures and Algorithms SCS2106",
+      "Introduction to AI SCS3102",
+      "Software Engineering SCS3202",
+      "Introduction to Cybersecurity SCS4601"
+    ],
+    "careers": [
+      "специализации: Data Analytics, Software Engineering, Artificial Intelligence, Cybersecurity (конкретные должности на странице не названы)"
+    ],
+    "workplaces": [],
+    "price_kzt": 4896900,
+    "url": "https://www.kimep.kz/school-of-computer-science-and-artificial-intelligence/kz/about-the-bachelor-of-science-in-computer-science-program/",
+    "grant_2026": {
+      "gop": "B057 Информационные технологии",
+      "gop_source": "по коду программы в реестре",
+      "count": 0,
+      "min": null
+    }
+  },
+  {
+    "code": "6B03102",
+    "name_ru": "Psychology",
+    "section": "College of Humanities and Education",
+    "ent_subjects": "География + Биология",
+    "ent_note": "Минимум ЕНТ 50 (не менее 3 по грамотности чтения и математике, не менее 5 по остальным); нужно подтверждение английского (сертификат или внутренний тест). Цена: 163 230 тенге за кредит, 30-36 кредитов в год = 4 896 900 - 5 876 280 тенге (прейскурант 2026-27).",
+    "tracks": [],
+    "key_courses": [
+      "Introduction to Psychology",
+      "Introduction to Cognitive Psychology",
+      "Child Psychological Development",
+      "Social Psychology",
+      "Neuropsychology",
+      "Organizational Psychology"
+    ],
+    "careers": [
+      "консультирование и терапия",
+      "обучение и развитие",
+      "HR",
+      "социальная работа",
+      "школьный психолог (со звёздочкой на странице)",
+      "академическая карьера"
+    ],
+    "workplaces": [],
+    "price_kzt": 4896900,
+    "url": "https://www.kimep.kz/college-humanities-education/kz/bachelor-of-science-in-psychology-bsp/",
+    "grant_2026": {
+      "gop": "B041 Психология",
+      "gop_source": "по коду программы в реестре",
+      "count": 0,
+      "min": null
+    }
+  },
+  {
+    "code": "6B03201",
+    "name_ru": "Journalism",
+    "section": "College of Social Sciences",
+    "ent_subjects": "два творческих экзамена КИМЭП (эссе и письменное интервью, онлайн) + ЕНТ",
+    "ent_note": "Минимум ЕНТ не указан; учитываются баллы по истории Казахстана и грамотности чтения; нужно подтверждение английского (сертификат или внутренний тест). Цена: 163 230 тенге за кредит, 30-36 кредитов в год = 4 896 900 - 5 876 280 тенге (прейскурант 2026-27).",
+    "tracks": [],
+    "key_courses": [
+      "News Journalism JMC3201",
+      "Broadcast Journalism JMC3623",
+      "Photojournalism JMC2703",
+      "Advanced News Writing JMC4201",
+      "Communication Research JMC4701.4"
+    ],
+    "careers": [
+      "digital-журналист",
+      "PR/медиа-менеджер",
+      "редактор",
+      "SMM",
+      "копирайтер",
+      "ведущий новостей",
+      "digital-продюсер"
+    ],
+    "workplaces": [
+      "KIMEP Times",
+      "KIMEP Pie",
+      "KIMEP SWAG radio (учебные медиа)",
+      "СМИ РК и международные организации (стажировки, названия не приведены)"
+    ],
+    "price_kzt": 4896900,
+    "url": "https://www.kimep.kz/college-of-social-sciences/kz/bachelor-of-journalism/",
+    "grant_2026": {
+      "gop": "B042 Журналистика и репортерское дело",
+      "gop_source": "по коду программы в реестре",
+      "count": 0,
+      "min": null
+    }
+  }
+]

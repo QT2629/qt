@@ -1,0 +1,28 @@
+[
+  {
+    "code": "innotech-1",
+    "name_ru": "Computer Science (Компьютерные науки)",
+    "section": "Школа цифровых технологий",
+    "ent_subjects": "",
+    "ent_note": "ЕНТ обязателен, порог по программе не указан; английский IELTS 5.0 / TOEFL 70 / Placement 45.",
+    "tracks": [],
+    "key_courses": [],
+    "careers": [],
+    "workplaces": [],
+    "price_kzt": null,
+    "url": "https://innotech.edu.kz"
+  },
+  {
+    "code": "innotech-2",
+    "name_ru": "Cybersecurity (Кибербезопасность)",
+    "section": "Школа цифровых технологий",
+    "ent_subjects": "",
+    "ent_note": "ЕНТ обязателен, порог по программе не указан; английский IELTS 5.0 / TOEFL 70 / Placement 45. Группа B058 в списке грантов 2026: 176 грантов, баллы 75-140 (предположительно эта программа, на сайте код не указан).",
+    "tracks": [],
+    "key_courses": [],
+    "careers": [],
+    "workplaces": [],
+    "price_kzt": null,
+    "url": "https://innotech.edu.kz"
+  }
+]

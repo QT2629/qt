@@ -1,0 +1,54 @@
+[
+  {
+    "code": "emer_kokshetau-1",
+    "name_ru": "Пожарная безопасность",
+    "section": "Бакалавриат, очно, 4 года",
+    "ent_subjects": "Математика + Физика",
+    "ent_note": "Порог по типовым правилам; в правилах МЧС числа нет",
+    "tracks": [],
+    "key_courses": [],
+    "careers": [],
+    "workplaces": [],
+    "price_kzt": null,
+    "url": "https://agz.edu.kz/obrazovatelnie_programmi.html"
+  },
+  {
+    "code": "emer_kokshetau-2",
+    "name_ru": "Защита в чрезвычайных ситуациях",
+    "section": "Бакалавриат, очно, 4 года",
+    "ent_subjects": "Математика + Физика",
+    "ent_note": "как выше",
+    "tracks": [],
+    "key_courses": [],
+    "careers": [],
+    "workplaces": [],
+    "price_kzt": null,
+    "url": "https://agz.edu.kz/obrazovatelnie_programmi.html"
+  },
+  {
+    "code": "emer_kokshetau-3",
+    "name_ru": "Командная тактическая сил гражданской обороны",
+    "section": "Бакалавриат, очно, 4 года",
+    "ent_subjects": "Математика + Физика (для лиц по ст. 39 закона о воинской службе)",
+    "ent_note": "как выше",
+    "tracks": [],
+    "key_courses": [],
+    "careers": [],
+    "workplaces": [],
+    "price_kzt": null,
+    "url": "https://agz.edu.kz/obrazovatelnie_programmi.html"
+  },
+  {
+    "code": "emer_kokshetau-4",
+    "name_ru": "Пожаротушение и аварийно-спасательное дело",
+    "section": "Бакалавриат, очно, 4 года",
+    "ent_subjects": "Математика + Физика",
+    "ent_note": "как выше",
+    "tracks": [],
+    "key_courses": [],
+    "careers": [],
+    "workplaces": [],
+    "price_kzt": null,
+    "url": "https://agz.edu.kz/obrazovatelnie_programmi.html"
+  }
+]

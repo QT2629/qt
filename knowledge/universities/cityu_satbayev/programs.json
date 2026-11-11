@@ -1,0 +1,41 @@
+[
+  {
+    "code": "cityu-1",
+    "name_ru": "Computer Science (с уклоном на ИИ)",
+    "section": "CityUHK @ Satbayev",
+    "ent_subjects": "",
+    "ent_note": "Код для заявления на грант: KZ-HKG-029 (2025). Двойной диплом CityU, 2+2. Профильные предметы ЕНТ не опубликованы в доступных материалах; по PDF 2025 около 20 грантов по ИТ.",
+    "tracks": [],
+    "key_courses": [],
+    "careers": [],
+    "workplaces": [],
+    "price_kzt": null,
+    "url": "https://satbayev.university/en/cityu"
+  },
+  {
+    "code": "cityu-2",
+    "name_ru": "Materials Science (материаловедение)",
+    "section": "CityUHK @ Satbayev",
+    "ent_subjects": "",
+    "ent_note": "Код для заявления на грант: KZ-HKG-029 (2025). Двойной диплом CityU, 2+2. Профильные предметы не найдены; по PDF 2025 около 5 грантов.",
+    "tracks": [],
+    "key_courses": [],
+    "careers": [],
+    "workplaces": [],
+    "price_kzt": null,
+    "url": "https://satbayev.university/en/cityu"
+  },
+  {
+    "code": "cityu-3",
+    "name_ru": "Civil Engineering (гражданское строительство)",
+    "section": "CityUHK @ Satbayev",
+    "ent_subjects": "",
+    "ent_note": "Код для заявления на грант: KZ-HKG-029 (2025). Двойной диплом CityU, 2+2. Профильные предметы не найдены; по PDF 2025 около 5 грантов (названо «градостроительство»).",
+    "tracks": [],
+    "key_courses": [],
+    "careers": [],
+    "workplaces": [],
+    "price_kzt": null,
+    "url": "https://satbayev.university/en/cityu"
+  }
+]

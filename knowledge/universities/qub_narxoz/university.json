@@ -1,0 +1,54 @@
+{
+  "slug": "qub_narxoz",
+  "short": "QUB x Narxoz",
+  "name_ru": "Queen's University Belfast - программы двойного диплома с Университетом Нархоз (Алматы)",
+  "name_kz": "Queen's University Belfast - Нархоз университетімен қос диплом",
+  "name_en": "Queen's University Belfast programmes with Narxoz University",
+  "aliases": [
+    "qub",
+    "queen's university belfast",
+    "queens belfast",
+    "белфаст",
+    "квинс белфаст",
+    "нархоз белфаст",
+    "нархоз двойной диплом"
+  ],
+  "city": "Алматы",
+  "type": "программа двойного диплома (2+2) частного университета Нархоз с британским вузом; филиал QUB заявлен, но не подтверждён как действующий",
+  "website": "https://narxoz.kz",
+  "programs_url": "https://en.narxoz.kz/sem/queens-university-belfast",
+  "price_note": "Стоимость обучения в Нархозе на 2026-2027 не найдена (сайты rk/en.narxoz.kz не открылись). По фрагменту страницы en.narxoz.kz/sem/queens-university-belfast (через поисковую выдачу): льготная цена за обучение в Queen's — 14 800 GBP в год, год на странице не указан; студент сам оплачивает разницу в стоимости, проживание, визу и страховку. Бурса QUB 2 500 GBP в год на проживание для пути 2+2 (по выдаче). Тенге не указаны.",
+  "notes": "Совместная программа двойного диплома Нархоз — Queen's University Belfast (Russell Group): студент учится на английском на BBA Нархоза (Management, Finance, Business Economics), затем переводится на второй курс QUB. Нархоз называет форматы 2+2 и 2+3 (по tengrinews, 03.11.2025: во втором случае четвёртый год — стажировка в Белфасте, Дублине или Лондоне). Получается два диплома: BSc от QUB и BBA Нархоза. В октябре 2024 г. в Нархозе открыт информационный офис QUB; самостоятельного филиала QUB с набором на бакалавриат на проверенных страницах нет. Сведения собраны по открытым источникам и подтверждены не полностью — уточняйте в приёмной комиссии.",
+  "admission_special": {
+    "summary": "Поступать нужно в Нархоз по обычным правилам (ЕНТ). По фрагменту официальной страницы Нархоза: пороги ЕНТ 100 баллов (Management — 75) и английский B2. Дальше после успешного завершения 1-2 курсов в Нархозе подаётся заявление на advanced entry на второй курс QUB: GPA не ниже 3.0 из 4.0 (для Finance 3.3) без пересдач по модулям, IELTS 6.5 с минимумом 5.5 по каждому компоненту, мотивационное письмо и британская виза. Программы QUB: BSc Business Management (с практикой или без), BSc Business Economics, BSc Finance. Финансирование: абитуриенты, подходящие под критерии госгранта Нархоза, могут подавать на программу (Forbes.kz, около 2023-2024); трое студентов получили грант (tengrinews, 22.10.2024). Сроки и число мест на 2026-2027 не найдены. Точная структура (2+2 или 2+3) в источниках расходится. Сведения собраны по открытым источникам и подтверждены не полностью — уточняйте в приёмной комиссии.",
+    "exam_name": null,
+    "ent_required": true,
+    "ent_note": "Для входа в Нархоз нужен ЕНТ; по странице Нархоза (фрагмент) порог 100 баллов, Management — 75; английский B2.",
+    "eligibility": "Студенты Нархоза (BBA Management, Finance, Business Economics), успешно закончившие 1-2 курсы; GPA от 3.0/4.0 (Finance 3.3) и IELTS 6.5 (5.5).",
+    "deadlines": null,
+    "documents": [
+      "мотивационное письмо",
+      "IELTS 6.5 (не ниже 5.5)",
+      "транскрипт с GPA",
+      "британская виза (по фрагменту страницы)"
+    ],
+    "grants": "Госгрант Нархоза при выполнении его критериев (Forbes.kz, без цифр); бурса QUB 2 500 GBP в год на проживание (путь 2+2, по выдаче); льготная цена в QUB 14 800 GBP в год (год не указан).",
+    "diploma": "Двойной: QUB (BSc Business Management / Business Economics / Finance) и Нархоз (BBA).",
+    "source": "https://en.narxoz.kz/sem/queens-university-belfast (только фрагмент выдачи, страница не открылась) ; https://tengrinews.kz/kazakhstan_news/kazahstanskiy-narhoz-britanskiy-queens-programmyi-dvoynogo-584696/ ; https://tengrinews.kz/article/almaty-otkryvaetsia-filial-britanskogo-queens-university-2649/ ; https://forbes.kz/articles/chto-takoe-dvoynoy-diplom-i-kakie-preimushestva-on-dayot-kazahstanskim-studentam-dc65c4",
+    "checked_on": "2026-11-11"
+  },
+  "grant_list_code": null,
+  "admissions": {
+    "phones": [],
+    "email": "",
+    "address": "Алматы, Нархоз, Школа экономики и менеджмента (офис Queen's University Belfast)",
+    "hours": "",
+    "url": "https://narxoz.kz",
+    "checked_on": "2026-11-11",
+    "source": "https://tengrinews.kz/article/almaty-otkryvaetsia-filial-britanskogo-queens-university-2649/"
+  },
+  "dorm": null,
+  "source": "https://en.narxoz.kz/sem/queens-university-belfast (только фрагмент выдачи, страница не открылась) ; https://tengrinews.kz/kazakhstan_news/kazahstanskiy-narhoz-britanskiy-queens-programmyi-dvoynogo-584696/ ; https://tengrinews.kz/article/almaty-otkryvaetsia-filial-britanskogo-queens-university-2649/ ; https://forbes.kz/articles/chto-takoe-dvoynoy-diplom-i-kakie-preimushestva-on-dayot-kazahstanskim-studentam-dc65c4",
+  "data_year": 2025,
+  "checked_on": "2026-11-11"
+}

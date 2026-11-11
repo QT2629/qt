@@ -1,0 +1,55 @@
+{
+  "slug": "cardiff_astana",
+  "short": "Cardiff Astana",
+  "name_ru": "Cardiff University Kazakhstan (Астана)",
+  "name_kz": "Cardiff University Kazakhstan",
+  "name_en": "Cardiff University Kazakhstan",
+  "aliases": [
+    "cardiff",
+    "cardiff university kazakhstan",
+    "британский университет астана",
+    "кардиф",
+    "кардифф",
+    "кардифф астана"
+  ],
+  "city": "Астана",
+  "type": "филиал иностранного вуза (Cardiff University, Великобритания, Russell Group)",
+  "website": "https://cardiff.edu.kz",
+  "programs_url": "https://cardiff.edu.kz/courses/",
+  "price_note": "Официальный сайт cardiff.edu.kz (проверено 2026-11-11) на набор сентября 2027: 17 000 USD в год для граждан РК и 19 000 USD для иностранцев — для всех бакалаврских программ и Foundation Year, цена в тенге не указана. Набор 2026 (по выдаче cardiff.ac.uk): 16 000 / 18 000 USD. Агрегатор studenthub.kz (ориентир, без даты) приводит 8 000 000 тг в год. Скидки вуза: 15% (до 10 стипендий), Provost 30% (до 3) и 5% за полную оплату — по cardiff.ac.uk (выдача). По политике оплаты вуза граждане РК платят в тенге по курсу, который вуз фиксирует на учебный год; точную сумму уточняйте в приёмной (admissionskz@cardiff.edu.kz).",
+  "notes": "Кампус открыт в Астане в сентябре 2025, обучение на английском, диплом Cardiff University (Russell Group). Бакалавриат 3 года по четырём программам (Business Management BSc, Civil Engineering BEng, Computer Science BSc, Exploration Geology BSc); любую можно пройти с Foundation Year. Выпускники 11-летней школы могут поступать только на Foundation Year, выпускники 12-летней школы, колледжа или с международной квалификацией — сразу на бакалавриат. Также есть магистратура: MSc AI + Data Science и MBA. По данным министра науки (сентябрь 2025), в первый год учились 315 граждан РК.",
+  "admission_special": {
+    "summary": "Поступление идёт по правилам Cardiff, а не через обычный конкурс ЕНТ: на официальных страницах курсов ЕНТ как требование не указан. Подача онлайн по ссылке на странице программы, затем условный или безусловный оффер. Английский: IELTS 6.5 (не ниже 5.5 по компонентам) для бакалавриата, 6.0 (5.5) для Foundation Year; принимаются TOEFL и тест Cardiff. Foundation Year: аттестат со средним баллом не ниже 4 из 5 за 11 класс, по математике не ниже 4. Формально бакалавриат требует британский уровень (A-level BBC и т.д.), но допускаются иные квалификации; выпускникам 11 классов нужен Foundation. Госгранты (государственная стипендия) сейчас указаны только для Foundation Year; приём заявок на набор 2027 до 15 января 2027; по заявлениям министра около 300 грантов в год (вторичный источник), для получения гранта по cardiff.ac.uk (май 2025) нужен ЕНТ не ниже 50. Самооплата: подача до 16 августа 2027 (граждане РК). Диплом выдаёт Cardiff University.",
+    "exam_name": null,
+    "ent_required": false,
+    "ent_note": "Страницы курсов cardiff.edu.kz ЕНТ не упоминают. Для претендентов на госгрант на Foundation по выдаче cardiff.ac.uk (2025) минимум 50 баллов — проверить в приёмной.",
+    "eligibility": "Foundation Year: выпускники 11-летней школы (аттестат, средний балл от 4/5, математика от 4). Бакалавриат напрямую: 12-летняя школа, колледж, Foundation, международная квалификация. Возраст от 16 лет.",
+    "deadlines": "Набор 2027: Foundation, госгрант (граждане РК) — 15.01.2027; Foundation/бакалавриат, самооплата граждан РК — 16.08.2027; иностранцы с визой — 30.07.2027, без визы — 16.08.2027. Рассмотрение самооплаты — по мере поступления.",
+    "documents": [
+      "академическая справка/транскрипт",
+      "сертификат английского (IELTS, TOEFL или Cardiff University English Test)",
+      "паспорт или удостоверение личности",
+      "для получателей госгранта — дополнительные документы по запросу"
+    ],
+    "grants": "Госстипендия (около 300 грантов в год по министру науки, вторичный источник) — по сайту вуза пока только на Foundation Year; при отказе можно перейти на самооплату. Скидки вуза: 15%, Provost 30%, 5% за полную оплату (cardiff.ac.uk, выдача). Оплата: сразу или тремя платежами. Платно: 17 000 USD/год (набор 2027).",
+    "diploma": "Диплом Cardiff University (Великобритания).",
+    "source": "https://cardiff.edu.kz/how-to-apply/ ; https://cardiff.edu.kz/courses/ ; https://cardiff.edu.kz/courses/computer-science-bsc/ ; https://cardiff.edu.kz/courses/civil-engineering-beng-2/ ; https://cardiff.edu.kz/courses/exploration-geology-bsc/ ; https://cardiff.edu.kz/courses/business-management-bsc/ ; https://cardiff.edu.kz/courses/foundation-year/ ; https://rus.baq.kz/300-grantov-ezhegodno-kak-budet-rabotat-novyy-kampus-cardiff-university-kazakhstan_300021493/",
+    "checked_on": "2026-11-11"
+  },
+  "grant_list_code": null,
+  "admissions": {
+    "phones": [
+      "+7 708 502 3535 (также WhatsApp)"
+    ],
+    "email": "admissionskz@cardiff.edu.kz",
+    "address": "Астана (кампус Cardiff University Kazakhstan; точный адрес на проверенных страницах не указан, есть карта 2GIS)",
+    "hours": "пн-пт 09:00-18:00 по Астане",
+    "url": "https://cardiff.edu.kz/how-to-apply/",
+    "checked_on": "2026-11-11",
+    "source": "https://cardiff.edu.kz/how-to-apply/"
+  },
+  "dorm": null,
+  "source": "https://cardiff.edu.kz/how-to-apply/ ; https://cardiff.edu.kz/courses/ ; https://cardiff.edu.kz/courses/computer-science-bsc/ ; https://cardiff.edu.kz/courses/civil-engineering-beng-2/ ; https://cardiff.edu.kz/courses/exploration-geology-bsc/ ; https://cardiff.edu.kz/courses/business-management-bsc/ ; https://cardiff.edu.kz/courses/foundation-year/ ; https://rus.baq.kz/300-grantov-ezhegodno-kak-budet-rabotat-novyy-kampus-cardiff-university-kazakhstan_300021493/",
+  "data_year": 2026,
+  "checked_on": "2026-11-11"
+}

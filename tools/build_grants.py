@@ -19,6 +19,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "knowledge" / "catalog" / "grants.json.gz"
 CATALOG = ROOT / "knowledge" / "catalog" / "kz_bachelor.json.gz"
+SLUGS = ROOT / "knowledge" / "catalog" / "grant_slugs.json"
 
 # Списки, где вместо балла ЕНТ стоит процент или балла нет совсем, — показываем только число грантов.
 NO_SCORE = {"oralman", "military_service", "children_of_security_staff", "olympiad"}
@@ -68,6 +69,9 @@ def main() -> None:
                 rows.append(r)
     with gzip.open(CATALOG, "rt", encoding="utf-8") as f:
         slug_of = {u["id"]: u.get("existing") or f"u{u['id']}" for u in json.load(f)["universities"]}
+    # Вузы и филиалы, которых нет в каталоге с кодом ОВПО: привязка по коду из списка или по названию списка.
+    special = json.load(open(SLUGS, encoding="utf-8")) if SLUGS.exists() else {}
+    by_code, by_note = special.get("by_code", {}), special.get("by_note", {})
     acc = collections.defaultdict(lambda: [0, None, None])
     names, skipped = {}, collections.Counter()
     for r in rows:
@@ -80,7 +84,8 @@ def main() -> None:
         # В списке кандасов вместо балла — процент от максимального балла ЕНТ.
         pct = num(r.get("pct_min")) if r["list"] in NO_SCORE else None
         keys = [("country", gop, year, cat)]
-        slug = slug_of.get(num(r.get("university_id")))
+        slug = (by_code.get(str(r.get("vuz_code") or "")) or slug_of.get(num(r.get("university_id")))
+                or next((v for k, v in by_note.items() if k in (r.get("note") or "")), None))
         if slug:
             keys.append((slug, gop, year, cat))
         else:
