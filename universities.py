@@ -394,6 +394,7 @@ def details(keys: list[str], text: str = "") -> str | None:
         u = UNIS[slug]
         out.append({"university": u["name_ru"], "city": u["city"], "website": u.get("website", ""),
                     "admissions": admissions_line(u), **{k: u[k] for k in ("type", "students", "rating") if u.get(k)},
+                    **({"admission_special": u["admission_special"]} if u.get("admission_special") else {}),
                     "all_bachelor_programs": [f"{p['name_ru']} ({p['code']})" for p in u["programs"].values() if p["open"]]})
     for key in keys:
         slug, code = key.split(":")
@@ -410,6 +411,7 @@ def details(keys: list[str], text: str = "") -> str | None:
         out.append({"university": u["name_ru"], "city": u["city"], "price_note": u["price_note"],
                     **({"data_source": u["notes"], "admissions": admissions_line(u)} if u.get("catalog") else {}),
                     **{k: u[k] for k in ("type", "students", "rating") if u.get(k)},
+                    **({"admission_special": u["admission_special"].get("summary")} if u.get("admission_special") else {}),
                     **{k: p[k] for k in ("code", "name_ru", "name_kz", "name_translation", "section", "ent_subjects", "ent_note", "price_kzt",
                                          "price_other", "duration", "credits", "languages", "format", "thesis", "direction",
                                          "tracks", "track_courses", "about", "outcomes", "study_path", "key_courses",
@@ -1093,7 +1095,10 @@ def uni_text(slug: str, lang: str) -> str:
     a = u.get("admissions") or {}
     if a.get("phones"):
         facts.append("📞 " + esc(", ".join(a["phones"])))
-    return (f"🏛 {b(uni_name(slug, lang))}\n" + "\n".join(facts) + "\n\n" + f"{esc(u['notes'])}\n\n💰 {esc(u['price_note'])}\n\n"
+    special = u.get("admission_special") or {}   # вузы с особым порядком приёма (свой экзамен, военные, филиалы)
+    special_text = special.get("summary_kz" if kz else "summary") or special.get("summary") or ""
+    special_block = ("🎓 " + b("Қабылдау ерекшелігі: " if kz else "Особый порядок поступления: ") + esc(special_text) + "\n\n") if special_text else ""
+    return (f"🏛 {b(uni_name(slug, lang))}\n" + "\n".join(facts) + "\n\n" + f"{esc(u['notes'])}\n\n" + special_block + f"💰 {esc(u['price_note'])}\n\n"
             + ("ҰБТ пәндеріңді таңда — бағдарламаларды көрсетемін:" if kz
                else "Выбери свои предметы ЕНТ — покажу программы:"))
 
