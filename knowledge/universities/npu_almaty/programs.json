@@ -17,5 +17,44 @@
       "count": 0,
       "min": null
     }
+  },
+  {
+    "code": "npu-1",
+    "name_ru": "Материаловедение и инженерия (Materials Science and Engineering)",
+    "section": "",
+    "ent_subjects": "",
+    "ent_note": "Двудипломная программа бакалавриата NPU и КазНУ им. аль-Фараби — по главной странице филиала npukazakhstanbranchen.nwpu.edu.cn (проверено 11.11.2026); код в реестре, предметы ЕНТ и цену уточняйте в приёмной.",
+    "tracks": [],
+    "key_courses": [],
+    "careers": [],
+    "workplaces": [],
+    "price_kzt": null,
+    "url": "https://npukazakhstanbranchen.nwpu.edu.cn"
+  },
+  {
+    "code": "npu-2",
+    "name_ru": "Компьютерные науки и технологии (Computer Science and Technology)",
+    "section": "",
+    "ent_subjects": "",
+    "ent_note": "Двудипломная программа бакалавриата NPU и КазНУ им. аль-Фараби — по главной странице филиала npukazakhstanbranchen.nwpu.edu.cn (проверено 11.11.2026); код в реестре, предметы ЕНТ и цену уточняйте в приёмной.",
+    "tracks": [],
+    "key_courses": [],
+    "careers": [],
+    "workplaces": [],
+    "price_kzt": null,
+    "url": "https://npukazakhstanbranchen.nwpu.edu.cn"
+  },
+  {
+    "code": "npu-3",
+    "name_ru": "Информационно-коммуникационная инженерия (Information and Communication Engineering)",
+    "section": "",
+    "ent_subjects": "",
+    "ent_note": "Двудипломная программа бакалавриата NPU и КазНУ им. аль-Фараби — по главной странице филиала npukazakhstanbranchen.nwpu.edu.cn (проверено 11.11.2026); код в реестре, предметы ЕНТ и цену уточняйте в приёмной.",
+    "tracks": [],
+    "key_courses": [],
+    "careers": [],
+    "workplaces": [],
+    "price_kzt": null,
+    "url": "https://npukazakhstanbranchen.nwpu.edu.cn"
   }
 ]

@@ -52,18 +52,5 @@
     "workplaces": [],
     "price_kzt": null,
     "url": "https://kaz.nyfa.edu/en"
-  },
-  {
-    "code": "nyfa_kz-4",
-    "name_ru": "Filmmaking (бакалавриат не подтверждён)",
-    "section": "NYFA Kazakhstan",
-    "ent_subjects": "собственный отбор (портфолио)",
-    "ent_note": "Назван на nyfakz.asia/application среди направлений; на главной сайта Filmmaking указан только как 1-годичная и короткие программы. Статус BFA не подтверждён.",
-    "tracks": [],
-    "key_courses": [],
-    "careers": [],
-    "workplaces": [],
-    "price_kzt": null,
-    "url": "https://nyfakz.asia/application"
   }
 ]
