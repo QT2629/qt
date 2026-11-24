@@ -397,6 +397,23 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     await update.message.reply_text(t(lang, "about"), reply_markup=start_keyboard(lang))
 
 
+async def site_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """/site — сайт Pro4U внутри Telegram: все вузы и программы, избранное (человек узнаётся автоматически)."""
+    lang = get_lang(context)
+    if not config.SITE_URL:
+        await update.message.reply_text("Сайт пока недоступен.")
+        return
+    kz = lang == "kz"
+    rows = [[InlineKeyboardButton("🌐 Сайттағы барлық ЖОО" if kz else "🌐 Все вузы и программы",
+                                  web_app=WebAppInfo(url=config.SITE_URL + "/"))],
+            [InlineKeyboardButton("⭐ Таңдаулылар" if kz else "⭐ Моё избранное",
+                                  web_app=WebAppInfo(url=config.SITE_URL + "/moe/"))]]
+    await update.message.reply_text(
+        "Сайт Pro4U: толық ақпарат пен таңдаулылар осында." if kz else
+        "Сайт Pro4U: подробности по вузам и программам и твоё избранное. Открывается прямо в Telegram.",
+        reply_markup=InlineKeyboardMarkup(rows))
+
+
 async def creative_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """/creative — творческие экзамены: что сдавать, баллы, сроки, документы."""
     await creative.command(update, context, await ensure_fresh(update, context))
@@ -418,10 +435,18 @@ async def set_commands(app: Application) -> None:
         BotCommand("profile", "Моя страница: цель, сроки ЕНТ, напоминания"),
         BotCommand("progress", "Мои пробники: баллы и график роста"),
         BotCommand("creative", "Творческие экзамены: что сдавать, сроки, баллы"),
+        BotCommand("site", "Сайт: вузы, программы, избранное"),
         BotCommand("lang", "Сменить язык"),
         BotCommand("reset", "Начать разговор заново"),
         BotCommand("delete_me", "Удалить мои данные"),
     ])
+    if config.SITE_URL:  # постоянная кнопка «🌐 Сайт» у поля ввода: сайт открывается внутри Telegram, вход без пароля
+        try:
+            from telegram import MenuButtonWebApp
+            await app.bot.set_chat_menu_button(
+                menu_button=MenuButtonWebApp(text="🌐 Сайт", web_app=WebAppInfo(url=config.SITE_URL + "/")))
+        except Exception as e:  # не критично: бот работает и без кнопки
+            logger.warning("Не удалось поставить кнопку сайта: %s", e)
     # Описание бота (экран до «Старт») и короткое «О боте» (профиль и превью ссылки) — с главной ценностью.
     for code in (None, "ru", "kk"):
         texts = BOT_PROFILE["kk" if code == "kk" else "ru"]
@@ -926,6 +951,7 @@ def main() -> None:
     app.add_handler(CommandHandler("delete_me", delete_me_command))
     app.add_handler(CommandHandler("progress", progress_command))
     app.add_handler(CommandHandler("creative", creative_command))
+    app.add_handler(CommandHandler("site", site_command))
     app.add_handler(CommandHandler("help", help_command))
     app.add_handler(CommandHandler("credits", credits_command))
     app.add_handler(CommandHandler("photos", photos_command))
