@@ -19,7 +19,7 @@ from pathlib import Path
 from urllib.parse import urlencode
 
 import anthropic
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup, Update
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup, Update, WebAppInfo
 from telegram.constants import ChatAction, ParseMode
 from telegram.error import BadRequest, Forbidden, RetryAfter, TelegramError
 from telegram.ext import (
@@ -382,6 +382,15 @@ async def profile_command(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
     await profile_bot.show_page(context, update.effective_chat.id, get_lang(context))
 
 
+def site_program_url(key: str) -> str | None:
+    """Адрес страницы программы на сайте (site/build.py: pid = код, всё кроме [A-Za-z0-9] → «-», нижний регистр)."""
+    if not config.SITE_URL or ":" not in key:
+        return None
+    slug, code = key.split(":", 1)
+    pid = re.sub(r"[^A-Za-z0-9]", "-", code).lower()
+    return f"{config.SITE_URL}/vuz/{slug}/{pid}/"
+
+
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """/help — что умеет бот."""
     lang = get_lang(context)
@@ -600,8 +609,13 @@ async def _on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     elif data.startswith(("up:", "p:")):  # карточка программы («p:» — кнопки из старых сообщений, AlmaU)
         key = data[3:] if data.startswith("up:") else "almau:" + data[2:]
         stats.log_event(user_id, "button", f"карточка {key}")
-        keyboard = InlineKeyboardMarkup([[InlineKeyboardButton(t(lang, "btn_ask_ai"), callback_data=f"ua:{key}")]])
-        await context.bot.send_message(chat_id, universities.program_card(key, lang), reply_markup=keyboard)
+        rows = [[InlineKeyboardButton(t(lang, "btn_ask_ai"), callback_data=f"ua:{key}")]]
+        site = site_program_url(key)
+        if site:  # подробности — на сайте, внутри Telegram (Mini App)
+            label = "🌐 Сайтта толығырақ" if lang == "kz" else "🌐 Подробнее на сайте"
+            rows.append([InlineKeyboardButton(label, web_app=WebAppInfo(url=site))])
+        await context.bot.send_message(chat_id, universities.program_card(key, lang, short=bool(site)),
+                                       reply_markup=InlineKeyboardMarkup(rows))
 
     elif data.startswith(("ua:", "a:")):  # следующий вопрос будет про эту программу
         key = data[3:] if data.startswith("ua:") else "almau:" + data[2:]

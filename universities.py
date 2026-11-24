@@ -1156,7 +1156,7 @@ def group_text(slug: str, group: str, lang: str) -> str:
     return text
 
 
-def program_card(key: str, lang: str) -> str:
+def program_card(key: str, lang: str, short: bool = False) -> str:
     """Карточка программы (HTML): важное — жирным."""
     slug, code = key.split(":")
     p = program(key)
@@ -1193,10 +1193,13 @@ def program_card(key: str, lang: str) -> str:
                                                       " — группа определена по похожим программам")
                                                      if "group" in p.get("inferred", []) else ""))
             q = grants.quota_line(slug, p["grant_2026"]["gop"].split()[0], lang)
-            if q:
+            if q and not short:  # квоты — длинная строка, в короткой карточке их нет (они на сайте)
                 lines.append(esc(q))
     if p.get("ent_note"):
         lines.append("⚠️ " + esc(p["ent_note"]))
+    if short:  # короткая карточка: подробности (траектории, предметы, карьера) — на сайте
+        lines.append("🗓 " + (f"Деректер: {config.DATA_AS_OF_KZ}" if kz else f"Данные на {config.DATA_AS_OF}"))
+        return "\n".join(lines)
     if p.get("about"):
         lines.append("\n" + b("Бағдарлама туралы:" if kz else "О программе:") + " " + esc(p["about"]))
     if p.get("tracks"):

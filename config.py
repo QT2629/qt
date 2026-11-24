@@ -36,6 +36,9 @@ DATA_DIR = os.getenv("DATA_DIR", "data")
 
 # Telegram ID администраторов через запятую — им доступна команда /stats.
 # Свой ID можно узнать командой /myid в боте.
+# Адрес сайта Pro4U (Vercel). Пустая строка — кнопки «на сайте» выключены.
+SITE_URL = os.getenv("SITE_URL", "https://pro4u-site.vercel.app").strip().rstrip("/")
+
 ADMIN_IDS = {int(x) for x in os.getenv("ADMIN_IDS", "").replace(" ", "").split(",") if x}
 
 # Сколько последних сообщений диалога помнит бот.
