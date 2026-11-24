@@ -246,7 +246,7 @@ async def run_action(context: ContextTypes.DEFAULT_TYPE, chat_id: int, user_id: 
     elif action == "mocks":
         await profile_bot.show_mocks(context, chat_id, lang)
     elif action == "profile":
-        await profile_bot.show_page(context, chat_id, lang, with_card=True)
+        await profile_bot.show_page(context, chat_id, lang)  # карточка-картинка только по кнопке «Моя карточка»
     elif action == "share":
         await send(chat_id, t(lang, "share_intro"), reply_markup=share_keyboard(context, lang, user_id))
     elif action == "contacts":  # вузы, о которых шла речь, иначе — вузы города человека
