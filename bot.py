@@ -14,6 +14,7 @@ import hashlib
 import html
 import logging
 import re
+import time
 from datetime import datetime, time, timedelta, timezone
 from pathlib import Path
 from urllib.parse import urlencode
@@ -859,6 +860,7 @@ async def reply_with_claude(context: ContextTypes.DEFAULT_TYPE, chat_id: int, la
     except anthropic.AnthropicError as e:
         stats.log_event(chat_id, "error", type(e).__name__)
         answer = api_error_text(e, lang)
+        await alert_billing(context, e)
     except Exception:
         logger.exception("Неожиданная ошибка")
         stats.log_event(chat_id, "error", "unexpected")
@@ -866,6 +868,24 @@ async def reply_with_claude(context: ContextTypes.DEFAULT_TYPE, chat_id: int, la
 
     answer, buttons = extract_buttons(context, lang, answer)
     await send_long(context, chat_id, answer, lang, last_markup=buttons)
+
+
+_LAST_BILLING_ALERT = 0.0
+
+
+async def alert_billing(context: ContextTypes.DEFAULT_TYPE, err: Exception) -> None:
+    """Если на балансе Anthropic API кончились деньги — один раз в 6 часов пишем администраторам."""
+    global _LAST_BILLING_ALERT
+    if "credit balance" not in str(err).lower() or time.time() - _LAST_BILLING_ALERT < 6 * 3600:
+        return
+    _LAST_BILLING_ALERT = time.time()
+    for admin_id in config.ADMIN_IDS:
+        try:
+            await context.bot.send_message(
+                admin_id, "⚠️ Pro4U: на балансе Anthropic API закончились деньги, ответы ИИ не работают "
+                          "(кнопки бота работают). Пополните: platform.claude.com → Plans & Billing.")
+        except Exception:
+            pass
 
 
 def api_error_text(err: Exception, lang: str) -> str:
@@ -887,6 +907,9 @@ def api_error_text(err: Exception, lang: str) -> str:
         return t(lang, "err_connection")
     if isinstance(err, anthropic.APIStatusError) and err.status_code == 402:
         logger.error("Закончились деньги на балансе Anthropic API — пополни в консоли")
+        return t(lang, "err_config")
+    if "credit balance" in str(err).lower():
+        logger.error("Закончились деньги на балансе Anthropic API — пополни в консоли (Plans & Billing)")
         return t(lang, "err_config")
     logger.error("Ошибка Claude API: %s", err)
     return t(lang, "err_generic")
