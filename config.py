@@ -11,8 +11,23 @@ ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
 if ANTHROPIC_API_KEY and "вставь" in ANTHROPIC_API_KEY:
     ANTHROPIC_API_KEY = None
 
+# Какой ИИ отвечает на вопросы: "gemini" или "claude". Не задан — берётся Gemini, если есть GEMINI_API_KEY.
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+if GEMINI_API_KEY and "вставь" in GEMINI_API_KEY:
+    GEMINI_API_KEY = None
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-3.1-flash-lite")
+# Сколько Gemini «думает» перед ответом (minimal / low / medium / high). Мысли тоже оплачиваются, поэтому minimal.
+GEMINI_THINKING = os.getenv("GEMINI_THINKING", "minimal").strip().lower()
+AI_PROVIDER = os.getenv("AI_PROVIDER", "gemini" if GEMINI_API_KEY else "claude").strip().lower()
+if AI_PROVIDER not in ("gemini", "claude"):
+    AI_PROVIDER = "claude"
+# Ключ выбранного ИИ задан — вопросы к ИИ работают.
+AI_READY = bool(GEMINI_API_KEY if AI_PROVIDER == "gemini" else ANTHROPIC_API_KEY)
+AI_MODEL = GEMINI_MODEL if AI_PROVIDER == "gemini" else None  # для Claude — CLAUDE_MODEL ниже
+
 # Самая дешёвая модель Claude. Если качества не хватит — claude-sonnet-5 или claude-opus-5.
 CLAUDE_MODEL = os.getenv("CLAUDE_MODEL", "claude-haiku-4-5")
+AI_MODEL = AI_MODEL or CLAUDE_MODEL  # имя модели, которая отвечает сейчас
 
 # Контакты приёмной комиссии — показываются по кнопке «Приёмная комиссия».
 ADMISSIONS_CONTACTS = os.getenv(

@@ -23,6 +23,12 @@ PRICES = {
     "claude-opus-5": (5.0, 25.0, 0.50, 10.0),
     "claude-opus-5-5": (4.0, 20.0, 0.20, 8.0),
     "claude-fable-5-1": (10.0, 50.0, 0.25, 20.0),
+    # Gemini ($ за 1 млн токенов: вход, выход, из кэша; запись в кэш бесплатна — кэш неявный)
+    "gemini-3.1-flash-lite": (0.25, 1.50, 0.025, 0.25),
+    "gemini-3.5-flash-lite": (0.30, 2.50, 0.03, 0.30),
+    "gemini-3-flash-preview": (0.50, 3.00, 0.05, 0.50),
+    "gemini-3.6-flash": (0.75, 3.75, 0.075, 0.75),
+    "gemini-3.8-flash": (0.75, 3.75, 0.075, 0.75),
 }
 # У Haiku 5.5 запросы длиннее 100 000 токенов входа стоят в 5 раз дороже (0,50 / 2,50).
 LONG_PROMPT = {"claude-haiku-5-5": (100_000, 5)}
@@ -119,7 +125,7 @@ def report(days: int) -> str:
         f"(задавали вопросы ИИ: {ai_users:.0f}). Возвраты внутри периода — в блоке «Удержание».",
         f"Вопросов к ИИ: {ai:.0f}" + (f", в среднем {ai / ai_users:.1f} на человека" if ai_users else ""),
         f"Анкет пройдено: {quiz:.0f}",
-        f"Расходы на Claude: ~${cost:.2f}" + (f" (~${cost / users:.3f} на человека)" if users else ""),
+        f"Расходы на ИИ: ~${cost:.2f}" + (f" (~${cost / users:.3f} на человека)" if users else ""),
         f"Расчётов «Шанс на грант»: {chances:.0f}",
         f"Пришли по приглашению: {refs:.0f}" + (f" (больше всех привёл один человек: {top_ref[1]})" if top_ref else ""),
         f"Упёрлись в дневной лимит: {limit:.0f} чел.",
@@ -328,9 +334,9 @@ def summary(days: int = 7) -> str:
     back = sum(1 for d in older if len(d) > 1)
 
     warn = storage_warning()
-    cost_line = f"Расходы на Claude за {days} дней: ~${cost:.2f}" + (f" (~${cost / active:.3f} на человека)" if active else "")
-    if config.CLAUDE_MODEL not in PRICES:
-        cost_line += f"\n   ⚠️ модели {config.CLAUDE_MODEL} нет в таблице цен, сумма завышена: впишите её цену в PRICES (stats.py)"
+    cost_line = f"Расходы на ИИ за {days} дней: ~${cost:.2f}" + (f" (~${cost / active:.3f} на человека)" if active else "")
+    if config.AI_MODEL not in PRICES:
+        cost_line += f"\n   ⚠️ модели {config.AI_MODEL} нет в таблице цен, сумма завышена: впишите её цену в PRICES (stats.py)"
     lines = [
         "📊 Pro4U коротко (без администраторов)",
         f"Данные в базе с {first_day[8:10]}.{first_day[5:7]}.{first_day[:4]}" if first_day else "Данных пока нет",
