@@ -52,7 +52,11 @@ def from_ai(text: str) -> str:
     out = esc(tables_to_lists(text))
     for tag in ALLOWED:
         out = re.sub(rf"&lt;(/?){tag}&gt;", rf"<\1{tag}>", out, flags=re.I)
+    out = re.sub(r"\[([^\]\n]+)\]\((https?://[^)\s]+)\)",          # [текст](ссылка) → «текст: ссылка», а если они совпадают — просто ссылка
+                 lambda m: m.group(2) if m.group(1).strip() == m.group(2) else f"{m.group(1)}: {m.group(2)}", out)
     out = re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", out, flags=re.S)
+    out = re.sub(r"(?<![\w*])\*(?!\s)([^*\n]+?)(?<!\s)\*(?![\w*])", r"<i>\1</i>", out)   # *курсив* из Markdown
+    out = out.replace("`", "")
     out = re.sub(r"(?m)^#{1,6}\s*(.+)$", r"<b>\1</b>", out)       # заголовки Markdown — жирной строкой
     return balance(out)
 
