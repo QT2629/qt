@@ -14,7 +14,7 @@ import hashlib
 import html
 import logging
 import re
-import time
+import time as time_module  # «time» ниже занято классом datetime.time
 from datetime import datetime, time, timedelta, timezone
 from pathlib import Path
 from urllib.parse import urlencode
@@ -883,9 +883,9 @@ def _billing_problem(err: Exception) -> bool:
 async def alert_billing(context: ContextTypes.DEFAULT_TYPE, err: Exception) -> None:
     """Если у ИИ кончились деньги — один раз в 6 часов пишем администраторам."""
     global _LAST_BILLING_ALERT
-    if not _billing_problem(err) or time.time() - _LAST_BILLING_ALERT < 6 * 3600:
+    if not _billing_problem(err) or time_module.time() - _LAST_BILLING_ALERT < 6 * 3600:
         return
-    _LAST_BILLING_ALERT = time.time()
+    _LAST_BILLING_ALERT = time_module.time()
     where = ("Google AI Studio → Billing" if config.AI_PROVIDER == "gemini"
              else "platform.claude.com → Plans & Billing")
     for admin_id in config.ADMIN_IDS:
