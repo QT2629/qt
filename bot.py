@@ -46,7 +46,7 @@ import profile_bot
 import profiles
 import stats
 import universities
-from claude_client import NoApiKey, Refused, ask_claude
+from claude_client import AI_ERRORS, NoApiKey, Refused, ask_claude
 from knowledge import build_knowledge_text
 from prompts import with_details
 from texts import BOT_PROFILE, LEGACY_BUTTONS, MENU_BUTTONS, TEXTS, t
@@ -807,7 +807,7 @@ def take_ai_quota(context: ContextTypes.DEFAULT_TYPE) -> bool:
 
 async def reply_with_claude(context: ContextTypes.DEFAULT_TYPE, chat_id: int, lang: str,
                             user_text: str, keys: list[str]) -> None:
-    if not config.ANTHROPIC_API_KEY:  # ИИ не подключён — не тратим лимит человека
+    if not config.AI_READY:  # ИИ не подключён — не тратим лимит человека
         await send_long(context, chat_id, t(lang, "no_ai"), lang)
         return
     if not take_ai_quota(context):
@@ -855,9 +855,9 @@ async def reply_with_claude(context: ContextTypes.DEFAULT_TYPE, chat_id: int, la
     except Refused:
         answer = t(lang, "refusal")
     except NoApiKey:
-        logger.warning("ANTHROPIC_API_KEY не задан — вопросы к ИИ отключены")
+        logger.warning("Ключ ИИ не задан — вопросы к ИИ отключены")
         answer = t(lang, "no_ai")
-    except anthropic.AnthropicError as e:
+    except AI_ERRORS as e:
         stats.log_event(chat_id, "error", type(e).__name__)
         answer = api_error_text(e, lang)
         await alert_billing(context, e)
@@ -873,45 +873,56 @@ async def reply_with_claude(context: ContextTypes.DEFAULT_TYPE, chat_id: int, la
 _LAST_BILLING_ALERT = 0.0
 
 
+def _billing_problem(err: Exception) -> bool:
+    """Закончились деньги или не подключена оплата у ИИ."""
+    text = str(err).lower()
+    return ("credit balance" in text or "billing" in text or "prepayment" in text
+            or getattr(err, "status_code", None) == 402)
+
+
 async def alert_billing(context: ContextTypes.DEFAULT_TYPE, err: Exception) -> None:
-    """Если на балансе Anthropic API кончились деньги — один раз в 6 часов пишем администраторам."""
+    """Если у ИИ кончились деньги — один раз в 6 часов пишем администраторам."""
     global _LAST_BILLING_ALERT
-    if "credit balance" not in str(err).lower() or time.time() - _LAST_BILLING_ALERT < 6 * 3600:
+    if not _billing_problem(err) or time.time() - _LAST_BILLING_ALERT < 6 * 3600:
         return
     _LAST_BILLING_ALERT = time.time()
+    where = ("Google AI Studio → Billing" if config.AI_PROVIDER == "gemini"
+             else "platform.claude.com → Plans & Billing")
     for admin_id in config.ADMIN_IDS:
         try:
             await context.bot.send_message(
-                admin_id, "⚠️ Pro4U: на балансе Anthropic API закончились деньги, ответы ИИ не работают "
-                          "(кнопки бота работают). Пополните: platform.claude.com → Plans & Billing.")
+                admin_id, f"⚠️ Pro4U: у ИИ ({config.AI_PROVIDER}) закончились деньги или не подключена оплата, "
+                          f"ответы ИИ не работают (кнопки бота работают). Проверьте: {where}.")
         except Exception:
             pass
 
 
 def api_error_text(err: Exception, lang: str) -> str:
     """Понятный текст для пользователя + подробности в лог."""
-    if isinstance(err, anthropic.AuthenticationError):
-        logger.error("Неверный ANTHROPIC_API_KEY — проверь файл .env")
+    provider = config.AI_PROVIDER
+    code = getattr(err, "code", None) if provider == "gemini" else None
+    if isinstance(err, anthropic.AuthenticationError) or code in (401, 403):
+        logger.error("Ключ ИИ (%s) неверный или без доступа: %s", provider, err)
         return t(lang, "err_config")
     if isinstance(err, anthropic.PermissionDeniedError):
         logger.error("Нет доступа к API (проверь права ключа): %s", err)
         return t(lang, "err_config")
-    if isinstance(err, anthropic.RateLimitError):
-        logger.warning("Слишком много запросов к Claude (rate limit)")
+    if isinstance(err, anthropic.RateLimitError) or code == 429:
+        if _billing_problem(err):
+            logger.error("У ИИ (%s) закончились деньги или лимит: %s", provider, err)
+            return t(lang, "err_config")
+        logger.warning("Слишком много запросов к ИИ (rate limit)")
         return t(lang, "err_busy")
-    if isinstance(err, anthropic.APITimeoutError):
-        logger.warning("Claude не ответил вовремя (timeout)")
+    if isinstance(err, anthropic.APITimeoutError) or code == 504:
+        logger.warning("ИИ не ответил вовремя (timeout)")
         return t(lang, "err_timeout")
-    if isinstance(err, anthropic.APIConnectionError):
-        logger.warning("Нет соединения с Claude API")
+    if isinstance(err, anthropic.APIConnectionError) or code in (500, 502, 503):
+        logger.warning("Нет соединения с ИИ или он перегружен (%s)", err)
         return t(lang, "err_connection")
-    if isinstance(err, anthropic.APIStatusError) and err.status_code == 402:
-        logger.error("Закончились деньги на балансе Anthropic API — пополни в консоли")
+    if _billing_problem(err):
+        logger.error("У ИИ (%s) закончились деньги — проверь оплату: %s", provider, err)
         return t(lang, "err_config")
-    if "credit balance" in str(err).lower():
-        logger.error("Закончились деньги на балансе Anthropic API — пополни в консоли (Plans & Billing)")
-        return t(lang, "err_config")
-    logger.error("Ошибка Claude API: %s", err)
+    logger.error("Ошибка ИИ (%s): %s", provider, err)
     return t(lang, "err_generic")
 
 
@@ -986,10 +997,10 @@ def main() -> None:
     if universities.UNTRANSLATED:
         logger.warning("Названия программ без перевода (добавь в knowledge/catalog/name_translations.py): %s",
                        "; ".join(universities.UNTRANSLATED))
-    if not config.ANTHROPIC_API_KEY:
-        logger.warning("ANTHROPIC_API_KEY не задан: кнопки работают, вопросы к ИИ отключены")
-    logger.info("Pro4U запущен (модель: %s, лимит %s вопросов к ИИ в день). Остановить: Ctrl+C",
-                config.CLAUDE_MODEL, config.DAILY_AI_LIMIT)
+    if not config.AI_READY:
+        logger.warning("Ключ ИИ (%s) не задан: кнопки работают, вопросы к ИИ отключены", config.AI_PROVIDER)
+    logger.info("Pro4U запущен (ИИ: %s, модель: %s, лимит %s вопросов к ИИ в день). Остановить: Ctrl+C",
+                config.AI_PROVIDER, config.AI_MODEL, config.DAILY_AI_LIMIT)
     # Напоминания о сроках ЕНТ и просьбы внести баллы — каждый день в 10:00 по Алматы.
     app.job_queue.run_daily(profile_bot.daily_reminders, time=time(10, 0, tzinfo=timezone(timedelta(hours=5))))
     # Каждый понедельник в 10:00 по Алматы — итоги недели администраторам.
